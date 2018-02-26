@@ -365,7 +365,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 720,
+          "SourceUnit": 683,
           "absolutePath": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
           "file": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
           "scope": 48,
@@ -380,7 +380,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 466,
+          "SourceUnit": 429,
           "absolutePath": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
           "file": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
           "scope": 48,
@@ -395,7 +395,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 658,
+          "SourceUnit": 621,
           "absolutePath": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
           "file": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
           "scope": 48,
@@ -411,26 +411,26 @@
       {
         "attributes": {
           "contractDependencies": [
-            308,
-            356,
-            465,
-            657,
-            719,
-            802,
-            956
+            271,
+            319,
+            428,
+            620,
+            682,
+            765,
+            919
           ],
           "contractKind": "contract",
           "documentation": "@title CarboneumCrowdsale\n@dev This is Carboneum fully fledged crowdsale.\nCappedCrowdsale - sets a max boundary for raised funds\n * After adding multiple features it's good practice to run integration tests\nto ensure that subcontracts works together as intended.",
           "fullyImplemented": false,
           "linearizedBaseContracts": [
             47,
-            657,
-            465,
-            356,
-            956,
-            802,
-            719,
-            308
+            620,
+            428,
+            319,
+            919,
+            765,
+            682,
+            271
           ],
           "name": "CarboneumCrowdsale",
           "scope": 48
@@ -447,7 +447,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "CappedCrowdsale",
-                  "referencedDeclaration": 719,
+                  "referencedDeclaration": 682,
                   "type": "contract CappedCrowdsale"
                 },
                 "id": 5,
@@ -470,7 +470,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RefundableCrowdsale",
-                  "referencedDeclaration": 465,
+                  "referencedDeclaration": 428,
                   "type": "contract RefundableCrowdsale"
                 },
                 "id": 7,
@@ -493,7 +493,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "MintedCrowdsale",
-                  "referencedDeclaration": 657,
+                  "referencedDeclaration": 620,
                   "type": "contract MintedCrowdsale"
                 },
                 "id": 9,
@@ -666,7 +666,7 @@
                         "attributes": {
                           "contractScope": null,
                           "name": "MintableToken",
-                          "referencedDeclaration": 1277,
+                          "referencedDeclaration": 1185,
                           "type": "contract MintableToken"
                         },
                         "id": 21,
@@ -728,7 +728,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 308,
+                      "referencedDeclaration": 271,
                       "type": "type(contract Crowdsale)",
                       "value": "Crowdsale"
                     },
@@ -791,7 +791,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 719,
+                      "referencedDeclaration": 682,
                       "type": "type(contract CappedCrowdsale)",
                       "value": "CappedCrowdsale"
                     },
@@ -826,7 +826,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 802,
+                      "referencedDeclaration": 765,
                       "type": "type(contract TimedCrowdsale)",
                       "value": "TimedCrowdsale"
                     },
@@ -897,7 +897,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 1538,
+                              "referencedDeclaration": 1446,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -989,5 +989,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-26T12:54:35.818Z"
+  "updatedAt": "2018-02-26T15:56:09.623Z"
 }
