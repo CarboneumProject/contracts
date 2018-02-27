@@ -9,8 +9,13 @@ module.exports = function (deployer, network, accounts) {
     const cap = web3.toWei(105600000, 'ether'); // Limit 88% of sale token in wei
     const goal = web3.toWei(0, 'ether'); // No goal
 
-
-    deployer.deploy(CarboneumToken).then(function () {
-        return deployer.deploy(CarboneumCrowdsale, startTime, endTime, rate, wallet, cap, CarboneumToken.address, goal);
-    });
+    if (network === "live") {
+        // Production we do not deploy new token.
+        const token_address = '0x30753e4a8aad7f8597332e813735def5dd395028'; // TODO Change this to real address
+        return deployer.deploy(CarboneumCrowdsale, startTime, endTime, rate, wallet, cap, token_address, goal);
+    } else {
+        deployer.deploy(CarboneumToken).then(function () {
+            return deployer.deploy(CarboneumCrowdsale, startTime, endTime, rate, wallet, cap, CarboneumToken.address, goal);
+        });
+    }
 };
