@@ -7,7 +7,7 @@ module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber('9615'); // ETH Price at 800 USD,
     const wallet = accounts[0];
     const cap = web3.toWei(105600000, 'ether'); // Limit 88% of sale token in wei
-    const goal = web3.toWei(0, 'ether'); // No goal
+    const goal = web3.toWei(1, 'ether'); // No goal
 
     if (network === "live") {
         // Production we do not deploy new token.

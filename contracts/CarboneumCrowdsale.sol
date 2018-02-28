@@ -19,6 +19,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, RefundableCrowdsale, MintedCrowd
     Crowdsale(_rate, _wallet, _token)
     CappedCrowdsale(_cap)
     TimedCrowdsale(_openingTime, _closingTime)
+    RefundableCrowdsale(_goal)
     {
         //As goal needs to be met for a successful crowdsale
         //the value needs to less or equal than a cap which is limit for accepted funds
