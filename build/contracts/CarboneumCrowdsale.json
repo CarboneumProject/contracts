@@ -336,686 +336,1250 @@
   ],
   "bytecode": "0x60606040526000600760146101000a81548160ff021916908315150217905550341561002a57600080fd5b60405160e080611bae833981016040528080519060200190919080519060200190919080519060200190919080519060200190919080519060200190919080519060200190919080519060200190919050508087878588888760008311151561009257600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141515156100ce57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561010a57600080fd5b8260028190555081600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050506000811115156101a457600080fd5b80600481905550504282101515156101bb57600080fd5b8181101515156101ca57600080fd5b8160058190555080600681905550505033600760006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060008111151561022a57600080fd5b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16610255610304565b808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050604051809103906000f08015156102a157600080fd5b600960006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600881905550508281111515156102f857600080fd5b50505050505050610314565b604051610a778061113783390190565b610e14806103236000396000f3006060604052600436106100fc576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680631515bc2b146101075780632c4e722e14610134578063355274ea1461015d57806340193883146101865780634042b66f146101af5780634b6753bc146101d85780634bb278f3146102015780634f93594514610216578063521eb273146102435780637d3d6522146102985780638d4e4083146102c55780638da5cb5b146102f2578063b5545a3c14610347578063b7a8807c1461035c578063ec8ac4d814610385578063f2fde38b146103b3578063fbfa77cf146103ec578063fc0c546a14610441575b61010533610496565b005b341561011257600080fd5b61011a610564565b604051808215151515815260200191505060405180910390f35b341561013f57600080fd5b610147610570565b6040518082815260200191505060405180910390f35b341561016857600080fd5b610170610576565b6040518082815260200191505060405180910390f35b341561019157600080fd5b61019961057c565b6040518082815260200191505060405180910390f35b34156101ba57600080fd5b6101c2610582565b6040518082815260200191505060405180910390f35b34156101e357600080fd5b6101eb610588565b6040518082815260200191505060405180910390f35b341561020c57600080fd5b61021461058e565b005b341561022157600080fd5b61022961066a565b604051808215151515815260200191505060405180910390f35b341561024e57600080fd5b610256610679565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102a357600080fd5b6102ab61069f565b604051808215151515815260200191505060405180910390f35b34156102d057600080fd5b6102d86106ae565b604051808215151515815260200191505060405180910390f35b34156102fd57600080fd5b6103056106c1565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561035257600080fd5b61035a6106e7565b005b341561036757600080fd5b61036f6107e8565b6040518082815260200191505060405180910390f35b6103b1600480803573ffffffffffffffffffffffffffffffffffffffff16906020019091905050610496565b005b34156103be57600080fd5b6103ea600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506107ee565b005b34156103f757600080fd5b6103ff610946565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561044c57600080fd5b61045461096c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000803491506104a68383610991565b6104af826109be565b90506104c6826003546109dc90919063ffffffff16565b6003819055506104d683826109fa565b8273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f623b3804fa71d67900d064613da8f94b9617215ee90799290593e1745087ad188484604051808381526020018281526020019250505060405180910390a361054d8383610a08565b610555610a0c565b61055f8383610adf565b505050565b60006006544211905090565b60025481565b60045481565b60085481565b60035481565b60065481565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156105ea57600080fd5b600760149054906101000a900460ff1615151561060657600080fd5b61060e610564565b151561061957600080fd5b610621610ae3565b7f6823b073d48d6e3a7d385eeb601452d680e74bb46afe3255a7d778f3a9b1768160405160405180910390a16001600760146101000a81548160ff021916908315150217905550565b60006004546003541015905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60006008546003541015905090565b600760149054906101000a900460ff1681565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600760149054906101000a900460ff16151561070257600080fd5b61070a61069f565b15151561071657600080fd5b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663fa89401a336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15156107d257600080fd5b6102c65a03f115156107e357600080fd5b505050565b60055481565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561084a57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561088657600080fd5b8073ffffffffffffffffffffffffffffffffffffffff16600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a380600760006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60055442101580156109a557506006544211155b15156109b057600080fd5b6109ba8282610c32565b5050565b60006109d560025483610c6590919063ffffffff16565b9050919050565b60008082840190508381101515156109f057fe5b8091505092915050565b610a048282610ca0565b5050565b5050565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663f340fa0134336040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019150506000604051808303818588803b1515610ac857600080fd5b6125ee5a03f11515610ad957600080fd5b50505050565b5050565b610aeb61069f565b15610b8e57600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166343d726d66040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b1515610b7557600080fd5b6102c65a03f11515610b8657600080fd5b505050610c28565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16638c52dc416040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b1515610c1357600080fd5b6102c65a03f11515610c2457600080fd5b5050505b610c30610d96565b565b610c3c8282610d98565b600454610c54826003546109dc90919063ffffffff16565b11151515610c6157600080fd5b5050565b6000806000841415610c7a5760009150610c99565b8284029050828482811515610c8b57fe5b04141515610c9557fe5b8091505b5092915050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166340c10f1983836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b1515610d6c57600080fd5b6102c65a03f11515610d7d57600080fd5b505050604051805190501515610d9257600080fd5b5050565b565b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff1614151515610dd457600080fd5b60008114151515610de457600080fd5b50505600a165627a7a723058208a506cfaa001a2097c69d2b11537bb21a851f6a5d03e5a564820ad4b8833eac200296060604052341561000f57600080fd5b604051602080610a7783398101604052808051906020019091905050336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156100a757600080fd5b80600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000600260146101000a81548160ff0219169083600281111561010757fe5b02179055505061095b8061011c6000396000f300606060405260043610610099576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806343d726d61461009e578063521eb273146100b35780638c52dc41146101085780638da5cb5b1461011d578063c19d93fb14610172578063cb13cddb146101a9578063f2fde38b146101f6578063f340fa011461022f578063fa89401a1461025d575b600080fd5b34156100a957600080fd5b6100b1610296565b005b34156100be57600080fd5b6100c66103ef565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561011357600080fd5b61011b610415565b005b341561012857600080fd5b6101306104f6565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561017d57600080fd5b61018561051b565b6040518082600281111561019557fe5b60ff16815260200191505060405180910390f35b34156101b457600080fd5b6101e0600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190505061052e565b6040518082815260200191505060405180910390f35b341561020157600080fd5b61022d600480803573ffffffffffffffffffffffffffffffffffffffff16906020019091905050610546565b005b61025b600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190505061069b565b005b341561026857600080fd5b610294600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506107c2565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156102f157600080fd5b600060028111156102fe57fe5b600260149054906101000a900460ff16600281111561031957fe5b14151561032557600080fd5b60028060146101000a81548160ff0219169083600281111561034357fe5b02179055507f1cdde67b72a90f19919ac732a437ac2f7a10fc128d28c2a6e525d89ce5cd9d3a60405160405180910390a1600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc3073ffffffffffffffffffffffffffffffffffffffff16319081150290604051600060405180830381858888f1935050505015156103ed57600080fd5b565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561047057600080fd5b6000600281111561047d57fe5b600260149054906101000a900460ff16600281111561049857fe5b1415156104a457600080fd5b6001600260146101000a81548160ff021916908360028111156104c357fe5b02179055507f599d8e5a83cffb867d051598c4d70e805d59802d8081c1c7d6dffc5b6aca2b8960405160405180910390a1565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260149054906101000a900460ff1681565b60016020528060005260406000206000915090505481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156105a157600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141515156105dd57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156106f657600080fd5b6000600281111561070357fe5b600260149054906101000a900460ff16600281111561071e57fe5b14151561072a57600080fd5b61077c34600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205461091190919063ffffffff16565b600160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555050565b6000600160028111156107d157fe5b600260149054906101000a900460ff1660028111156107ec57fe5b1415156107f857600080fd5b600160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490506000600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055508173ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f1935050505015156108bf57600080fd5b8173ffffffffffffffffffffffffffffffffffffffff167fd7dee2702d63ad89917b6a4da9981c90c4d24f8c2bdfd64c604ecae57d8d0651826040518082815260200191505060405180910390a25050565b600080828401905083811015151561092557fe5b80915050929150505600a165627a7a7230582063670ec9efa34decbff8a8f682e4c7a445946bd42b81f30db12c99317b678d300029",
   "deployedBytecode": "0x6060604052600436106100fc576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680631515bc2b146101075780632c4e722e14610134578063355274ea1461015d57806340193883146101865780634042b66f146101af5780634b6753bc146101d85780634bb278f3146102015780634f93594514610216578063521eb273146102435780637d3d6522146102985780638d4e4083146102c55780638da5cb5b146102f2578063b5545a3c14610347578063b7a8807c1461035c578063ec8ac4d814610385578063f2fde38b146103b3578063fbfa77cf146103ec578063fc0c546a14610441575b61010533610496565b005b341561011257600080fd5b61011a610564565b604051808215151515815260200191505060405180910390f35b341561013f57600080fd5b610147610570565b6040518082815260200191505060405180910390f35b341561016857600080fd5b610170610576565b6040518082815260200191505060405180910390f35b341561019157600080fd5b61019961057c565b6040518082815260200191505060405180910390f35b34156101ba57600080fd5b6101c2610582565b6040518082815260200191505060405180910390f35b34156101e357600080fd5b6101eb610588565b6040518082815260200191505060405180910390f35b341561020c57600080fd5b61021461058e565b005b341561022157600080fd5b61022961066a565b604051808215151515815260200191505060405180910390f35b341561024e57600080fd5b610256610679565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102a357600080fd5b6102ab61069f565b604051808215151515815260200191505060405180910390f35b34156102d057600080fd5b6102d86106ae565b604051808215151515815260200191505060405180910390f35b34156102fd57600080fd5b6103056106c1565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561035257600080fd5b61035a6106e7565b005b341561036757600080fd5b61036f6107e8565b6040518082815260200191505060405180910390f35b6103b1600480803573ffffffffffffffffffffffffffffffffffffffff16906020019091905050610496565b005b34156103be57600080fd5b6103ea600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506107ee565b005b34156103f757600080fd5b6103ff610946565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561044c57600080fd5b61045461096c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000803491506104a68383610991565b6104af826109be565b90506104c6826003546109dc90919063ffffffff16565b6003819055506104d683826109fa565b8273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f623b3804fa71d67900d064613da8f94b9617215ee90799290593e1745087ad188484604051808381526020018281526020019250505060405180910390a361054d8383610a08565b610555610a0c565b61055f8383610adf565b505050565b60006006544211905090565b60025481565b60045481565b60085481565b60035481565b60065481565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156105ea57600080fd5b600760149054906101000a900460ff1615151561060657600080fd5b61060e610564565b151561061957600080fd5b610621610ae3565b7f6823b073d48d6e3a7d385eeb601452d680e74bb46afe3255a7d778f3a9b1768160405160405180910390a16001600760146101000a81548160ff021916908315150217905550565b60006004546003541015905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60006008546003541015905090565b600760149054906101000a900460ff1681565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600760149054906101000a900460ff16151561070257600080fd5b61070a61069f565b15151561071657600080fd5b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663fa89401a336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15156107d257600080fd5b6102c65a03f115156107e357600080fd5b505050565b60055481565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561084a57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561088657600080fd5b8073ffffffffffffffffffffffffffffffffffffffff16600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a380600760006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60055442101580156109a557506006544211155b15156109b057600080fd5b6109ba8282610c32565b5050565b60006109d560025483610c6590919063ffffffff16565b9050919050565b60008082840190508381101515156109f057fe5b8091505092915050565b610a048282610ca0565b5050565b5050565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663f340fa0134336040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019150506000604051808303818588803b1515610ac857600080fd5b6125ee5a03f11515610ad957600080fd5b50505050565b5050565b610aeb61069f565b15610b8e57600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166343d726d66040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b1515610b7557600080fd5b6102c65a03f11515610b8657600080fd5b505050610c28565b600960009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16638c52dc416040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b1515610c1357600080fd5b6102c65a03f11515610c2457600080fd5b5050505b610c30610d96565b565b610c3c8282610d98565b600454610c54826003546109dc90919063ffffffff16565b11151515610c6157600080fd5b5050565b6000806000841415610c7a5760009150610c99565b8284029050828482811515610c8b57fe5b04141515610c9557fe5b8091505b5092915050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166340c10f1983836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b1515610d6c57600080fd5b6102c65a03f11515610d7d57600080fd5b505050604051805190501515610d9257600080fd5b5050565b565b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff1614151515610dd457600080fd5b60008114151515610de457600080fd5b50505600a165627a7a723058208a506cfaa001a2097c69d2b11537bb21a851f6a5d03e5a564820ad4b8833eac20029",
-  "sourceMap": "554:598:0:-;;;383:5:2;357:31;;;;;;;;;;;;;;;;;;;;646:504:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;951:5;899:12;913;874:4;830:5;837:7;846:6;1711:1:1;1703:5;:9;1695:18;;;;;;;;1746:1;1727:21;;:7;:21;;;;1719:30;;;;;;;;1781:1;1763:20;;:6;:20;;;;1755:29;;;;;;;;1798:5;1791:4;:12;;;;1818:7;1809:6;;:16;;;;;;;;;;;;;;;;;;1839:6;1831:5;;:14;;;;;;;;;;;;;;;;;;1617:233;;;485:1:6;478:4;:8;470:17;;;;;;;;499:4;493:3;:10;;;;418:90;759:3:7;743:12;:19;;735:28;;;;;;;;793:12;777;:28;;769:37;;;;;;;;827:12;813:11;:26;;;;859:12;845:11;:26;;;;654:222;;509:10:9;501:5;;:18;;;;;;;;;;;;;;;;;;771:1:3;763:5;:9;755:18;;;;;;;;803:6;;;;;;;;;;;787:23;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;779:5;;:31;;;;;;;;;;;;;;;;;;823:5;816:4;:12;;;;698:135;1138:4:0;1129:5;:13;;1121:22;;;;;;;;646:504;;;;;;;554:598;;;;;;;;;;;;:::o;:::-;;;;;;;",
-  "deployedSourceMap": "554:598:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2080:21:1;2090:10;2080:9;:21::i;:::-;554:598:0;1030:83:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1006:19:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;252:18:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;493:19:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1056:24:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;292:26:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;559:158:2;;;;;;;;;;;;;;617:83:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;933:21:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1156:85:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;357:31:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;238:20:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;921:121:3;;;;;;;;;;;;;;262:26:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2242:542:1;;;;;;;;;;;;;;;;;;;;832:169:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;581:24:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;871:18:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2242:542;2305:17;2436:14;2325:9;2305:29;;2340:45;2361:12;2375:9;2340:20;:45::i;:::-;2453:26;2469:9;2453:15;:26::i;:::-;2436:43;;2518:24;2532:9;2518;;:13;;:24;;;;:::i;:::-;2506:9;:36;;;;2549:38;2566:12;2580:6;2549:16;:38::i;:::-;2619:12;2593:58;;2607:10;2593:58;;;2633:9;2644:6;2593:58;;;;;;;;;;;;;;;;;;;;;;;;2658:47;2681:12;2695:9;2658:22;:47::i;:::-;2712:15;:13;:15::i;:::-;2733:46;2755:12;2769:9;2733:21;:46::i;:::-;2242:542;;;:::o;1030:83:7:-;1072:4;1097:11;;1091:3;:17;1084:24;;1030:83;:::o;1006:19:1:-;;;;:::o;252:18:6:-;;;;:::o;493:19:3:-;;;;:::o;1056:24:1:-;;;;:::o;292:26:7:-;;;;:::o;559:158:2:-;653:5:9;;;;;;;;;;;639:19;;:10;:19;;;631:28;;;;;;;;611:11:2;;;;;;;;;;;610:12;602:21;;;;;;;;637:11;:9;:11::i;:::-;629:20;;;;;;;;656:14;:12;:14::i;:::-;676:11;;;;;;;;;;708:4;694:11;;:18;;;;;;;;;;;;;;;;;;559:158::o;617:83:6:-;660:4;692:3;;679:9;;:16;;672:23;;617:83;:::o;933:21:1:-;;;;;;;;;;;;;:::o;1156:85:3:-;1200:4;1232;;1219:9;;:17;;1212:24;;1156:85;:::o;357:31:2:-;;;;;;;;;;;;;:::o;238:20:9:-;;;;;;;;;;;;;:::o;921:121:3:-;965:11;;;;;;;;;;;957:20;;;;;;;;992:13;:11;:13::i;:::-;991:14;983:23;;;;;;;;1013:5;;;;;;;;;;;:12;;;1026:10;1013:24;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;921:121::o;262:26:7:-;;;;:::o;832:169:9:-;653:5;;;;;;;;;;;639:19;;:10;:19;;;631:28;;;;;;;;928:1;908:22;;:8;:22;;;;900:31;;;;;;;;965:8;937:37;;958:5;;;;;;;;;;;937:37;;;;;;;;;;;;988:8;980:5;;:16;;;;;;;;;;;;;;;;;;832:169;:::o;581:24:3:-;;;;;;;;;;;;;:::o;871:18:1:-;;;;;;;;;;;;;:::o;1297:158:7:-;430:11;;423:3;:18;;:40;;;;;452:11;;445:3;:18;;423:40;415:49;;;;;;;;1398:52;1425:12;1439:10;1398:26;:52::i;:::-;1297:158;;:::o;5130:115:1:-;5198:7;5220:20;5235:4;;5220:10;:14;;:20;;;;:::i;:::-;5213:27;;5130:115;;;:::o;1008:129:8:-;1066:7;1081:9;1097:1;1093;:5;1081:17;;1116:1;1111;:6;;1104:14;;;;;;1131:1;1124:8;;1008:129;;;;;:::o;4394:132:1:-;4479:42;4494:12;4508;4479:14;:42::i;:::-;4394:132;;:::o;4779:113::-;;;:::o;1573:87:3:-;1613:5;;;;;;;;;;;:13;;;1633:9;1644:10;1613:42;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1573:87::o;3642:112:1:-;;;:::o;1327:159:3:-;1370:13;:11;:13::i;:::-;1366:89;;;1393:5;;;;;;;;;;;:11;;;:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1366:89;;;1427:5;;;;;;;;;;;:19;;;:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1366:89;1461:20;:18;:20::i;:::-;1327:159::o;886:191:6:-;973:52;1000:12;1014:10;973:26;:52::i;:::-;1068:3;;1039:25;1053:10;1039:9;;:13;;:25;;;;:::i;:::-;:32;;1031:41;;;;;;;;886:191;;:::o;203:173:8:-;261:7;316:9;285:1;280;:6;276:35;;;303:1;296:8;;;;276:35;332:1;328;:5;316:17;;355:1;350;346;:5;;;;;;;;:10;339:18;;;;;;370:1;363:8;;203:173;;;;;;:::o;500:150:5:-;605:5;;;;;;;;;;;591:25;;;617:12;631;591:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;583:62;;;;;;;;500:150;;:::o;913:38:2:-;:::o;3207:157:1:-;3326:1;3302:26;;:12;:26;;;;3294:35;;;;;;;;3357:1;3343:10;:15;;3335:24;;;;;;;;3207:157;;:::o",
+  "sourceMap": "554:598:0:-;;;383:5:3;357:31;;;;;;;;;;;;;;;;;;;;646:504:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;951:5;899:12;913;874:4;830:5;837:7;846:6;1711:1:2;1703:5;:9;1695:18;;;;;;;;1746:1;1727:21;;:7;:21;;;;1719:30;;;;;;;;1781:1;1763:20;;:6;:20;;;;1755:29;;;;;;;;1798:5;1791:4;:12;;;;1818:7;1809:6;;:16;;;;;;;;;;;;;;;;;;1839:6;1831:5;;:14;;;;;;;;;;;;;;;;;;1617:233;;;485:1:7;478:4;:8;470:17;;;;;;;;499:4;493:3;:10;;;;418:90;759:3:8;743:12;:19;;735:28;;;;;;;;793:12;777;:28;;769:37;;;;;;;;827:12;813:11;:26;;;;859:12;845:11;:26;;;;654:222;;509:10:10;501:5;;:18;;;;;;;;;;;;;;;;;;771:1:4;763:5;:9;755:18;;;;;;;;803:6;;;;;;;;;;;787:23;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;779:5;;:31;;;;;;;;;;;;;;;;;;823:5;816:4;:12;;;;698:135;1138:4:0;1129:5;:13;;1121:22;;;;;;;;646:504;;;;;;;554:598;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "554:598:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2080:21:2;2090:10;2080:9;:21::i;:::-;554:598:0;1030:83:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1006:19:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;252:18:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;493:19:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1056:24:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;292:26:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;559:158:3;;;;;;;;;;;;;;617:83:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;933:21:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1156:85:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;357:31:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;238:20:10;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;921:121:4;;;;;;;;;;;;;;262:26:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2242:542:2;;;;;;;;;;;;;;;;;;;;832:169:10;;;;;;;;;;;;;;;;;;;;;;;;;;;;581:24:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;871:18:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2242:542;2305:17;2436:14;2325:9;2305:29;;2340:45;2361:12;2375:9;2340:20;:45::i;:::-;2453:26;2469:9;2453:15;:26::i;:::-;2436:43;;2518:24;2532:9;2518;;:13;;:24;;;;:::i;:::-;2506:9;:36;;;;2549:38;2566:12;2580:6;2549:16;:38::i;:::-;2619:12;2593:58;;2607:10;2593:58;;;2633:9;2644:6;2593:58;;;;;;;;;;;;;;;;;;;;;;;;2658:47;2681:12;2695:9;2658:22;:47::i;:::-;2712:15;:13;:15::i;:::-;2733:46;2755:12;2769:9;2733:21;:46::i;:::-;2242:542;;;:::o;1030:83:8:-;1072:4;1097:11;;1091:3;:17;1084:24;;1030:83;:::o;1006:19:2:-;;;;:::o;252:18:7:-;;;;:::o;493:19:4:-;;;;:::o;1056:24:2:-;;;;:::o;292:26:8:-;;;;:::o;559:158:3:-;653:5:10;;;;;;;;;;;639:19;;:10;:19;;;631:28;;;;;;;;611:11:3;;;;;;;;;;;610:12;602:21;;;;;;;;637:11;:9;:11::i;:::-;629:20;;;;;;;;656:14;:12;:14::i;:::-;676:11;;;;;;;;;;708:4;694:11;;:18;;;;;;;;;;;;;;;;;;559:158::o;617:83:7:-;660:4;692:3;;679:9;;:16;;672:23;;617:83;:::o;933:21:2:-;;;;;;;;;;;;;:::o;1156:85:4:-;1200:4;1232;;1219:9;;:17;;1212:24;;1156:85;:::o;357:31:3:-;;;;;;;;;;;;;:::o;238:20:10:-;;;;;;;;;;;;;:::o;921:121:4:-;965:11;;;;;;;;;;;957:20;;;;;;;;992:13;:11;:13::i;:::-;991:14;983:23;;;;;;;;1013:5;;;;;;;;;;;:12;;;1026:10;1013:24;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;921:121::o;262:26:8:-;;;;:::o;832:169:10:-;653:5;;;;;;;;;;;639:19;;:10;:19;;;631:28;;;;;;;;928:1;908:22;;:8;:22;;;;900:31;;;;;;;;965:8;937:37;;958:5;;;;;;;;;;;937:37;;;;;;;;;;;;988:8;980:5;;:16;;;;;;;;;;;;;;;;;;832:169;:::o;581:24:4:-;;;;;;;;;;;;;:::o;871:18:2:-;;;;;;;;;;;;;:::o;1297:158:8:-;430:11;;423:3;:18;;:40;;;;;452:11;;445:3;:18;;423:40;415:49;;;;;;;;1398:52;1425:12;1439:10;1398:26;:52::i;:::-;1297:158;;:::o;5130:115:2:-;5198:7;5220:20;5235:4;;5220:10;:14;;:20;;;;:::i;:::-;5213:27;;5130:115;;;:::o;1008:129:9:-;1066:7;1081:9;1097:1;1093;:5;1081:17;;1116:1;1111;:6;;1104:14;;;;;;1131:1;1124:8;;1008:129;;;;;:::o;4394:132:2:-;4479:42;4494:12;4508;4479:14;:42::i;:::-;4394:132;;:::o;4779:113::-;;;:::o;1573:87:4:-;1613:5;;;;;;;;;;;:13;;;1633:9;1644:10;1613:42;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1573:87::o;3642:112:2:-;;;:::o;1327:159:4:-;1370:13;:11;:13::i;:::-;1366:89;;;1393:5;;;;;;;;;;;:11;;;:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1366:89;;;1427:5;;;;;;;;;;;:19;;;:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1366:89;1461:20;:18;:20::i;:::-;1327:159::o;886:191:7:-;973:52;1000:12;1014:10;973:26;:52::i;:::-;1068:3;;1039:25;1053:10;1039:9;;:13;;:25;;;;:::i;:::-;:32;;1031:41;;;;;;;;886:191;;:::o;203:173:9:-;261:7;316:9;285:1;280;:6;276:35;;;303:1;296:8;;;;276:35;332:1;328;:5;316:17;;355:1;350;346;:5;;;;;;;;:10;339:18;;;;;;370:1;363:8;;203:173;;;;;;:::o;500:150:6:-;605:5;;;;;;;;;;;591:25;;;617:12;631;591:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;583:62;;;;;;;;500:150;;:::o;913:38:3:-;:::o;3207:157:2:-;3326:1;3302:26;;:12;:26;;;;3294:35;;;;;;;;3357:1;3343:10;:15;;3335:24;;;;;;;;3207:157;;:::o",
   "source": "pragma solidity ^0.4.18;\n\nimport \"zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol\";\nimport \"zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol\";\nimport \"zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol\";\n\n/**\n * @title CarboneumCrowdsale\n * @dev This is Carboneum fully fledged crowdsale.\n * CappedCrowdsale - sets a max boundary for raised funds\n *\n * After adding multiple features it's good practice to run integration tests\n * to ensure that subcontracts works together as intended.\n */\ncontract CarboneumCrowdsale is CappedCrowdsale, RefundableCrowdsale, MintedCrowdsale {\n\n    function CarboneumCrowdsale(uint256 _openingTime, uint256 _closingTime, uint256 _rate,\n        address _wallet, uint256 _cap, MintableToken _token, uint256 _goal) public\n    Crowdsale(_rate, _wallet, _token)\n    CappedCrowdsale(_cap)\n    TimedCrowdsale(_openingTime, _closingTime)\n    RefundableCrowdsale(_goal)\n    {\n        //As goal needs to be met for a successful crowdsale\n        //the value needs to less or equal than a cap which is limit for accepted funds\n        require(_goal <= _cap);\n    }\n}\n",
   "sourcePath": "/home/robot/opensource/carboneum/contracts/contracts/CarboneumCrowdsale.sol",
   "ast": {
-    "attributes": {
-      "absolutePath": "/home/robot/opensource/carboneum/contracts/contracts/CarboneumCrowdsale.sol",
-      "exportedSymbols": {
-        "CarboneumCrowdsale": [
-          50
-        ]
-      }
+    "absolutePath": "/home/robot/opensource/carboneum/contracts/contracts/CarboneumCrowdsale.sol",
+    "exportedSymbols": {
+      "CarboneumCrowdsale": [
+        50
+      ]
     },
-    "children": [
+    "id": 51,
+    "nodeType": "SourceUnit",
+    "nodes": [
       {
-        "attributes": {
-          "literals": [
-            "solidity",
-            "^",
-            "0.4",
-            ".18"
-          ]
-        },
         "id": 1,
-        "name": "PragmaDirective",
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
         "src": "0:24:0"
       },
       {
-        "attributes": {
-          "SourceUnit": 686,
-          "absolutePath": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
-          "file": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
-          "scope": 51,
-          "symbolAliases": [
-            null
-          ],
-          "unitAlias": ""
-        },
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
         "id": 2,
-        "name": "ImportDirective",
-        "src": "26:78:0"
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 708,
+        "src": "26:78:0",
+        "symbolAliases": [],
+        "unitAlias": ""
       },
       {
-        "attributes": {
-          "SourceUnit": 432,
-          "absolutePath": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
-          "file": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
-          "scope": 51,
-          "symbolAliases": [
-            null
-          ],
-          "unitAlias": ""
-        },
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
         "id": 3,
-        "name": "ImportDirective",
-        "src": "105:84:0"
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 454,
+        "src": "105:84:0",
+        "symbolAliases": [],
+        "unitAlias": ""
       },
       {
-        "attributes": {
-          "SourceUnit": 624,
-          "absolutePath": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
-          "file": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
-          "scope": 51,
-          "symbolAliases": [
-            null
-          ],
-          "unitAlias": ""
-        },
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
         "id": 4,
-        "name": "ImportDirective",
-        "src": "190:76:0"
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 646,
+        "src": "190:76:0",
+        "symbolAliases": [],
+        "unitAlias": ""
       },
       {
-        "attributes": {
-          "contractDependencies": [
-            274,
-            322,
-            431,
-            623,
-            685,
-            768,
-            922
-          ],
-          "contractKind": "contract",
-          "documentation": "@title CarboneumCrowdsale\n@dev This is Carboneum fully fledged crowdsale.\nCappedCrowdsale - sets a max boundary for raised funds\n * After adding multiple features it's good practice to run integration tests\nto ensure that subcontracts works together as intended.",
-          "fullyImplemented": true,
-          "linearizedBaseContracts": [
-            50,
-            623,
-            431,
-            322,
-            922,
-            768,
-            685,
-            274
-          ],
-          "name": "CarboneumCrowdsale",
-          "scope": 51
-        },
-        "children": [
+        "baseContracts": [
           {
-            "attributes": {
-              "arguments": [
-                null
-              ]
-            },
-            "children": [
-              {
-                "attributes": {
-                  "contractScope": null,
-                  "name": "CappedCrowdsale",
-                  "referencedDeclaration": 685,
-                  "type": "contract CappedCrowdsale"
-                },
-                "id": 5,
-                "name": "UserDefinedTypeName",
-                "src": "585:15:0"
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 5,
+              "name": "CappedCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 707,
+              "src": "585:15:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_CappedCrowdsale_$707",
+                "typeString": "contract CappedCrowdsale"
               }
-            ],
+            },
             "id": 6,
-            "name": "InheritanceSpecifier",
+            "nodeType": "InheritanceSpecifier",
             "src": "585:15:0"
           },
           {
-            "attributes": {
-              "arguments": [
-                null
-              ]
-            },
-            "children": [
-              {
-                "attributes": {
-                  "contractScope": null,
-                  "name": "RefundableCrowdsale",
-                  "referencedDeclaration": 431,
-                  "type": "contract RefundableCrowdsale"
-                },
-                "id": 7,
-                "name": "UserDefinedTypeName",
-                "src": "602:19:0"
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 7,
+              "name": "RefundableCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 453,
+              "src": "602:19:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_RefundableCrowdsale_$453",
+                "typeString": "contract RefundableCrowdsale"
               }
-            ],
+            },
             "id": 8,
-            "name": "InheritanceSpecifier",
+            "nodeType": "InheritanceSpecifier",
             "src": "602:19:0"
           },
           {
-            "attributes": {
-              "arguments": [
-                null
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 9,
+              "name": "MintedCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 645,
+              "src": "623:15:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MintedCrowdsale_$645",
+                "typeString": "contract MintedCrowdsale"
+              }
+            },
+            "id": 10,
+            "nodeType": "InheritanceSpecifier",
+            "src": "623:15:0"
+          }
+        ],
+        "contractDependencies": [
+          296,
+          344,
+          453,
+          645,
+          707,
+          790,
+          944
+        ],
+        "contractKind": "contract",
+        "documentation": "@title CarboneumCrowdsale\n@dev This is Carboneum fully fledged crowdsale.\nCappedCrowdsale - sets a max boundary for raised funds\n * After adding multiple features it's good practice to run integration tests\nto ensure that subcontracts works together as intended.",
+        "fullyImplemented": true,
+        "id": 50,
+        "linearizedBaseContracts": [
+          50,
+          645,
+          453,
+          344,
+          944,
+          790,
+          707,
+          296
+        ],
+        "name": "CarboneumCrowdsale",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 48,
+              "nodeType": "Block",
+              "src": "962:188:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 45,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 43,
+                          "name": "_goal",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 24,
+                          "src": "1129:5:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "<=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 44,
+                          "name": "_cap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 20,
+                          "src": "1138:4:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "1129:13:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 42,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1526,
+                      "src": "1121:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 46,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1121:22:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 47,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1121:22:0"
+                }
               ]
             },
-            "children": [
+            "id": 49,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
               {
-                "attributes": {
-                  "contractScope": null,
-                  "name": "MintedCrowdsale",
-                  "referencedDeclaration": 623,
-                  "type": "contract MintedCrowdsale"
-                },
-                "id": 9,
-                "name": "UserDefinedTypeName",
-                "src": "623:15:0"
-              }
-            ],
-            "id": 10,
-            "name": "InheritanceSpecifier",
-            "src": "623:15:0"
-          },
-          {
-            "attributes": {
-              "constant": false,
-              "implemented": true,
-              "isConstructor": true,
-              "name": "CarboneumCrowdsale",
-              "payable": false,
-              "scope": 50,
-              "stateMutability": "nonpayable",
-              "superFunction": null,
-              "visibility": "public"
-            },
-            "children": [
-              {
-                "children": [
+                "arguments": [
                   {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_openingTime",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 11,
-                        "name": "ElementaryTypeName",
-                        "src": "674:7:0"
-                      }
-                    ],
-                    "id": 12,
-                    "name": "VariableDeclaration",
-                    "src": "674:20:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_closingTime",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 13,
-                        "name": "ElementaryTypeName",
-                        "src": "696:7:0"
-                      }
-                    ],
-                    "id": 14,
-                    "name": "VariableDeclaration",
-                    "src": "696:20:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_rate",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 15,
-                        "name": "ElementaryTypeName",
-                        "src": "718:7:0"
-                      }
-                    ],
-                    "id": 16,
-                    "name": "VariableDeclaration",
-                    "src": "718:13:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_wallet",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "address",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "address",
-                          "type": "address"
-                        },
-                        "id": 17,
-                        "name": "ElementaryTypeName",
-                        "src": "741:7:0"
-                      }
-                    ],
-                    "id": 18,
-                    "name": "VariableDeclaration",
-                    "src": "741:15:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_cap",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 19,
-                        "name": "ElementaryTypeName",
-                        "src": "758:7:0"
-                      }
-                    ],
-                    "id": 20,
-                    "name": "VariableDeclaration",
-                    "src": "758:12:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_token",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "contract MintableToken",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "contractScope": null,
-                          "name": "MintableToken",
-                          "referencedDeclaration": 1188,
-                          "type": "contract MintableToken"
-                        },
-                        "id": 21,
-                        "name": "UserDefinedTypeName",
-                        "src": "772:13:0"
-                      }
-                    ],
-                    "id": 22,
-                    "name": "VariableDeclaration",
-                    "src": "772:20:0"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "_goal",
-                      "scope": 49,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 23,
-                        "name": "ElementaryTypeName",
-                        "src": "794:7:0"
-                      }
-                    ],
-                    "id": 24,
-                    "name": "VariableDeclaration",
-                    "src": "794:13:0"
-                  }
-                ],
-                "id": 25,
-                "name": "ParameterList",
-                "src": "673:135:0"
-              },
-              {
-                "attributes": {
-                  "parameters": [
-                    null
-                  ]
-                },
-                "children": [],
-                "id": 41,
-                "name": "ParameterList",
-                "src": "962:0:0"
-              },
-              {
-                "children": [
-                  {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 274,
-                      "type": "type(contract Crowdsale)",
-                      "value": "Crowdsale"
-                    },
-                    "id": 26,
-                    "name": "Identifier",
-                    "src": "820:9:0"
-                  },
-                  {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 16,
-                      "type": "uint256",
-                      "value": "_rate"
-                    },
+                    "argumentTypes": null,
                     "id": 27,
-                    "name": "Identifier",
-                    "src": "830:5:0"
+                    "name": "_rate",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 16,
+                    "src": "830:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   },
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 18,
-                      "type": "address",
-                      "value": "_wallet"
-                    },
+                    "argumentTypes": null,
                     "id": 28,
-                    "name": "Identifier",
-                    "src": "837:7:0"
+                    "name": "_wallet",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 18,
+                    "src": "837:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
                   },
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 22,
-                      "type": "contract MintableToken",
-                      "value": "_token"
-                    },
+                    "argumentTypes": null,
                     "id": 29,
-                    "name": "Identifier",
-                    "src": "846:6:0"
+                    "name": "_token",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 22,
+                    "src": "846:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_MintableToken_$1265",
+                      "typeString": "contract MintableToken"
+                    }
                   }
                 ],
                 "id": 30,
-                "name": "ModifierInvocation",
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 26,
+                  "name": "Crowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 296,
+                  "src": "820:9:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Crowdsale_$296_$",
+                    "typeString": "type(contract Crowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
                 "src": "820:33:0"
               },
               {
-                "children": [
+                "arguments": [
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 685,
-                      "type": "type(contract CappedCrowdsale)",
-                      "value": "CappedCrowdsale"
-                    },
-                    "id": 31,
-                    "name": "Identifier",
-                    "src": "858:15:0"
-                  },
-                  {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 20,
-                      "type": "uint256",
-                      "value": "_cap"
-                    },
+                    "argumentTypes": null,
                     "id": 32,
-                    "name": "Identifier",
-                    "src": "874:4:0"
+                    "name": "_cap",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 20,
+                    "src": "874:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   }
                 ],
                 "id": 33,
-                "name": "ModifierInvocation",
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 31,
+                  "name": "CappedCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 707,
+                  "src": "858:15:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_CappedCrowdsale_$707_$",
+                    "typeString": "type(contract CappedCrowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
                 "src": "858:21:0"
               },
               {
-                "children": [
+                "arguments": [
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 768,
-                      "type": "type(contract TimedCrowdsale)",
-                      "value": "TimedCrowdsale"
-                    },
-                    "id": 34,
-                    "name": "Identifier",
-                    "src": "884:14:0"
-                  },
-                  {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 12,
-                      "type": "uint256",
-                      "value": "_openingTime"
-                    },
+                    "argumentTypes": null,
                     "id": 35,
-                    "name": "Identifier",
-                    "src": "899:12:0"
+                    "name": "_openingTime",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 12,
+                    "src": "899:12:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   },
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 14,
-                      "type": "uint256",
-                      "value": "_closingTime"
-                    },
+                    "argumentTypes": null,
                     "id": 36,
-                    "name": "Identifier",
-                    "src": "913:12:0"
+                    "name": "_closingTime",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 14,
+                    "src": "913:12:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   }
                 ],
                 "id": 37,
-                "name": "ModifierInvocation",
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 34,
+                  "name": "TimedCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 790,
+                  "src": "884:14:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_TimedCrowdsale_$790_$",
+                    "typeString": "type(contract TimedCrowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
                 "src": "884:42:0"
               },
               {
-                "children": [
+                "arguments": [
                   {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 431,
-                      "type": "type(contract RefundableCrowdsale)",
-                      "value": "RefundableCrowdsale"
-                    },
-                    "id": 38,
-                    "name": "Identifier",
-                    "src": "931:19:0"
-                  },
-                  {
-                    "attributes": {
-                      "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
-                      "referencedDeclaration": 24,
-                      "type": "uint256",
-                      "value": "_goal"
-                    },
+                    "argumentTypes": null,
                     "id": 39,
-                    "name": "Identifier",
-                    "src": "951:5:0"
+                    "name": "_goal",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 24,
+                    "src": "951:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   }
                 ],
                 "id": 40,
-                "name": "ModifierInvocation",
-                "src": "931:26:0"
-              },
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "attributes": {
-                          "argumentTypes": null,
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": false,
-                          "isStructConstructorCall": false,
-                          "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
-                          "type": "tuple()",
-                          "type_conversion": false
-                        },
-                        "children": [
-                          {
-                            "attributes": {
-                              "argumentTypes": [
-                                {
-                                  "typeIdentifier": "t_bool",
-                                  "typeString": "bool"
-                                }
-                              ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 1449,
-                              "type": "function (bool) pure",
-                              "value": "require"
-                            },
-                            "id": 42,
-                            "name": "Identifier",
-                            "src": "1121:7:0"
-                          },
-                          {
-                            "attributes": {
-                              "argumentTypes": null,
-                              "commonType": {
-                                "typeIdentifier": "t_uint256",
-                                "typeString": "uint256"
-                              },
-                              "isConstant": false,
-                              "isLValue": false,
-                              "isPure": false,
-                              "lValueRequested": false,
-                              "operator": "<=",
-                              "type": "bool"
-                            },
-                            "children": [
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 24,
-                                  "type": "uint256",
-                                  "value": "_goal"
-                                },
-                                "id": 43,
-                                "name": "Identifier",
-                                "src": "1129:5:0"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 20,
-                                  "type": "uint256",
-                                  "value": "_cap"
-                                },
-                                "id": 44,
-                                "name": "Identifier",
-                                "src": "1138:4:0"
-                              }
-                            ],
-                            "id": 45,
-                            "name": "BinaryOperation",
-                            "src": "1129:13:0"
-                          }
-                        ],
-                        "id": 46,
-                        "name": "FunctionCall",
-                        "src": "1121:22:0"
-                      }
-                    ],
-                    "id": 47,
-                    "name": "ExpressionStatement",
-                    "src": "1121:22:0"
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 38,
+                  "name": "RefundableCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 453,
+                  "src": "931:19:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_RefundableCrowdsale_$453_$",
+                    "typeString": "type(contract RefundableCrowdsale)"
                   }
-                ],
-                "id": 48,
-                "name": "Block",
-                "src": "962:188:0"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "931:26:0"
               }
             ],
-            "id": 49,
-            "name": "FunctionDefinition",
-            "src": "646:504:0"
+            "name": "CarboneumCrowdsale",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 25,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12,
+                  "name": "_openingTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "674:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 11,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "674:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 14,
+                  "name": "_closingTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "696:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "696:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 16,
+                  "name": "_rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "718:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 15,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "718:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 18,
+                  "name": "_wallet",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "741:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 17,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "741:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 20,
+                  "name": "_cap",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "758:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 19,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "758:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22,
+                  "name": "_token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "772:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_MintableToken_$1265",
+                    "typeString": "contract MintableToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 21,
+                    "name": "MintableToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1265,
+                    "src": "772:13:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_MintableToken_$1265",
+                      "typeString": "contract MintableToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24,
+                  "name": "_goal",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "794:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 23,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "794:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "673:135:0"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 41,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "962:0:0"
+            },
+            "scope": 50,
+            "src": "646:504:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
           }
         ],
-        "id": 50,
-        "name": "ContractDefinition",
+        "scope": 51,
         "src": "554:598:0"
       }
     ],
+    "src": "0:1153:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/robot/opensource/carboneum/contracts/contracts/CarboneumCrowdsale.sol",
+    "exportedSymbols": {
+      "CarboneumCrowdsale": [
+        50
+      ]
+    },
     "id": 51,
-    "name": "SourceUnit",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:0"
+      },
+      {
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+        "id": 2,
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 708,
+        "src": "26:78:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol",
+        "id": 3,
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 454,
+        "src": "105:84:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
+        "file": "zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol",
+        "id": 4,
+        "nodeType": "ImportDirective",
+        "scope": 51,
+        "sourceUnit": 646,
+        "src": "190:76:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 5,
+              "name": "CappedCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 707,
+              "src": "585:15:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_CappedCrowdsale_$707",
+                "typeString": "contract CappedCrowdsale"
+              }
+            },
+            "id": 6,
+            "nodeType": "InheritanceSpecifier",
+            "src": "585:15:0"
+          },
+          {
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 7,
+              "name": "RefundableCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 453,
+              "src": "602:19:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_RefundableCrowdsale_$453",
+                "typeString": "contract RefundableCrowdsale"
+              }
+            },
+            "id": 8,
+            "nodeType": "InheritanceSpecifier",
+            "src": "602:19:0"
+          },
+          {
+            "arguments": [],
+            "baseName": {
+              "contractScope": null,
+              "id": 9,
+              "name": "MintedCrowdsale",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 645,
+              "src": "623:15:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MintedCrowdsale_$645",
+                "typeString": "contract MintedCrowdsale"
+              }
+            },
+            "id": 10,
+            "nodeType": "InheritanceSpecifier",
+            "src": "623:15:0"
+          }
+        ],
+        "contractDependencies": [
+          296,
+          344,
+          453,
+          645,
+          707,
+          790,
+          944
+        ],
+        "contractKind": "contract",
+        "documentation": "@title CarboneumCrowdsale\n@dev This is Carboneum fully fledged crowdsale.\nCappedCrowdsale - sets a max boundary for raised funds\n * After adding multiple features it's good practice to run integration tests\nto ensure that subcontracts works together as intended.",
+        "fullyImplemented": true,
+        "id": 50,
+        "linearizedBaseContracts": [
+          50,
+          645,
+          453,
+          344,
+          944,
+          790,
+          707,
+          296
+        ],
+        "name": "CarboneumCrowdsale",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 48,
+              "nodeType": "Block",
+              "src": "962:188:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 45,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 43,
+                          "name": "_goal",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 24,
+                          "src": "1129:5:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "<=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 44,
+                          "name": "_cap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 20,
+                          "src": "1138:4:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "1129:13:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 42,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1526,
+                      "src": "1121:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 46,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1121:22:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 47,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1121:22:0"
+                }
+              ]
+            },
+            "id": 49,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 27,
+                    "name": "_rate",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 16,
+                    "src": "830:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 28,
+                    "name": "_wallet",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 18,
+                    "src": "837:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 29,
+                    "name": "_token",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 22,
+                    "src": "846:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_MintableToken_$1265",
+                      "typeString": "contract MintableToken"
+                    }
+                  }
+                ],
+                "id": 30,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 26,
+                  "name": "Crowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 296,
+                  "src": "820:9:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Crowdsale_$296_$",
+                    "typeString": "type(contract Crowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "820:33:0"
+              },
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 32,
+                    "name": "_cap",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 20,
+                    "src": "874:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  }
+                ],
+                "id": 33,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 31,
+                  "name": "CappedCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 707,
+                  "src": "858:15:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_CappedCrowdsale_$707_$",
+                    "typeString": "type(contract CappedCrowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "858:21:0"
+              },
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 35,
+                    "name": "_openingTime",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 12,
+                    "src": "899:12:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 36,
+                    "name": "_closingTime",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 14,
+                    "src": "913:12:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  }
+                ],
+                "id": 37,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 34,
+                  "name": "TimedCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 790,
+                  "src": "884:14:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_TimedCrowdsale_$790_$",
+                    "typeString": "type(contract TimedCrowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "884:42:0"
+              },
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 39,
+                    "name": "_goal",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 24,
+                    "src": "951:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  }
+                ],
+                "id": 40,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 38,
+                  "name": "RefundableCrowdsale",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 453,
+                  "src": "931:19:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_RefundableCrowdsale_$453_$",
+                    "typeString": "type(contract RefundableCrowdsale)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "931:26:0"
+              }
+            ],
+            "name": "CarboneumCrowdsale",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 25,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12,
+                  "name": "_openingTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "674:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 11,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "674:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 14,
+                  "name": "_closingTime",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "696:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "696:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 16,
+                  "name": "_rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "718:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 15,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "718:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 18,
+                  "name": "_wallet",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "741:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 17,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "741:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 20,
+                  "name": "_cap",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "758:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 19,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "758:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22,
+                  "name": "_token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "772:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_MintableToken_$1265",
+                    "typeString": "contract MintableToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 21,
+                    "name": "MintableToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1265,
+                    "src": "772:13:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_MintableToken_$1265",
+                      "typeString": "contract MintableToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24,
+                  "name": "_goal",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 49,
+                  "src": "794:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 23,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "794:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "673:135:0"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 41,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "962:0:0"
+            },
+            "scope": 50,
+            "src": "646:504:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 51,
+        "src": "554:598:0"
+      }
+    ],
     "src": "0:1153:0"
   },
   "compiler": {
@@ -1023,27 +1587,13 @@
     "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
   },
   "networks": {
-    "4447": {
+    "1519910807301": {
       "events": {},
       "links": {},
-      "address": "0xeec918d74c746167564401103096d45bbd494b74"
-    },
-    "1519796471124": {
-      "events": {},
-      "links": {},
-      "address": "0xc9cba7557328f0c21f3b8349ba4019c8255972fd"
-    },
-    "1519798707248": {
-      "events": {},
-      "links": {},
-      "address": "0xbcb84d3849bef03a4556a090f08873ec90e15fe7"
-    },
-    "1519812765093": {
-      "events": {},
-      "links": {},
-      "address": "0xc90f45e8c7be6a04da49f7b0f21c6b3f3e95dbfc"
+      "address": "0xa11f35e4bae6a0d802c445e744512b806bc32e62",
+      "transactionHash": "0xf33a3b785cd965962673618b3b172ff818c9b0a3727bccb23bee021c5ebd05cd"
     }
   },
-  "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-28T12:06:54.599Z"
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-03-01T15:47:27.830Z"
 }
