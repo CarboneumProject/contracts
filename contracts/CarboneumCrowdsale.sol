@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 
 import "zeppelin-solidity/contracts/crowdsale/validation/IndividuallyCappedCrowdsale.sol";
-import "zeppelin-solidity/contracts/crowdsale/validation/WhitelistedCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
@@ -13,8 +12,6 @@ import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
  * AllowanceCrowdsale - token held by a wallet.
  * IndividuallyCappedCrowdsale - Crowdsale with per-user caps.
  * TimedCrowdsale - Crowdsale accepting contributions only within a time frame.
- * After adding multiple features it's good practice to run integration tests
- * to ensure that subcontracts works together as intended.
  */
 contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale {
 

@@ -6,15 +6,17 @@ function ether(n) {
 }
 
 module.exports = function (deployer, network, accounts) {
+    const wallet = accounts[0];
     const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000)); // Now
     const privateSaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 3, 22, 3, 8, 0, 0).getTime() / 1000));
     const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
-    const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000)); // Util Pre-Sale at 22 March 2018 @10:08 (GMT +7)
+    // Sale end at 22 May 2018 @10:08 (GMT +7)
+    const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000));
     const priceETH_USD = 850;
     const priceC8_USD = 0.1;
     const rate = new web3.BigNumber(priceETH_USD / priceC8_USD);
-    const wallet = accounts[0];
-    const cap = ether(14117.647058824); // Hard cap $12M
+    const cap_usd = 12000000; // Hard cap $12M
+    const cap = ether(cap_usd / priceETH_USD);
     const tokenAllowance = new web3.BigNumber('120e24'); // 120M token
 
     let token, crowdsale;

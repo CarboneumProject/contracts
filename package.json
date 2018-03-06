@@ -1,0 +1,27 @@
+{
+  "name": "carboneum-contract",
+  "description": "",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "dependencies": {
+    "zeppelin-solidity": "https://github.com/CarboneumProject/zeppelin-solidity"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CarboneumProject/contracts.git"
+  },
+  "keywords": [
+    "SmartContract",
+    "Ethereum",
+    "SocialTrading",
+    "CopyTrading"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CarboneumProject/contracts/issues"
+  },
+  "homepage": "https://carboneum.io/"
+}
