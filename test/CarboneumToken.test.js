@@ -1,5 +1,7 @@
 import decodeLogs from './helpers/decodeLogs';
 
+const BigNumber = web3.BigNumber;
+
 const CarboneumToken = artifacts.require('CarboneumToken');
 
 contract('CarboneumToken', accounts => {
@@ -23,6 +25,11 @@ contract('CarboneumToken', accounts => {
     it('has 18 decimals', async function () {
         const decimals = await token.decimals();
         assert(decimals.eq(18));
+    });
+
+    it('has 200M token', async function () {
+        const supply = await token.totalSupply();
+        assert(supply.eq(new BigNumber('200e24')));
     });
 
     it('assigns the initial total supply to the creator', async function () {
