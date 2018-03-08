@@ -12,7 +12,7 @@ module.exports = function (deployer, network, accounts) {
     const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
     // Sale end at 22 May 2018 @10:08 (GMT +7)
     const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000));
-    const priceETH_USD = 850;
+    const priceETH_USD = 800;
     const priceC8_USD = 0.1;
     const rate = new web3.BigNumber(priceETH_USD / priceC8_USD);
     const cap_usd = 12000000; // Hard cap $12M
