@@ -8,7 +8,6 @@ function ether(n) {
 module.exports = function (deployer, network, accounts) {
     const wallet = accounts[0];
     const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000)); // Now
-    const privateSaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 3, 22, 3, 8, 0, 0).getTime() / 1000));
     const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
     // Sale end at 22 May 2018 @10:08 (GMT +7)
     const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000));
@@ -24,14 +23,12 @@ module.exports = function (deployer, network, accounts) {
         return CarboneumToken.new({from: wallet});
     }).then(function (instance) {
         token = instance;
-        return CarboneumCrowdsale.new(startTime, endTime, rate, wallet, cap, token.address, privateSaleEnd, presaleEnd);
+        return CarboneumCrowdsale.new(startTime, endTime, rate, wallet, cap, token.address, presaleEnd);
     }).then(function (instance) {
         crowdsale = instance;
         token.approve(crowdsale.address, tokenAllowance, {from: wallet});
         console.log('Token Address', token.address);
         console.log('Crowdsale Address', crowdsale.address);
-        // TODO integration test.
-        // crowdsale.setUserCap(new web3.BigNumber('0x93cdfd3cdc90e4303d0dffb143b147eb0d18db23'), ether(10)); // Set test cap.
         return true;
     });
 };
