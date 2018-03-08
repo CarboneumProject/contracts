@@ -74,15 +74,23 @@ contract('CarboneumCrowdsale', function ([_, wallet, arty, max, printer]) {
         it('should add bonus to pre-sale', async function () {
             await increaseTimeTo(this.openingTime);
             await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth});
-            let balance = await this.token.balanceOf(arty);
-            balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
+            let arty_balance = await this.token.balanceOf(arty);
+            arty_balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
+
+            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth});
+            let max_balance = await this.token.balanceOf(max);
+            max_balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
         });
 
         it('should be no bonus after pre-sale end', async function () {
             await increaseTimeTo(this.afterclosingPreSaleTime);
             await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth});
-            let balance = await this.token.balanceOf(arty);
-            balance.should.be.bignumber.equal(expectedTokenAmount);
+            let arty_balance = await this.token.balanceOf(arty);
+            arty_balance.should.be.bignumber.equal(expectedTokenAmount);
+
+            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth});
+            let max_balance = await this.token.balanceOf(max);
+            max_balance.should.be.bignumber.equal(expectedTokenAmount);
         });
     });
 });
