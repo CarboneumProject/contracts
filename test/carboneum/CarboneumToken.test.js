@@ -1,4 +1,4 @@
-import decodeLogs from './helpers/decodeLogs';
+import decodeLogs from '../helpers/decodeLogs';
 
 const BigNumber = web3.BigNumber;
 

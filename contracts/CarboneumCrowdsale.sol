@@ -15,31 +15,30 @@ import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
  */
 contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale {
 
-    uint256 public private_sale_end;
     uint256 public pre_sale_end;
 
     function CarboneumCrowdsale(uint256 _openingTime, uint256 _closingTime, uint256 _rate,
-        address _wallet, uint256 _cap, ERC20 _token, uint256 _private_sale_end, uint256 _pre_sale_end) public
+        address _wallet, uint256 _cap, ERC20 _token, uint256 _pre_sale_end) public
     AllowanceCrowdsale(_wallet)
     Crowdsale(_rate, _wallet, _token)
     CappedCrowdsale(_cap)
     TimedCrowdsale(_openingTime, _closingTime)
     {
-        require(_private_sale_end < _pre_sale_end);
-        private_sale_end = _private_sale_end;
+        require(_pre_sale_end < _closingTime);
         pre_sale_end = _pre_sale_end;
     }
 
     /**
-     * @dev Add bonus to private sale and pre-sale period.
+     * @dev Add bonus to pre-sale period.
      * @param _weiAmount Value in wei to be converted into tokens
      * @return Number of tokens that can be purchased with the specified _weiAmount
      */
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-        if (block.timestamp < pre_sale_end) {
-            rate += rate * 8 / 100;
+        var new_rate = rate;
+        if (now < pre_sale_end) {
             // Bonus 8%
+            new_rate += rate * 8 / 100;
         }
-        return _weiAmount.mul(rate);
+        return _weiAmount.mul(new_rate);
     }
 }
