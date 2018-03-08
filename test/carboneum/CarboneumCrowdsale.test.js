@@ -44,5 +44,28 @@ contract('CarboneumCrowdsale', function ([_, wallet, arty, max, printer]) {
             await this.crowdsale.buyTokens(arty, {value: lessThanCapArty}).should.be.fulfilled;
             await this.crowdsale.buyTokens(max, {value: lessThanCapBoth}).should.be.fulfilled;
         });
+
+        it('should reject payments outside cap', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: capArty});
+            await this.crowdsale.buyTokens(arty, {value: 1}).should.be.rejectedWith(EVMRevert);
+        });
+
+        it('should reject payments that exceed cap', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: capArty.plus(1)}).should.be.rejectedWith(EVMRevert);
+            await this.crowdsale.buyTokens(max, {value: capMax.plus(1)}).should.be.rejectedWith(EVMRevert);
+        });
+
+        it('should manage independent caps', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: lessThanCapArty}).should.be.fulfilled;
+            await this.crowdsale.buyTokens(max, {value: lessThanCapArty}).should.be.rejectedWith(EVMRevert);
+        });
+
+        it('should default to a cap of zero', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(printer, {value: lessThanCapBoth}).should.be.rejectedWith(EVMRevert);
+        });
     });
 });
