@@ -26,6 +26,10 @@ contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, ma
     const expectedPresaleTokenAmount = presale_rate.mul(lessThanCapBoth);
     const expectedTokenAmount = rate.mul(lessThanCapBoth);
 
+    before(async function () {
+        // Advance to the next block to correctly read time in the solidity "now" function interpreted by testrpc
+        await advanceBlock();
+    });
 
     beforeEach(async function () {
         this.openingTime = latestTime() + duration.seconds(100);
@@ -38,7 +42,7 @@ contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, ma
             rate, token_wallet, fund_wallet, capAll, this.token.address, this.closingPreSaleTime);
         this.crowdsale.setUserCap(arty, capArty);
         this.crowdsale.setUserCap(max, capMax);
-        await this.token.approve(this.crowdsale.address, tokenAllowance, {from: token_wallet});
+        await this.token.transfer(this.crowdsale.address, tokenAllowance, {from: token_wallet});
     });
 
     describe('accepting payments', function () {
@@ -71,31 +75,55 @@ contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, ma
             await this.crowdsale.buyTokens(printer, {value: lessThanCapBoth}).should.be.rejectedWith(EVMRevert);
         });
 
-        it('should add bonus to pre-sale', async function () {
+        it('should reject payments that exceed cap', async function () {
             await increaseTimeTo(this.openingTime);
-            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth});
+            await this.crowdsale.buyTokens(arty, {value: capAll.plus(1)}).should.be.rejectedWith(EVMRevert);
+        });
+
+        it('should not immediately assign tokens to beneficiary', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth, from: max});
+            const balance = await this.token.balanceOf(arty);
+            balance.should.be.bignumber.equal(0);
+        });
+
+
+        it('should not allow beneficiaries to withdraw tokens before crowdsale ends', async function () {
+            await increaseTimeTo(this.afterclosingPreSaleTime);
+            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth, from: max});
+            await this.crowdsale.withdrawTokens({from: arty}).should.be.rejectedWith(EVMRevert);
+        });
+
+        it('should allow beneficiaries to withdraw tokens after crowdsale ends with pre-sale bonus', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth, from: max});
+            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth, from: arty});
+
+
+            await increaseTimeTo(this.afterClosingTime);
+            await this.crowdsale.withdrawTokens({from: arty}).should.be.fulfilled;
             let arty_balance = await this.token.balanceOf(arty);
             arty_balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
 
-            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth});
+            await this.crowdsale.withdrawTokens({from: max}).should.be.fulfilled;
             let max_balance = await this.token.balanceOf(max);
             max_balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
         });
 
-        it('should be no bonus after pre-sale end', async function () {
+        it('should allow beneficiaries to withdraw tokens after crowdsale ends without pre-sale bonus', async function () {
             await increaseTimeTo(this.afterclosingPreSaleTime);
-            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth});
+            await this.crowdsale.buyTokens(arty, {value: lessThanCapBoth, from: max});
+            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth, from: arty});
+
+
+            await increaseTimeTo(this.afterClosingTime);
+            await this.crowdsale.withdrawTokens({from: arty}).should.be.fulfilled;
             let arty_balance = await this.token.balanceOf(arty);
             arty_balance.should.be.bignumber.equal(expectedTokenAmount);
 
-            await this.crowdsale.buyTokens(max, {value: lessThanCapBoth});
+            await this.crowdsale.withdrawTokens({from: max}).should.be.fulfilled;
             let max_balance = await this.token.balanceOf(max);
             max_balance.should.be.bignumber.equal(expectedTokenAmount);
-        });
-
-        it('should reject payments that exceed cap', async function () {
-            await increaseTimeTo(this.openingTime);
-            await this.crowdsale.buyTokens(arty, {value: capAll.plus(1)}).should.be.rejectedWith(EVMRevert);
         });
     });
 });
