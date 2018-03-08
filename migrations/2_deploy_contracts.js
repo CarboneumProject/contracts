@@ -6,7 +6,8 @@ function ether(n) {
 }
 
 module.exports = function (deployer, network, accounts) {
-    const wallet = accounts[0];
+    const token_wallet = accounts[0];
+    const fund_wallet = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real fund address.
     const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000)); // Now
     const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
     // Sale end at 22 May 2018 @10:08 (GMT +7)
@@ -20,13 +21,13 @@ module.exports = function (deployer, network, accounts) {
 
     let token, crowdsale;
     deployer.then(function () {
-        return CarboneumToken.new({from: wallet});
+        return CarboneumToken.new({from: token_wallet});
     }).then(function (instance) {
         token = instance;
-        return CarboneumCrowdsale.new(startTime, endTime, rate, wallet, cap, token.address, presaleEnd);
+        return CarboneumCrowdsale.new(startTime, endTime, rate, token_wallet, fund_wallet, cap, token.address, presaleEnd);
     }).then(function (instance) {
         crowdsale = instance;
-        token.approve(crowdsale.address, tokenAllowance, {from: wallet});
+        token.approve(crowdsale.address, tokenAllowance, {from: token_wallet});
         console.log('Token Address', token.address);
         console.log('Crowdsale Address', crowdsale.address);
         return true;

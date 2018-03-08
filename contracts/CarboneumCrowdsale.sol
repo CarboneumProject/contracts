@@ -18,9 +18,9 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     uint256 public pre_sale_end;
 
     function CarboneumCrowdsale(uint256 _openingTime, uint256 _closingTime, uint256 _rate,
-        address _wallet, uint256 _cap, ERC20 _token, uint256 _pre_sale_end) public
-    AllowanceCrowdsale(_wallet)
-    Crowdsale(_rate, _wallet, _token)
+        address _token_wallet, address _fund_wallet, uint256 _cap, ERC20 _token, uint256 _pre_sale_end) public
+    AllowanceCrowdsale(_token_wallet)
+    Crowdsale(_rate, _fund_wallet, _token)
     CappedCrowdsale(_cap)
     TimedCrowdsale(_openingTime, _closingTime)
     {

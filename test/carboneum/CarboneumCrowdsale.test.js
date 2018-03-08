@@ -14,7 +14,7 @@ const should = require('chai')
 const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
 
-contract('CarboneumCrowdsale', function ([_, wallet, arty, max, printer]) {
+contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, max, printer]) {
     const rate = new BigNumber(8000);
     const presale_rate = new BigNumber(8640);
     const capAll = ether(14000);
@@ -33,12 +33,12 @@ contract('CarboneumCrowdsale', function ([_, wallet, arty, max, printer]) {
         this.afterclosingPreSaleTime = this.closingPreSaleTime + duration.seconds(1);
         this.closingTime = this.openingTime + duration.weeks(1);
         this.afterClosingTime = this.closingTime + duration.seconds(1);
-        this.token = await CarboneumToken.new({from: wallet});
+        this.token = await CarboneumToken.new({from: token_wallet});
         this.crowdsale = await CarboneumCrowdsale.new(this.openingTime, this.closingTime,
-            rate, wallet, capAll, this.token.address, this.closingPreSaleTime);
+            rate, token_wallet, fund_wallet, capAll, this.token.address, this.closingPreSaleTime);
         this.crowdsale.setUserCap(arty, capArty);
         this.crowdsale.setUserCap(max, capMax);
-        await this.token.approve(this.crowdsale.address, tokenAllowance, {from: wallet});
+        await this.token.approve(this.crowdsale.address, tokenAllowance, {from: token_wallet});
     });
 
     describe('accepting payments', function () {
