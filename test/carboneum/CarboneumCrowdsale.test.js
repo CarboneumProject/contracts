@@ -17,7 +17,7 @@ const CarboneumToken = artifacts.require('CarboneumToken');
 contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, max, printer]) {
     const rate = new BigNumber(8000);
     const presale_rate = new BigNumber(8640);
-    const capAll = ether(14000);
+    const capAll = ether(14);
     const capArty = ether(10);
     const capMax = ether(2);
     const lessThanCapArty = ether(6);
@@ -91,6 +91,11 @@ contract('CarboneumCrowdsale', function ([_, token_wallet, fund_wallet, arty, ma
             await this.crowdsale.buyTokens(max, {value: lessThanCapBoth});
             let max_balance = await this.token.balanceOf(max);
             max_balance.should.be.bignumber.equal(expectedTokenAmount);
+        });
+
+        it('should reject payments that exceed cap', async function () {
+            await increaseTimeTo(this.openingTime);
+            await this.crowdsale.buyTokens(arty, {value: capAll.plus(1)}).should.be.rejectedWith(EVMRevert);
         });
     });
 });
