@@ -6,6 +6,11 @@ import EVMRevert from '../helpers/EVMRevert';
 
 const BigNumber = web3.BigNumber;
 
+require('chai')
+  .use(require('chai-as-promised'))
+  .use(require('chai-bignumber')(BigNumber))
+  .should();
+
 const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
 
@@ -15,7 +20,7 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
   const capAll = ether(14);
   const capArty = ether(10);
   const capMax = ether(2);
-  const lessThanCapArty = ether(6);
+  const lessThanCapArty = ether(4);
   const lessThanCapBoth = ether(1);
   const tokenAllowance = new BigNumber('120e24');
   const expectedPresaleTokenAmount = presaleRate.mul(lessThanCapBoth);
@@ -91,6 +96,12 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     it('should reject payments that exceed cap', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: capAll.plus(1) }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments after end', async function () {
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.send(lessThanCapBoth).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
     });
   });
 });

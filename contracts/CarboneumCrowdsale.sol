@@ -43,7 +43,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
    */
   function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
     uint256 newRate = rate;
-    if (now < pre_sale_end) {
+    if (now < pre_sale_end) { // solium-disable-line security/no-block-members
       // Bonus 8%
       newRate += rate * 8 / 100;
     }
