@@ -34,7 +34,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
      * @return Number of tokens that can be purchased with the specified _weiAmount
      */
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-        var new_rate = rate;
+        uint256 new_rate = rate;
         if (now < pre_sale_end) {
             // Bonus 8%
             new_rate += rate * 8 / 100;
