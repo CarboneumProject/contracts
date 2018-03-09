@@ -5,6 +5,7 @@ import "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
 
+
 /**
  * @title CarboneumCrowdsale
  * @dev This is Carboneum fully fledged crowdsale.
@@ -15,30 +16,37 @@ import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
  */
 contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale {
 
-    uint256 public pre_sale_end;
+  uint256 public pre_sale_end;
 
-    function CarboneumCrowdsale(uint256 _openingTime, uint256 _closingTime, uint256 _rate,
-        address _token_wallet, address _fund_wallet, uint256 _cap, ERC20 _token, uint256 _pre_sale_end) public
-    AllowanceCrowdsale(_token_wallet)
-    Crowdsale(_rate, _fund_wallet, _token)
-    CappedCrowdsale(_cap)
-    TimedCrowdsale(_openingTime, _closingTime)
-    {
-        require(_pre_sale_end < _closingTime);
-        pre_sale_end = _pre_sale_end;
-    }
+  function CarboneumCrowdsale(
+    uint256 _openingTime,
+    uint256 _closingTime,
+    uint256 _rate,
+    address _tokenWallet,
+    address _fundWallet,
+    uint256 _cap,
+    ERC20 _token,
+    uint256 _preSaleEnd) public
+  AllowanceCrowdsale(_tokenWallet)
+  Crowdsale(_rate, _fundWallet, _token)
+  CappedCrowdsale(_cap)
+  TimedCrowdsale(_openingTime, _closingTime)
+  {
+    require(_preSaleEnd < _closingTime);
+    pre_sale_end = _preSaleEnd;
+  }
 
-    /**
-     * @dev Add bonus to pre-sale period.
-     * @param _weiAmount Value in wei to be converted into tokens
-     * @return Number of tokens that can be purchased with the specified _weiAmount
-     */
-    function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-        uint256 new_rate = rate;
-        if (now < pre_sale_end) {
-            // Bonus 8%
-            new_rate += rate * 8 / 100;
-        }
-        return _weiAmount.mul(new_rate);
+  /**
+   * @dev Add bonus to pre-sale period.
+   * @param _weiAmount Value in wei to be converted into tokens
+   * @return Number of tokens that can be purchased with the specified _weiAmount
+   */
+  function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
+    uint256 newRate = rate;
+    if (now < pre_sale_end) {
+      // Bonus 8%
+      newRate += rate * 8 / 100;
     }
+    return _weiAmount.mul(newRate);
+  }
 }
