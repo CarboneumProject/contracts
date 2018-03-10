@@ -62,5 +62,9 @@ module.exports = {
       provider: infuraProvider('mainnet'),
       network_id: 1, // eslint-disable-line camelcase
     },
+    rinkeby: {
+      provider: infuraProvider('rinkeby'),
+      network_id: 4, // eslint-disable-line camelcase
+    },
   },
 };

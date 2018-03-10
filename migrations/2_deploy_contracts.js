@@ -8,7 +8,7 @@ function ether (n) {
 module.exports = function (deployer, network, accounts) {
   const tokenWallet = accounts[0];
   const fundWallet = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real fund address.
-  const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000)); // Now
+  const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000) + 300); // Now + 5 Min
   const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
   // Sale end at 22 May 2018 @10:08 (GMT +7)
   const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000));
