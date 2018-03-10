@@ -49,7 +49,7 @@ module.exports = {
     live: {
       host: 'localhost', // geth in localhost node.
       port: 8888, // Port in lucky number.
-      network_id: 1,        // eslint-disable-line camelcase
+      network_id: 1, // eslint-disable-line camelcase
       // optional config values:
       // gas
       // gasPrice
