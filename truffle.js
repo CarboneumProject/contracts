@@ -46,5 +46,17 @@ module.exports = {
       port: 7545,
       network_id: '*', // eslint-disable-line camelcase
     },
+    live: {
+      host: 'localhost', // geth in localhost node.
+      port: 8888, // Port in lucky number.
+      network_id: 1,        // Ethereum public network
+      // optional config values:
+      // gas
+      // gasPrice
+      // from - default address to use for any transaction Truffle makes during migrations
+      // provider - web3 provider instance Truffle should use to talk to the Ethereum network.
+      //          - function that returns a web3 provider instance (see below.)
+      //          - if specified, host and port are ignored.
+    },
   },
 };
