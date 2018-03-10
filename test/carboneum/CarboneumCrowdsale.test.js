@@ -98,7 +98,7 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.buyTokens(arty, { value: capAll.plus(1) }).should.be.rejectedWith(EVMRevert);
     });
 
-    it('should reject payments after end', async function () {
+    it('should reject payments after sale end', async function () {
       await increaseTimeTo(this.afterClosingTime);
       await this.crowdsale.send(lessThanCapBoth).should.be.rejectedWith(EVMRevert);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
