@@ -58,5 +58,9 @@ module.exports = {
       //          - function that returns a web3 provider instance (see below.)
       //          - if specified, host and port are ignored.
     },
+    mainnet: {
+      provider: infuraProvider('mainnet'),
+      network_id: 1, // eslint-disable-line camelcase
+    },
   },
 };
