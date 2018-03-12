@@ -61,10 +61,14 @@ module.exports = {
     mainnet: {
       provider: infuraProvider('mainnet'),
       network_id: 1, // eslint-disable-line camelcase
+      gasPrice: 4000000000,
+      gas: 4600000,
     },
     rinkeby: {
       provider: infuraProvider('rinkeby'),
       network_id: 4, // eslint-disable-line camelcase
+      gasPrice: 4000000000,
+      gas: 4600000,
     },
   },
 };
