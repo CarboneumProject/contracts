@@ -1,4 +1,4 @@
-# Carboneum Smart Contracts
+# Carboneum Smart Contracts [![Build Status](https://travis-ci.org/CarboneumProject/contracts.svg?branch=master)](https://travis-ci.org/CarboneumProject/contracts)
 
 ## Getting start
 ```
