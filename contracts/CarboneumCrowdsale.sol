@@ -40,6 +40,10 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     rate = _rate;
   }
 
+  function getRate() public view returns (uint256) {
+    return rate;
+  }
+
   /**
    * @dev Add bonus to pre-sale period.
    * @param _weiAmount Value in wei to be converted into tokens

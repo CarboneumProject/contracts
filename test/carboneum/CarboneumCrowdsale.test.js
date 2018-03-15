@@ -106,9 +106,14 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
   });
 
   describe('set rate', function () {
-    it('should apply new rate when owner set them', async function () {
+    it('should apply new rate when owner set it', async function () {
       await increaseTimeTo(this.openingTime);
-      await this.crowdsale.setRate(new web3.BigNumber(100));
+      let rateStart = await this.crowdsale.getRate();
+      rateStart.should.be.bignumber.equal(rate);
+      let expectRate = new web3.BigNumber(100);
+      await this.crowdsale.setRate(expectRate);
+      let rateNew = await this.crowdsale.getRate();
+      rateNew.should.be.bignumber.equal(expectRate);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(108)); // Bonus 8%
