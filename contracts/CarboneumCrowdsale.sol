@@ -15,8 +15,7 @@ import "zeppelin-solidity/contracts/crowdsale/distribution/PostDeliveryCrowdsale
  * IndividuallyCappedCrowdsale - Crowdsale with per-user caps.
  * TimedCrowdsale - Crowdsale accepting contributions only within a time frame.
  */
-contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale,
-TimedCrowdsale, PostDeliveryCrowdsale {
+contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale, PostDeliveryCrowdsale {
 
   uint256 public pre_sale_end;
 
