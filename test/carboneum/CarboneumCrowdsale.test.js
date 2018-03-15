@@ -104,4 +104,19 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
     });
   });
+
+  describe('set rate', function () {
+    it('should apply new rate when owner set them', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.setRate(new web3.BigNumber(100));
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(108)); // Bonus 8%
+
+      await increaseTimeTo(this.afterclosingPreSaleTime);
+      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100)); // No Bonus
+    });
+  });
 });
