@@ -17,19 +17,35 @@ module.exports = function (deployer, network, accounts) {
   const rate = new web3.BigNumber(priceETHUSD / priceC8USD);
   const capUSD = 12000000; // Hard cap $12M
   const cap = ether(capUSD / priceETHUSD);
-  const tokenAllowance = new web3.BigNumber('120e24'); // 120M token
+  const tokenAllowance = new web3.BigNumber('100e24'); // 100M token reserve 20M for THB and other sale.
 
   let token, crowdsale;
-  return deployer.then(function () {
-    return CarboneumToken.new({ from: tokenWallet });
-  }).then(function (instance) {
-    token = instance;
-    return CarboneumCrowdsale.new(startTime, endTime, rate, tokenWallet, fundWallet, cap, token.address, presaleEnd);
-  }).then(function (instance) {
-    crowdsale = instance;
-    token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
-    console.log('Token Address', token.address);
-    console.log('Crowdsale Address', crowdsale.address);
-    return true;
-  });
+  if (network === 'mainnet') {
+    return deployer.then(function () {
+      return CarboneumToken.at('0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d');
+    }).then(function (instance) {
+      token = instance;
+      return CarboneumCrowdsale.new(startTime, endTime, rate, tokenWallet, fundWallet, cap, token.address, presaleEnd);
+    }).then(function (instance) {
+      crowdsale = instance;
+      token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
+      console.log('Token Address', token.address);
+      console.log('Crowdsale Address', crowdsale.address);
+      return true;
+    });
+  } else {
+    // Deploy all new set of contract
+    return deployer.then(function () {
+      return CarboneumToken.new({ from: tokenWallet });
+    }).then(function (instance) {
+      token = instance;
+      return CarboneumCrowdsale.new(startTime, endTime, rate, tokenWallet, fundWallet, cap, token.address, presaleEnd);
+    }).then(function (instance) {
+      crowdsale = instance;
+      token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
+      console.log('Token Address', token.address);
+      console.log('Crowdsale Address', crowdsale.address);
+      return true;
+    });
+  }
 };
