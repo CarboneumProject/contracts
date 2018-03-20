@@ -41,22 +41,17 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     rate = _rate;
   }
 
-  function getRate() public view returns (uint256) {
-    return rate;
-  }
-
   /**
    * @dev Add bonus to pre-sale period.
    * @param _weiAmount Value in wei to be converted into tokens
    * @return Number of tokens that can be purchased with the specified _weiAmount
    */
   function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-    uint256 newRate = rate;
     if (now < pre_sale_end) {// solium-disable-line security/no-block-members
       // Bonus 8%
-      newRate += rate * 8 / 100;
+      return _weiAmount.mul(rate + (rate * 8 / 100));
     }
-    return _weiAmount.mul(newRate);
+    return _weiAmount.mul(rate);
   }
 
 }
