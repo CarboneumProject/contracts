@@ -32,6 +32,7 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     this.closingPreSaleTime = this.openingTime + duration.hours(1);
     this.afterclosingPreSaleTime = this.closingPreSaleTime + duration.seconds(1);
     this.closingTime = this.openingTime + duration.weeks(1);
+    this.beforeEndTime = this.closingTime - duration.hours(1);
     this.afterClosingTime = this.closingTime + duration.seconds(1);
     this.token = await CarboneumToken.new({ from: tokenWallet });
     this.crowdsale = await CarboneumCrowdsale.new(this.openingTime, this.closingTime,
@@ -74,10 +75,13 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     it('should add bonus to pre-sale', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
+      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
+      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(expectedPresaleTokenAmount);
 
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
       let maxBalance = await this.token.balanceOf(max);
       maxBalance.should.be.bignumber.equal(expectedPresaleTokenAmount);
     });
@@ -85,10 +89,12 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     it('should be no bonus after pre-sale end', async function () {
       await increaseTimeTo(this.afterclosingPreSaleTime);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
+      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
+      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(expectedTokenAmount);
-
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
       let maxBalance = await this.token.balanceOf(max);
       maxBalance.should.be.bignumber.equal(expectedTokenAmount);
     });
@@ -103,6 +109,35 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.send(lessThanCapBoth).should.be.rejectedWith(EVMRevert);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
     });
+
+    it('should not immediately assign tokens to beneficiary', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
+      const balance = await this.token.balanceOf(arty);
+      balance.should.be.bignumber.equal(0);
+    });
+
+    it('should not allow beneficiaries to withdraw tokens before crowdsale ends', async function () {
+      await increaseTimeTo(this.beforeEndTime);
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
+      await this.crowdsale.withdrawTokens({ from: arty }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should allow beneficiaries to withdraw tokens after crowdsale ends', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
+    });
+
+    it('should return the amount of tokens bought', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.withdrawTokens({ from: arty });
+      const balance = await this.token.balanceOf(arty);
+      balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
+    });
   });
 
   describe('set rate', function () {
@@ -115,11 +150,14 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       let rateNew = await this.crowdsale.getRate();
       rateNew.should.be.bignumber.equal(expectRate);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
-      let artyBalance = await this.token.balanceOf(arty);
-      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(108)); // Bonus 8%
-
       await increaseTimeTo(this.afterclosingPreSaleTime);
       await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+
+      await increaseTimeTo(this.afterClosingTime);
+      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
+      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(108)); // Bonus 8%
       let maxBalance = await this.token.balanceOf(max);
       maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100)); // No Bonus
     });

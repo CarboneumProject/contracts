@@ -4,6 +4,7 @@ import "zeppelin-solidity/contracts/crowdsale/validation/IndividuallyCappedCrowd
 import "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
 import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
+import "zeppelin-solidity/contracts/crowdsale/distribution/PostDeliveryCrowdsale.sol";
 
 
 /**
@@ -14,7 +15,7 @@ import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
  * IndividuallyCappedCrowdsale - Crowdsale with per-user caps.
  * TimedCrowdsale - Crowdsale accepting contributions only within a time frame.
  */
-contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale {
+contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale, PostDeliveryCrowdsale {
 
   uint256 public pre_sale_end;
 
