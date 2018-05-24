@@ -1,5 +1,6 @@
 const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
+const StockRadarsSubscription = artifacts.require('StockRadarsSubscription');
 
 function ether (n) {
   return new web3.BigNumber(web3.toWei(n, 'ether'));
@@ -18,6 +19,7 @@ module.exports = function (deployer, network, accounts) {
   const capUSD = 12000000; // Hard cap $12M
   const cap = ether(capUSD / priceETHUSD);
   const tokenAllowance = new web3.BigNumber('100e24'); // 100M token reserve 20M for THB and other sale.
+  const stockradarsRate = ether(3.2);
 
   let token, crowdsale;
   if (network === 'mainnet') {
@@ -32,6 +34,10 @@ module.exports = function (deployer, network, accounts) {
       console.log('Token Address', token.address);
       console.log('Crowdsale Address', crowdsale.address);
       return true;
+    }).then(function (pass) {
+      return StockRadarsSubscription.new(stockradarsRate, accounts[1], token.address);
+    }).then(function (subscription) {
+      console.log('Subscription Address', subscription.address);
     });
   } else {
     // Deploy all new set of contract
@@ -46,6 +52,10 @@ module.exports = function (deployer, network, accounts) {
       console.log('Token Address', token.address);
       console.log('Crowdsale Address', crowdsale.address);
       return true;
+    }).then(function (pass) {
+      return StockRadarsSubscription.new(stockradarsRate, accounts[1], token.address);
+    }).then(function (subscription) {
+      console.log('Subscription Address', subscription.address);
     });
   }
 };
