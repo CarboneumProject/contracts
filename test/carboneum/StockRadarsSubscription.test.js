@@ -1,4 +1,5 @@
 import ether from '../helpers/ether';
+import EVMRevert from '../helpers/EVMRevert';
 
 const BigNumber = web3.BigNumber;
 
@@ -19,13 +20,25 @@ contract('StockRadarsSubscription', accounts => {
 
   describe('subscription', function () {
     it('should accept C8 token for purchasing subscription', async function () {
-      let amountTwoDay = ether(6.4);
+      let amountTwoDay = ether(64);
       await this.subscription.renewSubscription(new BigNumber(8088),
         amountTwoDay, { from: member }).should.be.fulfilled;
       let stockradarsBalance = await this.token.balanceOf(stockradars);
       stockradarsBalance.should.be.bignumber.equal(amountTwoDay);
       let expiration = await this.subscription.subscriptionExpiration(new BigNumber(8088));
-      expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000));
+      expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000 + (20 * 24 * 3600 - 60)));
+    });
+  });
+
+  describe('rate', function () {
+    it('should change rate from owner', async function () {
+      let rate = ether(6.4);
+      await this.subscription.setRate(rate, { from: stockradars }).should.be.fulfilled;
+    });
+
+    it('should not change rate from other', async function () {
+      let rate = ether(6.4);
+      await this.subscription.setRate(rate, { from: member }).should.be.rejectedWith(EVMRevert);
     });
   });
 });
