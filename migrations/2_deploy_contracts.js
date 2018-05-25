@@ -27,7 +27,7 @@ module.exports = function (deployer, network, accounts) {
       return CarboneumToken.at('0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d');
     }).then(function (instance) {
       token = instance;
-      return CarboneumCrowdsale.new(startTime, endTime, rate, tokenWallet, fundWallet, cap, token.address, presaleEnd);
+      return CarboneumCrowdsale.at('0x65e151d4e56261b4672bdebd76d7045030b38292');
     }).then(function (instance) {
       crowdsale = instance;
       token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
@@ -35,7 +35,18 @@ module.exports = function (deployer, network, accounts) {
       console.log('Crowdsale Address', crowdsale.address);
       return true;
     }).then(function (pass) {
-      return StockRadarsSubscription.new(stockradarsRate, accounts[1], token.address);
+      return StockRadarsSubscription.new(stockradarsRate, accounts[0], token.address);
+    }).then(function (subscription) {
+      console.log('Subscription Address', subscription.address);
+    });
+  } else if (network === 'rinkeby') {
+    return deployer.then(function () {
+      return CarboneumToken.at('0xd36255cee98d10068d0bc1a394480bf09b3db4d7');
+    }).then(function (instance) {
+      token = instance;
+      return CarboneumCrowdsale.at('0x7d12617a251e619e3810d847832b97de7bd808b3');
+    }).then(function (pass) {
+      return StockRadarsSubscription.new(stockradarsRate, accounts[0], token.address);
     }).then(function (subscription) {
       console.log('Subscription Address', subscription.address);
     });
