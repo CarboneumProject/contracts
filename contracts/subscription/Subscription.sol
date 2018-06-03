@@ -11,7 +11,7 @@ contract Subscription is Ownable {
   /// @dev The token being use (C8)
   ERC20 public token;
 
-  /// @dev Address where funds are collected
+  /// @dev Address where fee are collected
   address public wallet;
 
   /// @dev Cost per day of membership for C8 token
@@ -65,7 +65,7 @@ contract Subscription is Ownable {
   );
 
   function Subscription(
-    uint256 _fee,
+    uint _fee,
     address _fundWallet,
     ERC20 _token) public
   {
@@ -78,11 +78,11 @@ contract Subscription is Ownable {
   }
 
   function renewSubscription(uint256 _appId, uint256 _userId, uint256 _weiAmount) external {
-    uint256 fee = _weiAmount * fee / 100;
-    uint256 toAppOwner = _weiAmount - fee;
+    uint256 txFee = _weiAmount * fee / 100;
+    uint256 toAppOwner = _weiAmount - txFee;
     Application storage app = applications[_appId];
-    require(applications[_appId].appId == 0);
-    require(token.transferFrom(msg.sender, wallet, fee));
+    require(app.appId == _appId);
+    require(token.transferFrom(msg.sender, wallet, txFee));
     require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
 
     uint256 daysToAdd = _weiAmount / app.price;
@@ -135,7 +135,12 @@ contract Subscription is Ownable {
   }
 
   /// @dev Set fee percent for Carboneum team.
-  function setFee(uint256 _fee) external onlyOwner {
+  function setFee(uint _fee) external onlyOwner {
     fee = _fee;
+  }
+
+  function getExpiration(uint256 _appId, uint256 _userId) public view returns (uint256) {
+    Application storage app = applications[_appId];
+    return app.subscriptionExpiration[_userId];
   }
 }
