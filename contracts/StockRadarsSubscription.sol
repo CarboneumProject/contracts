@@ -50,6 +50,7 @@ contract StockRadarsSubscription is Ownable {
   function renewSubscription(uint256 _userId, uint256 _weiAmount) external {
     require(token.transferFrom(msg.sender, wallet, _weiAmount));
     uint256 daysToAdd = _weiAmount / subscriptionRate;
+    require(daysToAdd > 1 days);
     uint256 currentExpiration = subscriptionExpiration[_userId];
     // If their membership already expired...
     if (currentExpiration < now) {
