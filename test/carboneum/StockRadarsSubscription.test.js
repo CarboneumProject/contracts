@@ -28,6 +28,13 @@ contract('StockRadarsSubscription', accounts => {
       let expiration = await this.subscription.subscriptionExpiration(new BigNumber(8088));
       expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000 + (20 * 24 * 3600 - 60)));
     });
+
+    it('should not accept C8 token for purchasing subscription less than 1 day', async function () {
+      let amountLessThan1Day = ether(3.1);
+      await this.subscription.renewSubscription(new BigNumber(8088),
+        amountLessThan1Day, { from: member }).should.be.rejectedWith(EVMRevert);
+    });
+
   });
 
   describe('rate', function () {
