@@ -34,7 +34,6 @@ contract('StockRadarsSubscription', accounts => {
       await this.subscription.renewSubscription(new BigNumber(8088),
         amountLessThan1Day, { from: member }).should.be.rejectedWith(EVMRevert);
     });
-
   });
 
   describe('rate', function () {

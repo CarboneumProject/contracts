@@ -43,7 +43,7 @@ contract StockRadarsSubscription is Ownable {
   }
 
   /// @dev Set Cost per day of membership by owner.
-  function setRate(uint256 _rate) public onlyOwner {
+  function setRate(uint256 _rate) external onlyOwner {
     subscriptionRate = _rate;
   }
 
@@ -59,6 +59,10 @@ contract StockRadarsSubscription is Ownable {
     }
     uint256 newExpiration = currentExpiration + daysToAdd * 1 days;
     subscriptionExpiration[_userId] = newExpiration;
-    emit SubscriptionPurchase(msg.sender, _userId, _weiAmount, newExpiration);
+    emit SubscriptionPurchase(
+      msg.sender,
+      _userId,
+      _weiAmount,
+      newExpiration);
   }
 }
