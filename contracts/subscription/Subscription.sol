@@ -19,6 +19,8 @@ contract Subscription is Ownable {
 
   uint public fee;
 
+  uint256 lastAppId;
+
   struct Application {
     /// @dev Application Id.
     uint256 appId;
@@ -75,6 +77,7 @@ contract Subscription is Ownable {
     token = _token;
     wallet = _fundWallet;
     fee = _fee;
+    lastAppId = 0;
   }
 
   function renewSubscriptionByDays(uint256 _appId, uint256 _userId, uint _day) external {
@@ -85,25 +88,24 @@ contract Subscription is Ownable {
   }
 
   function registration(
-    uint256 _appId,
     bytes32 _appName,
     uint256 _price,
     address _beneficiary)
   external
   {
-    require(applications[_appId].appId == 0);
     require(_appName != "");
     require(_price > 0);
     require(_beneficiary != address(0));
-    Application storage app = applications[_appId];
-    app.appId = _appId;
+    lastAppId = lastAppId + 1;
+    Application storage app = applications[lastAppId];
+    app.appId = lastAppId;
     app.appName = _appName;
     app.price = _price;
     app.beneficiary = _beneficiary;
     app.owner = msg.sender;
     emit Registration(
       msg.sender,
-      _appId,
+      lastAppId,
       _appName,
       _price,
       _beneficiary);

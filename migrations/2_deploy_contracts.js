@@ -1,6 +1,6 @@
 const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
-const StockRadarsSubscription = artifacts.require('StockRadarsSubscription');
+const Subscription = artifacts.require('Subscription');
 
 function ether (n) {
   return new web3.BigNumber(web3.toWei(n, 'ether'));
@@ -20,6 +20,7 @@ module.exports = function (deployer, network, accounts) {
   const cap = ether(capUSD / priceETHUSD);
   const tokenAllowance = new web3.BigNumber('100e24'); // 100M token reserve 20M for THB and other sale.
   const stockradarsRate = ether(3.2);
+  const fee = new web3.BigNumber(1); // 1%
 
   let token, crowdsale;
   if (network === 'mainnet') {
@@ -35,8 +36,9 @@ module.exports = function (deployer, network, accounts) {
       console.log('Crowdsale Address', crowdsale.address);
       return true;
     }).then(function (pass) {
-      return StockRadarsSubscription.new(stockradarsRate, accounts[0], token.address);
+      return Subscription.new(fee, accounts[0], token.address);
     }).then(function (subscription) {
+      subscription.registration('StockRadars', stockradarsRate, tokenWallet, { from: tokenWallet });
       console.log('Subscription Address', subscription.address);
     });
   } else if (network === 'rinkeby') {
@@ -46,8 +48,9 @@ module.exports = function (deployer, network, accounts) {
       token = instance;
       return CarboneumCrowdsale.at('0x7d12617a251e619e3810d847832b97de7bd808b3');
     }).then(function (pass) {
-      return StockRadarsSubscription.new(stockradarsRate, accounts[0], token.address);
+      return Subscription.new(fee, accounts[0], token.address);
     }).then(function (subscription) {
+      subscription.registration('StockRadars', stockradarsRate, tokenWallet, { from: tokenWallet });
       console.log('Subscription Address', subscription.address);
     });
   } else {
@@ -64,8 +67,9 @@ module.exports = function (deployer, network, accounts) {
       console.log('Crowdsale Address', crowdsale.address);
       return true;
     }).then(function (pass) {
-      return StockRadarsSubscription.new(stockradarsRate, accounts[1], token.address);
+      return Subscription.new(fee, accounts[0], token.address);
     }).then(function (subscription) {
+      subscription.registration('StockRadars', stockradarsRate, tokenWallet, { from: tokenWallet });
       console.log('Subscription Address', subscription.address);
     });
   }

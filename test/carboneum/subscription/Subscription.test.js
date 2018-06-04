@@ -22,8 +22,8 @@ contract('Subscription', accounts => {
     this.subscription = await Subscription.new(fee, stockradars,
       this.token.address, { from: stockradars });
     await this.token.approve(this.subscription.address, ether(1000), { from: member });
-    this.subscription.registration(appA, 'appA', rateA, appOwnerA, { from: appOwnerA });
-    this.subscription.registration(appB, 'appB', rateB, appOwnerB, { from: appOwnerB });
+    this.subscription.registration('appA', rateA, appOwnerA, { from: appOwnerA });
+    this.subscription.registration('appB', rateB, appOwnerB, { from: appOwnerB });
   });
 
   describe('subscription', function () {
