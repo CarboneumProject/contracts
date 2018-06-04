@@ -129,4 +129,16 @@ contract('Subscription', accounts => {
       await this.subscription.setFee(rate, { from: member }).should.be.rejectedWith(EVMRevert);
     });
   });
+
+  describe('price', function () {
+    it('should change price from app owner', async function () {
+      let price = new BigNumber(1);
+      await this.subscription.setPrice(appA, price, { from: appOwnerA }).should.be.fulfilled;
+    });
+
+    it('should not change price from other', async function () {
+      let price = new BigNumber(1);
+      await this.subscription.setPrice(appA, price, { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
+    });
+  });
 });
