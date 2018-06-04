@@ -77,30 +77,11 @@ contract Subscription is Ownable {
     fee = _fee;
   }
 
-  function renewSubscription(uint256 _appId, uint256 _userId, uint256 _weiAmount) external {
-    uint256 txFee = _weiAmount * fee / 100;
-    uint256 toAppOwner = _weiAmount - txFee;
+  function renewSubscriptionByDays(uint256 _appId, uint256 _userId, uint _day) external {
     Application storage app = applications[_appId];
     require(app.appId == _appId);
-    require(token.transferFrom(msg.sender, wallet, txFee));
-    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
-
-    uint256 daysToAdd = _weiAmount / app.price;
-    require(daysToAdd >= 1);
-    uint256 currentExpiration = app.subscriptionExpiration[_userId];
-    // If their membership already expired...
-    if (currentExpiration < now) {
-      // ...use `now` as the starting point of their new subscription
-      currentExpiration = now;
-    }
-    uint256 newExpiration = currentExpiration + daysToAdd * 1 days;
-    app.subscriptionExpiration[_userId] = newExpiration;
-    emit SubscriptionPurchase(
-      msg.sender,
-      _appId,
-      _userId,
-      _weiAmount,
-      newExpiration);
+    uint256 amount = _day * app.price;
+    renewSubscriptionByAmount(_appId, _userId, amount);
   }
 
   function registration(
@@ -142,5 +123,36 @@ contract Subscription is Ownable {
   function getExpiration(uint256 _appId, uint256 _userId) public view returns (uint256) {
     Application storage app = applications[_appId];
     return app.subscriptionExpiration[_userId];
+  }
+
+  function renewSubscriptionByAmount(uint256 _appId, uint256 _userId, uint256 _weiAmount) public {
+    Application storage app = applications[_appId];
+    require(app.appId == _appId);
+    uint256 txFee = processFee(_weiAmount);
+    uint256 toAppOwner = _weiAmount - txFee;
+    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
+
+    uint256 daysToAdd = _weiAmount / app.price;
+    require(daysToAdd >= 1, "Purchase period must longer than 1 day.");
+    uint256 currentExpiration = app.subscriptionExpiration[_userId];
+    // If their membership already expired...
+    if (currentExpiration < now) {
+      // ...use `now` as the starting point of their new subscription
+      currentExpiration = now;
+    }
+    uint256 newExpiration = currentExpiration + daysToAdd * 1 days;
+    app.subscriptionExpiration[_userId] = newExpiration;
+    emit SubscriptionPurchase(
+      msg.sender,
+      _appId,
+      _userId,
+      _weiAmount,
+      newExpiration);
+  }
+
+  function processFee(uint256 _weiAmount) internal returns (uint256) {
+    uint256 txFee = _weiAmount * fee / 100;
+    require(token.transferFrom(msg.sender, wallet, txFee));
+    return txFee;
   }
 }

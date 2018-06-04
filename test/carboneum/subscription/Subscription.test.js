@@ -27,10 +27,10 @@ contract('Subscription', accounts => {
   });
 
   describe('subscription', function () {
-    it('should accept C8 token for purchasing appA subscription', async function () {
+    it('should accept C8 token for purchasing appA subscription by amount', async function () {
       let amountTwentyDay = ether(64);
       let memberId = new BigNumber(8088);
-      await this.subscription.renewSubscription(appA, memberId,
+      await this.subscription.renewSubscriptionByAmount(appA, memberId,
         amountTwentyDay, { from: member }).should.be.fulfilled;
       let expectedFee = ether(0.64 * fee);
       let stockradarsBalance = await this.token.balanceOf(stockradars);
@@ -42,11 +42,39 @@ contract('Subscription', accounts => {
       expiration.should.be.bignumber.equal(timestamp + (20 * 24 * 3600));
     });
 
-    it('should accept C8 token for purchasing appB subscription', async function () {
+    it('should accept C8 token for purchasing appB subscription by amount', async function () {
       let amountTwoDay = ether(64);
       let memberId = new BigNumber(8888);
-      await this.subscription.renewSubscription(appB, memberId,
+      await this.subscription.renewSubscriptionByAmount(appB, memberId,
         amountTwoDay, { from: member }).should.be.fulfilled;
+      let expectedFee = ether(0.64 * fee);
+      let stockradarsBalance = await this.token.balanceOf(stockradars);
+      stockradarsBalance.should.be.bignumber.equal(expectedFee);
+      let appOwnerBalance = await this.token.balanceOf(appOwnerB);
+      appOwnerBalance.should.be.bignumber.equal(amountTwoDay - expectedFee);
+      let expiration = await this.subscription.getExpiration(appB, memberId);
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (2 * 24 * 3600));
+    });
+
+    it('should accept C8 token for purchasing appA subscription by 20 days', async function () {
+      let amountTwentyDay = ether(64);
+      let memberId = new BigNumber(8088);
+      await this.subscription.renewSubscriptionByDays(appA, memberId, 20, { from: member }).should.be.fulfilled;
+      let expectedFee = ether(0.64 * fee);
+      let stockradarsBalance = await this.token.balanceOf(stockradars);
+      stockradarsBalance.should.be.bignumber.equal(expectedFee);
+      let appOwnerBalance = await this.token.balanceOf(appOwnerA);
+      appOwnerBalance.should.be.bignumber.equal(amountTwentyDay - expectedFee);
+      let expiration = await this.subscription.getExpiration(appA, memberId);
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (20 * 24 * 3600));
+    });
+
+    it('should accept C8 token for purchasing appB subscription by 2 days', async function () {
+      let amountTwoDay = ether(64);
+      let memberId = new BigNumber(8888);
+      await this.subscription.renewSubscriptionByDays(appB, memberId, 2, { from: member }).should.be.fulfilled;
       let expectedFee = ether(0.64 * fee);
       let stockradarsBalance = await this.token.balanceOf(stockradars);
       stockradarsBalance.should.be.bignumber.equal(expectedFee);
@@ -59,13 +87,13 @@ contract('Subscription', accounts => {
 
     it('should not accept C8 token for purchasing appA subscription less than 1 day', async function () {
       let amountLessThan1Day = ether(3.1);
-      await this.subscription.renewSubscription(new BigNumber(1), new BigNumber(8088),
+      await this.subscription.renewSubscriptionByAmount(new BigNumber(1), new BigNumber(8088),
         amountLessThan1Day, { from: member }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should not accept C8 token for purchasing unknown app subscription', async function () {
       let amountLessThan1Day = ether(3.1);
-      await this.subscription.renewSubscription(new BigNumber(999), new BigNumber(8088),
+      await this.subscription.renewSubscriptionByAmount(new BigNumber(999), new BigNumber(8088),
         amountLessThan1Day, { from: member }).should.be.rejectedWith(EVMRevert);
     });
   });
