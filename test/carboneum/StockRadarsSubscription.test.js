@@ -20,13 +20,14 @@ contract('StockRadarsSubscription', accounts => {
 
   describe('subscription', function () {
     it('should accept C8 token for purchasing subscription', async function () {
-      let amountTwoDay = ether(64);
+      let amountTwoDay = ether(6.4);
       await this.subscription.renewSubscription(new BigNumber(8088),
         amountTwoDay, { from: member }).should.be.fulfilled;
       let stockradarsBalance = await this.token.balanceOf(stockradars);
       stockradarsBalance.should.be.bignumber.equal(amountTwoDay);
       let expiration = await this.subscription.subscriptionExpiration(new BigNumber(8088));
-      expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000 + (20 * 24 * 3600 - 60)));
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (2 * 24 * 3600));
     });
 
     it('should not accept C8 token for purchasing subscription less than 1 day', async function () {

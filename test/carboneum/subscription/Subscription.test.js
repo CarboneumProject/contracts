@@ -38,8 +38,8 @@ contract('Subscription', accounts => {
       let appOwnerBalance = await this.token.balanceOf(appOwnerA);
       appOwnerBalance.should.be.bignumber.equal(amountTwentyDay - expectedFee);
       let expiration = await this.subscription.getExpiration(appA, memberId);
-      expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000 + ((20 * 24 * 3600) - 60)));
-      expiration.should.be.bignumber.below(new BigNumber(Date.now() / 1000 + ((20 * 24 * 3600) + 60)));
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (20 * 24 * 3600));
     });
 
     it('should accept C8 token for purchasing appB subscription', async function () {
@@ -53,8 +53,8 @@ contract('Subscription', accounts => {
       let appOwnerBalance = await this.token.balanceOf(appOwnerB);
       appOwnerBalance.should.be.bignumber.equal(amountTwoDay - expectedFee);
       let expiration = await this.subscription.getExpiration(appB, memberId);
-      expiration.should.be.bignumber.above(new BigNumber(Date.now() / 1000 + ((2 * 24 * 3600) - 60)));
-      expiration.should.be.bignumber.below(new BigNumber(Date.now() / 1000 + ((2 * 24 * 3600) + 60)));
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (2 * 24 * 3600));
     });
 
     it('should not accept C8 token for purchasing appA subscription less than 1 day', async function () {
