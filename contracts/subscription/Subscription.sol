@@ -127,7 +127,7 @@ contract Subscription is Ownable {
     return app.subscriptionExpiration[_userId];
   }
 
-  function renewSubscriptionByAmount(uint256 _appId, uint256 _userId, uint256 _weiAmount) public {
+  function renewSubscriptionByAmount(uint256 _appId, uint256 _userId, uint256 _weiAmount) internal {
     Application storage app = applications[_appId];
     require(app.appId == _appId);
     uint256 txFee = processFee(_weiAmount);
