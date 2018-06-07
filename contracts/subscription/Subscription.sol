@@ -170,7 +170,9 @@ contract Subscription is Ownable {
     Application storage app = applications[_appId];
     uint256 amount = UINT256_MAX;
     for (uint i = 0; i < app.prices.length; i++) {
-      if (_day >= app.prices[i].day) {
+      if (_day == app.prices[i].day) {
+        amount = app.prices[i].price;
+      } else if (_day > app.prices[i].day) {
         uint256 rate = app.prices[i].price.div(app.prices[i].day);
         uint256 amountInPrice = _day.mul(rate);
         if (amountInPrice < amount) {
