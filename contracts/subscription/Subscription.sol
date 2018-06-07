@@ -111,6 +111,7 @@ contract Subscription is Ownable {
       _appId,
       _userId,
       _day,
+      amount,
       newExpiration);
   }
 
