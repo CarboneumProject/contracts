@@ -12,8 +12,8 @@ contract('Subscription', accounts => {
   const appOwnerA = accounts[2];
   const appOwnerB = accounts[3];
   const fee = 3; // 3%
-  const rateA = ether(3.2);
-  const rateB = ether(32);
+  const priceA = ether(3.2);
+  const priceB = ether(32);
   const appA = new BigNumber(1);
   const appB = new BigNumber(2);
 
@@ -22,12 +22,13 @@ contract('Subscription', accounts => {
     this.subscription = await Subscription.new(fee, stockradars,
       this.token.address, { from: stockradars });
     await this.token.approve(this.subscription.address, ether(1000), { from: member });
-    this.subscription.registration('appA', rateA, appOwnerA, { from: appOwnerA });
-    this.subscription.registration('appB', rateB, appOwnerB, { from: appOwnerB });
+    this.subscription.registration('appA', priceA, appOwnerA, { from: appOwnerA });
+    this.subscription.registration('appB', priceB, appOwnerB, { from: appOwnerB });
   });
 
   describe('subscription', function () {
     it('should accept C8 token for purchasing appA subscription by 20 days', async function () {
+      this.subscription.setPrice(appA, [1, 365], [priceA, ether(365)], { from: appOwnerA });
       let amountTwentyDay = ether(64);
       let memberId = new BigNumber(8088);
       await this.subscription.renewSubscriptionByDays(appA, memberId, 20, { from: member }).should.be.fulfilled;
@@ -70,6 +71,36 @@ contract('Subscription', accounts => {
       expiration.should.be.bignumber.equal(timestamp + (4 * 24 * 3600));
     });
 
+    it('should accept C8 token for purchasing appA subscription by 20 days and use best price.', async function () {
+      this.subscription.setPrice(appA, [1, 20, 365], [ether(3.2), ether(40), ether(365)], { from: appOwnerA });
+      let amountTwentyDay = ether(40);
+      let memberId = new BigNumber(8088);
+      await this.subscription.renewSubscriptionByDays(appA, memberId, 20, { from: member }).should.be.fulfilled;
+      let expectedFee = ether(0.40).mul(fee);
+      let stockradarsBalance = await this.token.balanceOf(stockradars);
+      stockradarsBalance.should.be.bignumber.equal(expectedFee);
+      let appOwnerBalance = await this.token.balanceOf(appOwnerA);
+      appOwnerBalance.should.be.bignumber.equal(amountTwentyDay - expectedFee);
+      let expiration = await this.subscription.getExpiration(appA, memberId);
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (20 * 24 * 3600));
+    });
+
+    it('should accept C8 token for purchasing appA subscription by 19 days and use best price.', async function () {
+      this.subscription.setPrice(appA, [1, 20, 365], [ether(3.2), ether(40), ether(365)], { from: appOwnerA });
+      let amount = ether(60.8);
+      let memberId = new BigNumber(8088);
+      await this.subscription.renewSubscriptionByDays(appA, memberId, 19, { from: member }).should.be.fulfilled;
+      let expectedFee = ether(0.608).mul(fee);
+      let stockradarsBalance = await this.token.balanceOf(stockradars);
+      stockradarsBalance.should.be.bignumber.equal(expectedFee);
+      let appOwnerBalance = await this.token.balanceOf(appOwnerA);
+      appOwnerBalance.should.be.bignumber.equal(amount - expectedFee);
+      let expiration = await this.subscription.getExpiration(appA, memberId);
+      let timestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      expiration.should.be.bignumber.equal(timestamp + (19 * 24 * 3600));
+    });
+
     it('should not accept C8 token for purchasing appA subscription by day less than 1 day', async function () {
       await this.subscription.renewSubscriptionByDays(appA, new BigNumber(8088),
         0, { from: member }).should.be.rejectedWith(EVMRevert);
@@ -96,12 +127,47 @@ contract('Subscription', accounts => {
   describe('price', function () {
     it('should change price from app owner', async function () {
       let price = new BigNumber(1);
-      await this.subscription.setPrice(appA, price, { from: appOwnerA }).should.be.fulfilled;
+      await this.subscription.setPrice(appA, [1], [price], { from: appOwnerA }).should.be.fulfilled;
+    });
+
+    it('should change price with completely new set of price', async function () {
+      await this.subscription.setPrice(appA, [1, 2], [new BigNumber(1), new BigNumber(2)],
+        { from: appOwnerA }).should.be.fulfilled;
+      let price1 = await this.subscription.getPrice(appA, 1);
+      let price2 = await this.subscription.getPrice(appA, 2);
+      price1.should.be.bignumber.equal(new BigNumber(1));
+      price2.should.be.bignumber.equal(new BigNumber(2));
+      await this.subscription.setPrice(appA, [3, 4], [new BigNumber(3.5), new BigNumber(4)],
+        { from: appOwnerA }).should.be.fulfilled;
+
+      let priceA = await this.subscription.getPrice(appA, 1);
+      let priceB = await this.subscription.getPrice(appA, 2);
+      let priceC = await this.subscription.getPrice(appA, 3);
+      let priceD = await this.subscription.getPrice(appA, 4);
+      let priceE = await this.subscription.getPrice(appA, 5);
+      let priceF = await this.subscription.getPrice(appA, 6);
+
+      // No price
+      priceA.should.be.bignumber.equal(new BigNumber(0));
+      priceB.should.be.bignumber.equal(new BigNumber(0));
+
+      // Starting price
+      priceC.should.be.bignumber.equal(new BigNumber(3));
+
+      // Best value price
+      priceD.should.be.bignumber.equal(new BigNumber(4));
+      priceE.should.be.bignumber.equal(new BigNumber(5));
+      priceF.should.be.bignumber.equal(new BigNumber(6));
     });
 
     it('should not change price from other', async function () {
       let price = new BigNumber(1);
-      await this.subscription.setPrice(appA, price, { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
+      await this.subscription.setPrice(appA, [1], [price], { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should not change price to zero', async function () {
+      let price = new BigNumber(0);
+      await this.subscription.setPrice(appA, [1], [price], { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
     });
   });
 });

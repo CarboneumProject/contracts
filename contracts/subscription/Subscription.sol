@@ -6,6 +6,7 @@ import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
 contract Subscription is Ownable {
+  uint256 constant UINT256_MAX = ~uint256(0);
   using SafeMath for uint256;
 
   /// @dev The token being use (C8)
@@ -21,15 +22,17 @@ contract Subscription is Ownable {
 
   uint256 lastAppId;
 
+  struct Pricing {
+    uint256 day;
+    uint256 price;
+  }
+
   struct Application {
     /// @dev Application Id.
     uint256 appId;
 
     /// @dev Application name.
     bytes32 appName;
-
-    /// @dev Cost per day of membership for C8 token
-    uint256 price;
 
     /// @dev Beneficiary address.
     address beneficiary;
@@ -39,6 +42,8 @@ contract Subscription is Ownable {
 
     /// @dev Timestamp of when Membership expires UserId=>timestamp of expire.
     mapping(uint256 => uint256) subscriptionExpiration;
+
+    Pricing[] prices;
   }
 
   mapping(uint256 => Application) public applications;
@@ -47,14 +52,14 @@ contract Subscription is Ownable {
    * Event for subscription purchase logging
    * @param purchaser who paid for the subscription
    * @param userId user id who will benefit from purchase
-   * @param amount amount of tokens purchased
+   * @param day day of subscription purchased
    * @param expiration expiration of user subscription.
    */
   event SubscriptionPurchase(
     address indexed purchaser,
     uint256 indexed _appId,
     uint256 indexed userId,
-    uint256 amount,
+    uint256 day,
     uint256 expiration
   );
 
@@ -83,8 +88,37 @@ contract Subscription is Ownable {
   function renewSubscriptionByDays(uint256 _appId, uint256 _userId, uint _day) external {
     Application storage app = applications[_appId];
     require(app.appId == _appId);
-    uint256 amount = _day * app.price;
-    renewSubscriptionByAmount(_appId, _userId, amount);
+    require(_day >= 1);
+    uint256 amount = UINT256_MAX;
+    for (uint i = 0; i < app.prices.length; i++) {
+      if (_day >= app.prices[i].day) {
+        uint256 rate = app.prices[i].price / app.prices[i].day;
+        uint256 amountInPrice = _day * rate;
+        if (amountInPrice < amount) {
+          amount = amountInPrice;
+        }
+      }
+    }
+    require(amount != UINT256_MAX);
+
+    uint256 txFee = processFee(amount);
+    uint256 toAppOwner = amount - txFee;
+    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
+
+    uint256 currentExpiration = app.subscriptionExpiration[_userId];
+    // If their membership already expired...
+    if (currentExpiration < now) {
+      // ...use `now` as the starting point of their new subscription
+      currentExpiration = now;
+    }
+    uint256 newExpiration = currentExpiration + _day * 1 days;
+    app.subscriptionExpiration[_userId] = newExpiration;
+    emit SubscriptionPurchase(
+      msg.sender,
+      _appId,
+      _userId,
+      _day,
+      newExpiration);
   }
 
   function registration(
@@ -100,9 +134,12 @@ contract Subscription is Ownable {
     Application storage app = applications[lastAppId];
     app.appId = lastAppId;
     app.appName = _appName;
-    app.price = _price;
     app.beneficiary = _beneficiary;
     app.owner = msg.sender;
+    app.prices.push(Pricing({
+      day : 1,
+      price : _price
+      }));
     emit Registration(
       msg.sender,
       lastAppId,
@@ -111,10 +148,18 @@ contract Subscription is Ownable {
       _beneficiary);
   }
 
-  function setPrice(uint256 _appId, uint256 _price) external {
+  function setPrice(uint256 _appId, uint256[] _days, uint256[] _prices) external {
     Application storage app = applications[_appId];
     require(app.owner == msg.sender);
-    app.price = _price;
+    app.prices.length = 0;
+    for (uint i = 0; i < _days.length; i++) {
+      require(_days[i] > 0);
+      require(_prices[i] > 0);
+      app.prices.push(Pricing({
+        day : _days[i],
+        price : _prices[i]
+        }));
+    }
   }
 
   /// @dev Set fee percent for Carboneum team.
@@ -127,29 +172,22 @@ contract Subscription is Ownable {
     return app.subscriptionExpiration[_userId];
   }
 
-  function renewSubscriptionByAmount(uint256 _appId, uint256 _userId, uint256 _weiAmount) internal {
+  function getPrice(uint256 _appId, uint256 _day) public view returns (uint256) {
     Application storage app = applications[_appId];
-    require(app.appId == _appId);
-    uint256 txFee = processFee(_weiAmount);
-    uint256 toAppOwner = _weiAmount - txFee;
-    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
-
-    uint256 daysToAdd = _weiAmount / app.price;
-    require(daysToAdd >= 1, "Purchase period must longer than 1 day.");
-    uint256 currentExpiration = app.subscriptionExpiration[_userId];
-    // If their membership already expired...
-    if (currentExpiration < now) {
-      // ...use `now` as the starting point of their new subscription
-      currentExpiration = now;
+    uint256 amount = UINT256_MAX;
+    for (uint i = 0; i < app.prices.length; i++) {
+      if (_day >= app.prices[i].day) {
+        uint256 rate = app.prices[i].price / app.prices[i].day;
+        uint256 amountInPrice = _day * rate;
+        if (amountInPrice < amount) {
+          amount = amountInPrice;
+        }
+      }
     }
-    uint256 newExpiration = currentExpiration + daysToAdd * 1 days;
-    app.subscriptionExpiration[_userId] = newExpiration;
-    emit SubscriptionPurchase(
-      msg.sender,
-      _appId,
-      _userId,
-      _weiAmount,
-      newExpiration);
+    if (amount == UINT256_MAX) {
+      amount = 0;
+    }
+    return amount;
   }
 
   function processFee(uint256 _weiAmount) internal returns (uint256) {
