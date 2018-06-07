@@ -53,6 +53,7 @@ contract Subscription is Ownable {
    * @param purchaser who paid for the subscription
    * @param userId user id who will benefit from purchase
    * @param day day of subscription purchased
+   * @param amount amount of subscription purchased in wei
    * @param expiration expiration of user subscription.
    */
   event SubscriptionPurchase(
@@ -60,6 +61,7 @@ contract Subscription is Ownable {
     uint256 indexed _appId,
     uint256 indexed userId,
     uint256 day,
+    uint256 amount,
     uint256 expiration
   );
 
@@ -89,20 +91,11 @@ contract Subscription is Ownable {
     Application storage app = applications[_appId];
     require(app.appId == _appId);
     require(_day >= 1);
-    uint256 amount = UINT256_MAX;
-    for (uint i = 0; i < app.prices.length; i++) {
-      if (_day >= app.prices[i].day) {
-        uint256 rate = app.prices[i].price / app.prices[i].day;
-        uint256 amountInPrice = _day * rate;
-        if (amountInPrice < amount) {
-          amount = amountInPrice;
-        }
-      }
-    }
-    require(amount != UINT256_MAX);
+    uint256 amount = getPrice(_appId, _day);
+    require(amount > 0);
 
     uint256 txFee = processFee(amount);
-    uint256 toAppOwner = amount - txFee;
+    uint256 toAppOwner = amount.sub(txFee);
     require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
 
     uint256 currentExpiration = app.subscriptionExpiration[_userId];
@@ -111,7 +104,7 @@ contract Subscription is Ownable {
       // ...use `now` as the starting point of their new subscription
       currentExpiration = now;
     }
-    uint256 newExpiration = currentExpiration + _day * 1 days;
+    uint256 newExpiration = currentExpiration.add(_day.mul(1 days));
     app.subscriptionExpiration[_userId] = newExpiration;
     emit SubscriptionPurchase(
       msg.sender,
@@ -130,7 +123,7 @@ contract Subscription is Ownable {
     require(_appName != "");
     require(_price > 0);
     require(_beneficiary != address(0));
-    lastAppId = lastAppId + 1;
+    lastAppId = lastAppId.add(1);
     Application storage app = applications[lastAppId];
     app.appId = lastAppId;
     app.appName = _appName;
@@ -177,8 +170,8 @@ contract Subscription is Ownable {
     uint256 amount = UINT256_MAX;
     for (uint i = 0; i < app.prices.length; i++) {
       if (_day >= app.prices[i].day) {
-        uint256 rate = app.prices[i].price / app.prices[i].day;
-        uint256 amountInPrice = _day * rate;
+        uint256 rate = app.prices[i].price.div(app.prices[i].day);
+        uint256 amountInPrice = _day.mul(rate);
         if (amountInPrice < amount) {
           amount = amountInPrice;
         }
@@ -191,7 +184,7 @@ contract Subscription is Ownable {
   }
 
   function processFee(uint256 _weiAmount) internal returns (uint256) {
-    uint256 txFee = _weiAmount * fee / 100;
+    uint256 txFee = _weiAmount.mul(fee).div(100);
     require(token.transferFrom(msg.sender, wallet, txFee));
     return txFee;
   }
