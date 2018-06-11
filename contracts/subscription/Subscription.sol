@@ -94,10 +94,6 @@ contract Subscription is Ownable {
     uint256 amount = getPrice(_appId, _day);
     require(amount > 0);
 
-    uint256 txFee = processFee(amount);
-    uint256 toAppOwner = amount.sub(txFee);
-    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
-
     uint256 currentExpiration = app.subscriptionExpiration[_userId];
     // If their membership already expired...
     if (currentExpiration < now) {
@@ -106,6 +102,9 @@ contract Subscription is Ownable {
     }
     uint256 newExpiration = currentExpiration.add(_day.mul(1 days));
     app.subscriptionExpiration[_userId] = newExpiration;
+    uint256 txFee = processFee(amount);
+    uint256 toAppOwner = amount.sub(txFee);
+    require(token.transferFrom(msg.sender, app.beneficiary, toAppOwner));
     emit SubscriptionPurchase(
       msg.sender,
       _appId,
@@ -172,6 +171,7 @@ contract Subscription is Ownable {
     for (uint i = 0; i < app.prices.length; i++) {
       if (_day == app.prices[i].day) {
         amount = app.prices[i].price;
+        return amount;
       } else if (_day > app.prices[i].day) {
         uint256 rate = app.prices[i].price.div(app.prices[i].day);
         uint256 amountInPrice = _day.mul(rate);
