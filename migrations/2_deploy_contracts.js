@@ -9,6 +9,7 @@ function ether (n) {
 module.exports = function (deployer, network, accounts) {
   const tokenWallet = accounts[0];
   const fundWallet = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real fund address.
+  const iconAddress = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real ICON Token address.
   const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000) + 300); // Now + 5 Min
   const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
   // Sale end at 22 May 2018 @10:08 (GMT +7)
@@ -16,6 +17,7 @@ module.exports = function (deployer, network, accounts) {
   const priceETHUSD = 800;
   const priceC8USD = 0.1;
   const rate = new web3.BigNumber(priceETHUSD / priceC8USD);
+  const iconRate = new web3.BigNumber(200);
   const capUSD = 12000000; // Hard cap $12M
   const cap = ether(capUSD / priceETHUSD);
   const tokenAllowance = new web3.BigNumber('100e24'); // 100M token reserve 20M for THB and other sale.
@@ -59,7 +61,8 @@ module.exports = function (deployer, network, accounts) {
       return CarboneumToken.new({ from: tokenWallet });
     }).then(function (instance) {
       token = instance;
-      return CarboneumCrowdsale.new(startTime, endTime, rate, tokenWallet, fundWallet, cap, token.address, presaleEnd);
+      return CarboneumCrowdsale.new(startTime, endTime, rate, iconRate, tokenWallet,
+        fundWallet, cap, token.address, iconAddress);
     }).then(function (instance) {
       crowdsale = instance;
       token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
