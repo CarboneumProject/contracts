@@ -51,7 +51,7 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokensWithIcon(arty, lessThanCapArty, { from: arty }).should.be.fulfilled;
       let artyBalance = await this.token.balanceOf(arty);
-      artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(rate));
+      artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(iconRate));
     });
 
     it('should reject payments outside cap', async function () {
@@ -97,19 +97,28 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     });
   });
 
+  describe('set rate', function () {
+    it('should apply new rate when owner set them', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.setRate(new web3.BigNumber(100));
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+    });
+  });
+
   describe('set ICON rate', function () {
     it('should apply new ICON rate when owner set it', async function () {
       await increaseTimeTo(this.openingTime);
       let expectRate = new web3.BigNumber(100);
-      await this.crowdsale.setRate(expectRate);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
-      await increaseTimeTo(this.afterclosingPreSaleTime);
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      await this.crowdsale.setIconRate(expectRate);
+      await this.crowdsale.buyTokensWithIcon(arty, lessThanCapBoth, { from: arty });
       await increaseTimeTo(this.afterClosingTime);
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
-      let maxBalance = await this.token.balanceOf(max);
-      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
     });
   });
 });

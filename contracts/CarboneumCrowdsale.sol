@@ -49,7 +49,12 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
    * @param value Icon token paid for purchase
    * @param amount amount of tokens purchased
    */
-  event TokenPurchaseWithIcon(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
+  event TokenPurchaseWithIcon(
+    address indexed purchaser,
+    address indexed beneficiary,
+    uint256 value,
+    uint256 amount
+  );
 
   function setRate(uint256 _rate) external onlyOwner {
     rate = _rate;
@@ -74,9 +79,13 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     require(iconToken.transferFrom(msg.sender, wallet, _iconAmount));
 
     // Transfer Carboneum token from token owner to sender.
-    require(token.transfer(_beneficiary, tokenAmount));
+    _deliverTokens(_beneficiary, tokenAmount);
 
-    TokenPurchaseWithIcon(msg.sender, _beneficiary, _iconAmount, tokenAmount);
+    TokenPurchaseWithIcon(
+      msg.sender,
+      _beneficiary,
+      _iconAmount,
+      tokenAmount);
   }
 
   function _preValidatePurchaseIcon(address _beneficiary, uint256 _weiAmount) internal {
