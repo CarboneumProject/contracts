@@ -92,6 +92,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     require(_beneficiary != address(0));
     require(_weiAmount != 0);
     require(contributions[_beneficiary].add(_weiAmount) <= caps[_beneficiary]);
+    require(weiRaised.add(_weiAmount) <= cap);
   }
 
 }

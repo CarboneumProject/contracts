@@ -18,8 +18,9 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
   const rate = new BigNumber(8000);
   const iconRate = new BigNumber(200);
   const capAll = ether(14);
-  const capArty = ether(10);
+  const capArty = ether(13);
   const capMax = ether(2);
+  const moreThanCapIcon = ether(561);
   const lessThanCapArty = ether(4);
   const lessThanCapBoth = ether(1);
   const tokenAllowance = new BigNumber('120e24');
@@ -52,6 +53,25 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.buyTokensWithIcon(arty, lessThanCapArty, { from: arty }).should.be.fulfilled;
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(iconRate));
+    });
+
+    it('should accept payments with ICON more than one buyer within cap', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
+      await this.crowdsale.buyTokensWithIcon(arty, ether(480), { from: arty }).should.be.fulfilled;
+    });
+
+    it('should reject payments outside cap with ICON', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(arty, moreThanCapIcon,
+        { from: arty }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON more than one buyer', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
+      await this.crowdsale.buyTokensWithIcon(arty, ether(480.1),
+        { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject payments outside cap', async function () {
