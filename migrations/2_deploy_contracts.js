@@ -9,11 +9,9 @@ function ether (n) {
 module.exports = function (deployer, network, accounts) {
   const tokenWallet = accounts[0];
   const fundWallet = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real fund address.
-  const iconAddress = new web3.BigNumber('0x966504CE67077C2a1b88a5C7d6CA4EdBc87caebC'); // Real ICON Token address.
   const startTime = new web3.BigNumber(Math.floor(new Date().getTime() / 1000) + 300); // Now + 5 Min
-  const presaleEnd = new web3.BigNumber(Math.floor(new Date(2018, 4, 22, 3, 8, 0, 0).getTime() / 1000));
-  // Sale end at 22 May 2018 @10:08 (GMT +7)
-  const endTime = new web3.BigNumber(Math.floor(new Date(2018, 5, 22, 3, 8, 0, 0).getTime() / 1000));
+  // Sale end at 8 July 2018 @10:08 (GMT +7)
+  const endTime = new web3.BigNumber(Math.floor(new Date(2018, 6, 8, 3, 8, 0, 0).getTime() / 1000));
   const priceETHUSD = 800;
   const priceC8USD = 0.1;
   const rate = new web3.BigNumber(priceETHUSD / priceC8USD);
@@ -30,7 +28,9 @@ module.exports = function (deployer, network, accounts) {
       return CarboneumToken.at('0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d');
     }).then(function (instance) {
       token = instance;
-      return CarboneumCrowdsale.at('0x65e151d4e56261b4672bdebd76d7045030b38292');
+      const iconAddress = new web3.BigNumber('0xb5a5f22694352c15b00323844ad545abb2b11028'); // Real ICON Token address.
+      return CarboneumCrowdsale.new(startTime, endTime, rate, iconRate, tokenWallet,
+        fundWallet, cap, token.address, iconAddress);
     }).then(function (instance) {
       crowdsale = instance;
       token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
@@ -48,32 +48,12 @@ module.exports = function (deployer, network, accounts) {
       return CarboneumToken.at('0xd36255cee98d10068d0bc1a394480bf09b3db4d7');
     }).then(function (instance) {
       token = instance;
-      return CarboneumCrowdsale.at('0x7d12617a251e619e3810d847832b97de7bd808b3');
-    }).then(function (pass) {
-      return Subscription.new(fee, accounts[0], token.address);
-    }).then(function (subscription) {
-      subscription.registration('StockRadars', stockradarsRate, tokenWallet, { from: tokenWallet });
-      console.log('Subscription Address', subscription.address);
-    });
-  } else {
-    // Deploy all new set of contract
-    return deployer.then(function () {
-      return CarboneumToken.new({ from: tokenWallet });
-    }).then(function (instance) {
-      token = instance;
+      const iconAddress = new web3.BigNumber('0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d'); // C8 old For ICON test
       return CarboneumCrowdsale.new(startTime, endTime, rate, iconRate, tokenWallet,
         fundWallet, cap, token.address, iconAddress);
     }).then(function (instance) {
       crowdsale = instance;
-      token.approve(crowdsale.address, tokenAllowance, { from: tokenWallet });
-      console.log('Token Address', token.address);
       console.log('Crowdsale Address', crowdsale.address);
-      return true;
-    }).then(function (pass) {
-      return Subscription.new(fee, accounts[0], token.address);
-    }).then(function (subscription) {
-      subscription.registration('StockRadars', stockradarsRate, tokenWallet, { from: tokenWallet });
-      console.log('Subscription Address', subscription.address);
     });
   }
 };
