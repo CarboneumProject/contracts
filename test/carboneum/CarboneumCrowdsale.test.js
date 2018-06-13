@@ -67,6 +67,12 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
         { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
+    it('should reject payments outside cap with ICON not in whitelist', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(printer, lessThanCapBoth,
+        { from: printer }).should.be.rejectedWith(EVMRevert);
+    });
+
     it('should reject payments outside cap with ICON more than one buyer', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
