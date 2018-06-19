@@ -15,15 +15,15 @@ const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
 
 contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max, printer]) {
-  const rate = new BigNumber(8000);
-  const iconRate = new BigNumber(200);
+  const rate = new BigNumber(5000);
+  const iconRate = new BigNumber(20);
   const capAll = ether(14);
   const capArty = ether(13);
   const capMax = ether(2);
-  const moreThanCapIcon = ether(561);
+  const moreThanCapIcon = ether(5601);
   const lessThanCapArty = ether(4);
   const lessThanCapBoth = ether(1);
-  const tokenAllowance = new BigNumber('120e24');
+  const tokenAllowance = new BigNumber('100e24');
   const expectedTokenAmount = rate.mul(lessThanCapBoth);
 
   beforeEach(async function () {
@@ -46,6 +46,10 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapArty }).should.be.fulfilled;
       await this.crowdsale.buyTokens(max, { value: lessThanCapBoth }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(rate));
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(rate));
     });
 
     it('should accept payments with ICON', async function () {
@@ -58,7 +62,23 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     it('should accept payments with ICON more than one buyer within cap', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
-      await this.crowdsale.buyTokensWithIcon(arty, ether(480), { from: arty }).should.be.fulfilled;
+      await this.crowdsale.buyTokensWithIcon(arty, ether(3000), { from: arty }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(ether(3000).mul(iconRate));
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(capMax.mul(rate));
+    });
+
+    it('should reject payments outside cap when buyer not in whitelist', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(printer,
+        { value: new BigNumber(1), from: printer }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments with ICON without buyer approval.', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(max, lessThanCapBoth,
+        { from: max }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject payments outside cap with ICON', async function () {
@@ -76,7 +96,7 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
     it('should reject payments outside cap with ICON more than one buyer', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
-      await this.crowdsale.buyTokensWithIcon(arty, ether(480.1),
+      await this.crowdsale.buyTokensWithIcon(arty, ether(3001),
         { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
@@ -84,6 +104,13 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: capArty });
       await this.crowdsale.buyTokens(arty, { value: 1 }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(arty, { value: capArty });
+      await this.crowdsale.buyTokensWithIcon(arty, new BigNumber(1),
+        { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject payments that exceed cap', async function () {
@@ -134,6 +161,13 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       let maxBalance = await this.token.balanceOf(max);
       maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
     });
+
+    it('should cannot set rate from other user.', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: arty }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: max }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: printer }).should.be.rejectedWith(EVMRevert);
+    });
   });
 
   describe('set ICON rate', function () {
@@ -145,6 +179,14 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await increaseTimeTo(this.afterClosingTime);
       let artyBalance = await this.token.balanceOf(arty);
       artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+    });
+
+    it('should cannot set ICON rate from other user.', async function () {
+      await increaseTimeTo(this.openingTime);
+      let expectRate = new web3.BigNumber(100);
+      await this.crowdsale.setIconRate(expectRate, { from: arty }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setIconRate(expectRate, { from: max }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setIconRate(expectRate, { from: printer }).should.be.rejectedWith(EVMRevert);
     });
   });
 });

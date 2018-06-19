@@ -69,8 +69,8 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     uint256 tokenAmount = iconRate.mul(_iconAmount);
     uint256 weiAmount = tokenAmount.div(rate);
 
-    // Check sender on the white list and lower than cap.
-    _preValidatePurchaseIcon(msg.sender, weiAmount);
+    // Validate purchase.
+    _preValidatePurchase(_beneficiary, weiAmount);
 
     // Update cap.
     contributions[_beneficiary] = contributions[_beneficiary].add(weiAmount);
@@ -87,12 +87,4 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
       _iconAmount,
       tokenAmount);
   }
-
-  function _preValidatePurchaseIcon(address _beneficiary, uint256 _weiAmount) internal {
-    require(_beneficiary != address(0));
-    require(_weiAmount != 0);
-    require(contributions[_beneficiary].add(_weiAmount) <= caps[_beneficiary]);
-    require(weiRaised.add(_weiAmount) <= cap);
-  }
-
 }
