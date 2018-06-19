@@ -12,9 +12,8 @@ module.exports = function (deployer, network, accounts) {
   // Sale end at 8 July 2018 @10:00 (GMT +7)
   const endTime = new web3.BigNumber(Math.floor(new Date('2018-07-08T03:00:00').getTime() / 1000));
   const priceETHUSD = 500;
-  const priceC8USD = 0.1;
-  const rate = new web3.BigNumber(priceETHUSD / priceC8USD);
-  const iconRate = new web3.BigNumber(200);
+  const rate = new web3.BigNumber(5000);
+  const iconRate = new web3.BigNumber(20);
   const capUSD = 12000000; // Hard cap $12M
   const cap = ether(capUSD / priceETHUSD);
 
