@@ -15,31 +15,30 @@ const CarboneumCrowdsale = artifacts.require('CarboneumCrowdsale');
 const CarboneumToken = artifacts.require('CarboneumToken');
 
 contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max, printer]) {
-  const rate = new BigNumber(8000);
-  const presaleRate = new BigNumber(8640);
+  const rate = new BigNumber(5000);
+  const iconRate = new BigNumber(20);
   const capAll = ether(14);
-  const capArty = ether(10);
+  const capArty = ether(13);
   const capMax = ether(2);
+  const moreThanCapIcon = ether(5601);
   const lessThanCapArty = ether(4);
   const lessThanCapBoth = ether(1);
-  const tokenAllowance = new BigNumber('120e24');
-  const expectedPresaleTokenAmount = presaleRate.mul(lessThanCapBoth);
+  const tokenAllowance = new BigNumber('100e24');
   const expectedTokenAmount = rate.mul(lessThanCapBoth);
 
   beforeEach(async function () {
     await advanceBlock();
     this.openingTime = latestTime() + duration.seconds(100);
-    this.closingPreSaleTime = this.openingTime + duration.hours(1);
-    this.afterclosingPreSaleTime = this.closingPreSaleTime + duration.seconds(1);
     this.closingTime = this.openingTime + duration.weeks(1);
-    this.beforeEndTime = this.closingTime - duration.hours(1);
     this.afterClosingTime = this.closingTime + duration.seconds(1);
     this.token = await CarboneumToken.new({ from: tokenWallet });
+    this.iconToken = await CarboneumToken.new({ from: arty });
     this.crowdsale = await CarboneumCrowdsale.new(this.openingTime, this.closingTime,
-      rate, tokenWallet, fundWallet, capAll, this.token.address, this.closingPreSaleTime);
-    this.crowdsale.setUserCap(arty, capArty);
-    this.crowdsale.setUserCap(max, capMax);
+      rate, iconRate, tokenWallet, fundWallet, capAll, this.token.address, this.iconToken.address);
+    await this.crowdsale.setUserCap(arty, capArty);
+    await this.crowdsale.setUserCap(max, capMax);
     await this.token.approve(this.crowdsale.address, tokenAllowance, { from: tokenWallet });
+    await this.iconToken.approve(this.crowdsale.address, tokenAllowance, { from: arty });
   });
 
   describe('accepting payments', function () {
@@ -47,12 +46,71 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapArty }).should.be.fulfilled;
       await this.crowdsale.buyTokens(max, { value: lessThanCapBoth }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(rate));
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(rate));
+    });
+
+    it('should accept payments with ICON', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(arty, lessThanCapArty, { from: arty }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapArty.mul(iconRate));
+    });
+
+    it('should accept payments with ICON more than one buyer within cap', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
+      await this.crowdsale.buyTokensWithIcon(arty, ether(3000), { from: arty }).should.be.fulfilled;
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(ether(3000).mul(iconRate));
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(capMax.mul(rate));
+    });
+
+    it('should reject payments outside cap when buyer not in whitelist', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(printer,
+        { value: new BigNumber(1), from: printer }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments with ICON without buyer approval.', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(max, lessThanCapBoth,
+        { from: max }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(arty, moreThanCapIcon,
+        { from: arty }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON not in whitelist', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokensWithIcon(printer, lessThanCapBoth,
+        { from: printer }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON more than one buyer', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(max, { value: capMax }).should.be.fulfilled;
+      await this.crowdsale.buyTokensWithIcon(arty, ether(3001),
+        { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject payments outside cap', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: capArty });
       await this.crowdsale.buyTokens(arty, { value: 1 }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should reject payments outside cap with ICON', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.buyTokens(arty, { value: capArty });
+      await this.crowdsale.buyTokensWithIcon(arty, new BigNumber(1),
+        { from: arty }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject payments that exceed cap', async function () {
@@ -72,33 +130,6 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.buyTokens(printer, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
     });
 
-    it('should add bonus to pre-sale', async function () {
-      await increaseTimeTo(this.openingTime);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
-      await increaseTimeTo(this.afterClosingTime);
-      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
-      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
-      let artyBalance = await this.token.balanceOf(arty);
-      artyBalance.should.be.bignumber.equal(expectedPresaleTokenAmount);
-
-      let maxBalance = await this.token.balanceOf(max);
-      maxBalance.should.be.bignumber.equal(expectedPresaleTokenAmount);
-    });
-
-    it('should be no bonus after pre-sale end', async function () {
-      await increaseTimeTo(this.afterclosingPreSaleTime);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
-      await increaseTimeTo(this.afterClosingTime);
-      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
-      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
-      let artyBalance = await this.token.balanceOf(arty);
-      artyBalance.should.be.bignumber.equal(expectedTokenAmount);
-      let maxBalance = await this.token.balanceOf(max);
-      maxBalance.should.be.bignumber.equal(expectedTokenAmount);
-    });
-
     it('should reject payments that exceed cap', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: capAll.plus(1) }).should.be.rejectedWith(EVMRevert);
@@ -110,52 +141,52 @@ contract('CarboneumCrowdsale', function ([_, tokenWallet, fundWallet, arty, max,
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth }).should.be.rejectedWith(EVMRevert);
     });
 
-    it('should not immediately assign tokens to beneficiary', async function () {
-      await increaseTimeTo(this.openingTime);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
-      const balance = await this.token.balanceOf(arty);
-      balance.should.be.bignumber.equal(0);
-    });
-
-    it('should not allow beneficiaries to withdraw tokens before crowdsale ends', async function () {
-      await increaseTimeTo(this.beforeEndTime);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
-      await this.crowdsale.withdrawTokens({ from: arty }).should.be.rejectedWith(EVMRevert);
-    });
-
-    it('should allow beneficiaries to withdraw tokens after crowdsale ends', async function () {
-      await increaseTimeTo(this.openingTime);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
-      await increaseTimeTo(this.afterClosingTime);
-      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
-    });
-
     it('should return the amount of tokens bought', async function () {
       await increaseTimeTo(this.openingTime);
       await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth, from: max });
       await increaseTimeTo(this.afterClosingTime);
-      await this.crowdsale.withdrawTokens({ from: arty });
       const balance = await this.token.balanceOf(arty);
-      balance.should.be.bignumber.equal(expectedPresaleTokenAmount);
+      balance.should.be.bignumber.equal(expectedTokenAmount);
     });
   });
 
   describe('set rate', function () {
-    it('should apply new rate when owner set it', async function () {
+    it('should apply new rate when owner set them', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.setRate(new web3.BigNumber(100));
+      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
+      let artyBalance = await this.token.balanceOf(arty);
+      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
+      let maxBalance = await this.token.balanceOf(max);
+      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+    });
+
+    it('should cannot set rate from other user.', async function () {
+      await increaseTimeTo(this.openingTime);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: arty }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: max }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setRate(new web3.BigNumber(100), { from: printer }).should.be.rejectedWith(EVMRevert);
+    });
+  });
+
+  describe('set ICON rate', function () {
+    it('should apply new ICON rate when owner set it', async function () {
       await increaseTimeTo(this.openingTime);
       let expectRate = new web3.BigNumber(100);
-      await this.crowdsale.setRate(expectRate);
-      await this.crowdsale.buyTokens(arty, { value: lessThanCapBoth });
-      await increaseTimeTo(this.afterclosingPreSaleTime);
-      await this.crowdsale.buyTokens(max, { value: lessThanCapBoth });
-
+      await this.crowdsale.setIconRate(expectRate);
+      await this.crowdsale.buyTokensWithIcon(arty, lessThanCapBoth, { from: arty });
       await increaseTimeTo(this.afterClosingTime);
-      await this.crowdsale.withdrawTokens({ from: arty }).should.be.fulfilled;
-      await this.crowdsale.withdrawTokens({ from: max }).should.be.fulfilled;
       let artyBalance = await this.token.balanceOf(arty);
-      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(108)); // Bonus 8%
-      let maxBalance = await this.token.balanceOf(max);
-      maxBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100)); // No Bonus
+      artyBalance.should.be.bignumber.equal(lessThanCapBoth.mul(100));
+    });
+
+    it('should cannot set ICON rate from other user.', async function () {
+      await increaseTimeTo(this.openingTime);
+      let expectRate = new web3.BigNumber(100);
+      await this.crowdsale.setIconRate(expectRate, { from: arty }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setIconRate(expectRate, { from: max }).should.be.rejectedWith(EVMRevert);
+      await this.crowdsale.setIconRate(expectRate, { from: printer }).should.be.rejectedWith(EVMRevert);
     });
   });
 });
