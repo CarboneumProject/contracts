@@ -202,4 +202,23 @@ contract('Subscription', accounts => {
       await this.subscription.setPrice(appA, [1], [price], { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
     });
   });
+
+  describe('App', function () {
+    it('should change app enable from app owner', async function () {
+      await this.subscription.setAppEnable(appA, false, { from: appOwnerA }).should.be.fulfilled;
+      await this.subscription.setAppEnable(appA, true, { from: appOwnerA }).should.be.fulfilled;
+    });
+
+    it('should not change app enable from other', async function () {
+      await this.subscription.setAppEnable(appA, false, { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('should change beneficiary wallet from other app owner', async function () {
+      await this.subscription.setAppWallet(appA, accounts[4], { from: appOwnerA }).should.be.fulfilled;
+    });
+
+    it('should not change beneficiary from other', async function () {
+      await this.subscription.setAppWallet(appA, accounts[4], { from: appOwnerB }).should.be.rejectedWith(EVMRevert);
+    });
+  });
 });

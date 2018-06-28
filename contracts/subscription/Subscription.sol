@@ -37,6 +37,9 @@ contract Subscription is Ownable {
     /// @dev Beneficiary address.
     address beneficiary;
 
+    /// @dev enabled
+    bool enabled;
+
     /// @dev Owner address.
     address owner;
 
@@ -71,6 +74,18 @@ contract Subscription is Ownable {
     bytes32 _appName,
     uint256 _price,
     address _beneficiary
+  );
+
+  event AppEnable(
+    address indexed creator,
+    uint256 _appId,
+    bool enabled
+  );
+
+  event AppWallet(
+    address indexed creator,
+    uint256 _appId,
+    address wallet
   );
 
   function Subscription(
@@ -133,6 +148,7 @@ contract Subscription is Ownable {
       day : 1,
       price : _price
       }));
+    app.enabled = true;
     emit Registration(
       msg.sender,
       lastAppId,
@@ -153,6 +169,20 @@ contract Subscription is Ownable {
         price : _prices[i]
         }));
     }
+  }
+
+  function setAppEnable(uint256 _appId, bool enabled) external {
+    Application storage app = applications[_appId];
+    require(app.owner == msg.sender);
+    app.enabled = enabled;
+    AppEnable(msg.sender, _appId, enabled);
+  }
+
+  function setAppWallet(uint256 _appId, address _beneficiary) external {
+    Application storage app = applications[_appId];
+    require(app.owner == msg.sender);
+    app.beneficiary = _beneficiary;
+    AppWallet(msg.sender, _appId, _beneficiary);
   }
 
   /// @dev Set fee percent for Carboneum team.
