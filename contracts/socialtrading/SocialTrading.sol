@@ -14,28 +14,34 @@ contract SocialTrading is Ownable {
   uint public rewardFee; //percentage times (1 ether)
   uint public relayFee; //percentage times (1 ether)
   uint public verifierFee; //percentage times (1 ether)
-  ERC20 public feeToken;
+  ERC20 public c8Token;
   address public feeAccount;
 
   mapping(address => mapping(address => bool)) public following;
   mapping(address => uint) public relays;
   mapping(address => uint) public verifiers;
 
-  mapping(address => uint256) rewards;
-  mapping(address => uint256) claimedRewards;
+  mapping(address => uint256) public rewards;
+  mapping(address => uint256) public claimedRewards;
 
   struct ClosePositionActivity {
-    bytes32 buyTx;
-    bytes32 sellTx;
     address leaders;
     address followers;
-    int256 gainLoss;
+    address relayer;
+    address verifier;
+    bytes32 buyTx;
+    bytes32 sellTx;
+    int256 rewardFee;
+    int256 relayFee;
+    int256 verifierFee;
+    uint closePositionTimestampInSec;
+    bytes32 activityHash;
   }
 
 
   function CopyTrading(
     address _feeAccount,
-    ERC20 _feeToken,
+    ERC20 _c8Token,
     uint _rewardFee,
     uint _relayFee,
     uint _verifierFee
@@ -43,14 +49,14 @@ contract SocialTrading is Ownable {
   {
     feeAccount = _feeAccount;
     rewardFee = _rewardFee;
-    feeToken = _feeToken;
+    c8Token = _feeToken;
     relayFee = _relayFee;
     verifierFee = _verifierFee;
   }
 
   event Follow(address leader, address follower);
   event UnFollow(address leader, address follower);
-  event FeeChange(FeeType feeType, uint oldFee, uint newFee);
+  event FeeChange(uint8 feeType, uint oldFee, uint newFee);
   event AddRelay(address relay);
   event AddVerifier(address verifier);
   event Activities(bytes32 offChainHash);
@@ -60,17 +66,17 @@ contract SocialTrading is Ownable {
   }
 
   function changeRewardFee(uint _fee) external onlyOwner {
-    emit FeeChange(FeeType.REWARD_FEE, rewardFee, _fee);
+    emit FeeChange(uint8(FeeType.REWARD_FEE), rewardFee, _fee);
     rewardFee = _fee;
   }
 
   function changeRelayFee(uint _fee) external onlyOwner {
-    emit FeeChange(FeeType.RELAY_FEE, relayFee, _fee);
+    emit FeeChange(uint8(FeeType.RELAY_FEE), relayFee, _fee);
     relayFee = _fee;
   }
 
   function changeVerifierFee(uint _fee) external onlyOwner {
-    emit FeeChange(FeeType.VERIFIER_FEE, verifierFee, _fee);
+    emit FeeChange(uint8(FeeType.VERIFIER_FEE), verifierFee, _fee);
     verifierFee = _fee;
   }
 
@@ -109,7 +115,7 @@ contract SocialTrading is Ownable {
   /**
    * @dev add trade activity log to contract by trusted relay.
    */
-  function tradeActivityBatch(bytes32 sideChainHash) external {
+  function tradeActivityBatch(byte32 sideChainHash) external {
     require(relays[msg.sender] == 1);
     emit Activities(sideChainHash);
   }
@@ -119,14 +125,15 @@ contract SocialTrading is Ownable {
    */
   function verifyActivityBatch(ClosePositionActivity[] activity) external {
     require(verifiers[msg.sender] == 1);
-    // TODO Calc reward.
-    // Transfer token from follower to this contract.
-    // Contract spiting fee to leader, relay and verifier the keep balance.
+    // Deterministic select verifiers to verify transaction.
+
+    // Store reward for parties to be claim later.
+
   }
 
   function claimReward() external {
     claimedRewards[msg.sender] += rewards[msg.sender];
     rewards[msg.sender] = 0;
-    require(feeToken.transfer(msg.sender, rewards[msg.sender]));
+    require(c8Token.transfer(msg.sender, rewards[msg.sender]));
   }
 }
