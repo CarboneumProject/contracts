@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.13;
 pragma experimental ABIEncoderV2;
 
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -6,11 +6,13 @@ import "zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
 
 contract SocialTrading is Ownable {
+
   enum FeeType {
     REWARD_FEE,
     RELAY_FEE,
     VERIFIER_FEE
   }
+
   uint public rewardFee; //percentage times (1 ether)
   uint public relayFee; //percentage times (1 ether)
   uint public verifierFee; //percentage times (1 ether)
@@ -27,7 +29,7 @@ contract SocialTrading is Ownable {
   struct ClosePositionActivity {
     address leaders;
     address followers;
-    address relayer;
+    address relay;
     address verifier;
     bytes32 buyTx;
     bytes32 sellTx;
@@ -39,7 +41,7 @@ contract SocialTrading is Ownable {
   }
 
 
-  function CopyTrading(
+  function SocialTrading(
     address _feeAccount,
     ERC20 _c8Token,
     uint _rewardFee,
@@ -49,17 +51,10 @@ contract SocialTrading is Ownable {
   {
     feeAccount = _feeAccount;
     rewardFee = _rewardFee;
-    c8Token = _feeToken;
+    c8Token = _c8Token;
     relayFee = _relayFee;
     verifierFee = _verifierFee;
   }
-
-  event Follow(address leader, address follower);
-  event UnFollow(address leader, address follower);
-  event FeeChange(uint8 feeType, uint oldFee, uint newFee);
-  event AddRelay(address relay);
-  event AddVerifier(address verifier);
-  event Activities(bytes32 offChainHash);
 
   function() public {
     revert();
@@ -115,7 +110,7 @@ contract SocialTrading is Ownable {
   /**
    * @dev add trade activity log to contract by trusted relay.
    */
-  function tradeActivityBatch(byte32 sideChainHash) external {
+  function tradeActivityBatch(bytes32 sideChainHash) external {
     require(relays[msg.sender] == 1);
     emit Activities(sideChainHash);
   }
@@ -128,10 +123,10 @@ contract SocialTrading is Ownable {
     // Deterministic select verifiers to verify transaction.
 
     // Store reward for parties to be claim later.
-
   }
 
   function claimReward() external {
+    require(rewards[msg.sender] > 0);
     claimedRewards[msg.sender] += rewards[msg.sender];
     rewards[msg.sender] = 0;
     require(c8Token.transfer(msg.sender, rewards[msg.sender]));
