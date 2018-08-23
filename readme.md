@@ -3,7 +3,6 @@
 ## Getting start
 ```
 $ npm install
-$ testrpc -u 0
 $ truffle compile
 $ truffle test
 $ truffle migrate
