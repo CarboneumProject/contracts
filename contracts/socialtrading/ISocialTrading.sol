@@ -42,13 +42,13 @@ contract ISocialTrading is Ownable {
    */
   function claimReward() external;
 
-//  /**
-//  * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
-//  */
-//  function getFriends(address _user) public view returns (address[]);
-//
-//  /**
-//  * Followers - refers to the users that follow a specific user.
-//  */
-//  function getFollowers(address _user) public view returns (address[]);
+  /**
+  * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
+  */
+  function getFriends(address _user) public view returns (address[]);
+
+  /**
+  * Followers - refers to the users that follow a specific user.
+  */
+  function getFollowers(address _user) public view returns (address[]);
 }
