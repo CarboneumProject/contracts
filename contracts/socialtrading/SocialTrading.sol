@@ -23,12 +23,12 @@ contract SocialTrading is ISocialTrading {
 
   mapping(bytes32 => LibActivityInfo.Info) public closePositionActivities;
 
-  event Follow(address leader, address follower, uint percentage);
-  event UnFollow(address leader, address follower);
-  event AddRelay(address relay);
-  event AddVerifier(address verifier);
-  event Activities(bytes32 offChainHash);
-  event CloseActivity(bytes32 activityHash, address verifier);
+  event Follow(address indexed leader, address indexed follower, uint percentage);
+  event UnFollow(address indexed leader, address indexed follower);
+  event AddRelay(address indexed relay);
+  event AddVerifier(address indexed verifier);
+  event Activities(bytes32 indexed offChainHash);
+  event CloseActivity(bytes32 indexed activityHash, address indexed verifier);
 
   constructor (
     address _feeAccount,
