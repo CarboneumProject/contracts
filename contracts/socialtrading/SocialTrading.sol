@@ -1,128 +1,112 @@
-pragma solidity ^0.4.13;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.4.18;
 
-import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "./LibActivityInfo.sol";
+import "./LibUserInfo.sol";
+import "./ISocialTrading.sol";
 
 
-contract SocialTrading is Ownable {
-
-  enum FeeType {
-    REWARD_FEE,
-    RELAY_FEE,
-    VERIFIER_FEE
-  }
-
-  uint public rewardFee; //percentage times (1 ether)
-  uint public relayFee; //percentage times (1 ether)
-  uint public verifierFee; //percentage times (1 ether)
+contract SocialTrading is ISocialTrading {
   ERC20 public c8Token;
   address public feeAccount;
 
-  mapping(address => mapping(address => bool)) public following;
+  mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
+  mapping(address => address[]) public followerToLeadersIndex; // Following list
+  mapping(address => address[]) public leaderToFollowers; // Follower list
+
   mapping(address => uint) public relays;
   mapping(address => uint) public verifiers;
 
   mapping(address => uint256) public rewards;
   mapping(address => uint256) public claimedRewards;
 
-  struct ClosePositionActivity {
-    address leaders;
-    address followers;
-    address relay;
-    address verifier;
-    bytes32 buyTx;
-    bytes32 sellTx;
-    int256 rewardFee;
-    int256 relayFee;
-    int256 verifierFee;
-    uint closePositionTimestampInSec;
-    bytes32 activityHash;
-  }
+  mapping(bytes32 => LibActivityInfo.Info) public closePositionActivities;
 
+  event Follow(address leader, address follower, uint percentage);
+  event UnFollow(address leader, address follower);
+  event AddRelay(address relay);
+  event AddVerifier(address verifier);
+  event Activities(bytes32 offChainHash);
+  event CloseActivity(bytes32 activityHash, address verifier);
 
-  function SocialTrading(
+  constructor (
     address _feeAccount,
-    ERC20 _c8Token,
-    uint _rewardFee,
-    uint _relayFee,
-    uint _verifierFee
+    ERC20 _c8Token
   ) public
   {
     feeAccount = _feeAccount;
-    rewardFee = _rewardFee;
     c8Token = _c8Token;
-    relayFee = _relayFee;
-    verifierFee = _verifierFee;
   }
 
   function() public {
     revert();
   }
 
-  function changeRewardFee(uint _fee) external onlyOwner {
-    emit FeeChange(uint8(FeeType.REWARD_FEE), rewardFee, _fee);
-    rewardFee = _fee;
-  }
-
-  function changeRelayFee(uint _fee) external onlyOwner {
-    emit FeeChange(uint8(FeeType.RELAY_FEE), relayFee, _fee);
-    relayFee = _fee;
-  }
-
-  function changeVerifierFee(uint _fee) external onlyOwner {
-    emit FeeChange(uint8(FeeType.VERIFIER_FEE), verifierFee, _fee);
-    verifierFee = _fee;
-  }
-
   /**
    * @dev Follow leader to copy trade.
    */
-  function follow(address leader) external {
-    following[leader][msg.sender] = true;
-    emit Follow(leader, msg.sender);
+  function follow(address _leader, uint _percentage) external {
+    LibUserInfo.Following memory leader1 = LibUserInfo.Following(_leader, _percentage, 0);
+    uint index = followerToLeadersIndex[msg.sender].push(_leader);
+    leader1.index = index;
+    followerToLeaders[msg.sender][_leader] = leader1;
+    emit Follow(_leader, msg.sender, _percentage);
   }
 
   /**
    * @dev UnFollow leader to stop copy trade.
    */
-  function unfollow(address leader) external {
-    following[leader][msg.sender] = false;
-    emit UnFollow(leader, msg.sender);
+  function unfollow(address _leader) external {
+    uint rowToDelete = followerToLeaders[msg.sender][_leader].index;
+    address keyToMove = followerToLeadersIndex[msg.sender][followerToLeadersIndex[msg.sender].length - 1];
+    followerToLeadersIndex[msg.sender][rowToDelete] = keyToMove;
+    followerToLeaders[msg.sender][keyToMove].index = rowToDelete;
+    followerToLeadersIndex[msg.sender].length -= 1;
+    emit UnFollow(_leader, msg.sender);
   }
 
   /**
    * @dev Register relay to contract by the owner.
    */
-  function registerRelay(address relay) onlyOwner external {
-    relays[relay] = 1;
-    emit AddRelay(relay);
+  function registerRelay(address _relay) onlyOwner external {
+    relays[_relay] = 1;
+    emit AddRelay(_relay);
   }
 
   /**
    * @dev Register verifier to contract by the owner.
    */
-  function registerVerifier(address verifier) onlyOwner external {
-    verifiers[verifier] = 1;
-    emit AddVerifier(verifier);
+  function registerVerifier(address _verifier) onlyOwner external {
+    verifiers[_verifier] = 1;
+    emit AddVerifier(_verifier);
   }
 
   /**
-   * @dev add trade activity log to contract by trusted relay.
+   * @dev add trade activity log to contract by a trusted relay.
    */
-  function tradeActivityBatch(bytes32 sideChainHash) external {
+  function tradeActivityBatch(bytes32 _sideChainHash) external {
     require(relays[msg.sender] == 1);
-    emit Activities(sideChainHash);
+    emit Activities(_sideChainHash);
   }
 
-  /**
-   * @dev add verify activity log result to contract by trusted verifier.
-   */
-  function verifyActivityBatch(ClosePositionActivity[] activity) external {
-    require(verifiers[msg.sender] == 1);
-    // Deterministic select verifiers to verify transaction.
+//  /**
+//   * @dev add close position activity log result to contract by a trusted relay.
+//   */
+//  function addCloseActivities(LibActivityInfo.Info[] _activities) external {
+//    require(relays[msg.sender] == 1);
+//    for (uint i = 0; i < _activities.length; i++) {
+//      bytes32 hash = _activities[i].activityHash;
+//      closePositionActivities[_activities[i].activityHash] = _activities[i];
+//      address verifier = getVerifier(hash);
+//      emit CloseActivity(hash, verifier);
+//    }
+//  }
 
-    // Store reward for parties to be claim later.
+  /**
+   * @dev add activity log result to contract by trusted verifier.
+   */
+  function verifyActivityBatch(bytes32[] _activitiesHash, bool[] _result) external {
+    require(verifiers[msg.sender] == 1);
   }
 
   function claimReward() external {
@@ -130,5 +114,29 @@ contract SocialTrading is Ownable {
     claimedRewards[msg.sender] += rewards[msg.sender];
     rewards[msg.sender] = 0;
     require(c8Token.transfer(msg.sender, rewards[msg.sender]));
+  }
+
+  function getFriends(address _user) public view returns (address[]) {
+    address[] memory result = new address[](followerToLeadersIndex[_user].length);
+    uint counter = 0;
+    for (uint i = 0; i < followerToLeadersIndex[_user].length; i++) {
+      result[counter] = followerToLeadersIndex[_user][i];
+      counter++;
+    }
+    return result;
+  }
+
+  function getFollowers(address _user) public view returns (address[]) {
+    address[] memory result = new address[](followerToLeadersIndex[_user].length);
+    uint counter = 0;
+    for (uint i = 0; i < followerToLeadersIndex[_user].length; i++) {
+      result[counter] = followerToLeadersIndex[_user][i];
+      counter++;
+    }
+    return result;
+  }
+
+  function getVerifier(bytes32 hash) private returns (address) {
+    return address(0);
   }
 }
