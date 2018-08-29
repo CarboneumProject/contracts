@@ -39,5 +39,19 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       let friends2 = await this.socialTrading.getFriends(followerA, { from: followerA });
       assert.equal(friends2[0], leader2);
     });
+
+    it('should allow a leader to follow by users', async function () {
+      await this.socialTrading.follow(leader1, ether(50), { from: followerA });
+      await this.socialTrading.follow(leader1, ether(50), { from: followerB });
+      await this.socialTrading.follow(leader1, ether(50), { from: followerC });
+      let followers = await this.socialTrading.getFollowers(leader1, { from: leader1 });
+      assert.equal(followers[0], followerA);
+      assert.equal(followers[1], followerB);
+      assert.equal(followers[2], followerC);
+      await this.socialTrading.unfollow(leader1, { from: followerB });
+      let followers2 = await this.socialTrading.getFollowers(leader1, { from: leader1 });
+      assert.equal(followers2[0], followerA);
+      assert.equal(followers2[1], followerC);
+    });
   });
 });

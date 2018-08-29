@@ -12,7 +12,8 @@ contract SocialTrading is ISocialTrading {
 
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
-  mapping(address => address[]) public leaderToFollowers; // Follower list
+  mapping(address => mapping(address => uint)) public leaderToFollowers;
+  mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
   mapping(address => uint) public relays;
   mapping(address => uint) public verifiers;
@@ -46,8 +47,11 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
-    uint index = followerToLeadersIndex[msg.sender].push(_leader);
-    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, index - 1);
+    uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
+    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, index);
+
+    uint index2 = leaderToFollowersIndex[_leader].push(msg.sender) - 1;
+    leaderToFollowers[_leader][msg.sender] = index2;
     emit Follow(_leader, msg.sender, _percentage);
   }
 
@@ -60,6 +64,12 @@ contract SocialTrading is ISocialTrading {
     followerToLeadersIndex[msg.sender][rowToDelete] = keyToMove;
     followerToLeaders[msg.sender][keyToMove].index = rowToDelete;
     followerToLeadersIndex[msg.sender].length -= 1;
+
+    uint rowToDelete2 = leaderToFollowers[_leader][msg.sender];
+    address keyToMove2 = leaderToFollowersIndex[_leader][leaderToFollowersIndex[_leader].length - 1];
+    leaderToFollowersIndex[_leader][rowToDelete2] = keyToMove2;
+    leaderToFollowers[_leader][keyToMove2] = rowToDelete2;
+    leaderToFollowersIndex[_leader].length -= 1;
     emit UnFollow(_leader, msg.sender);
   }
 
@@ -125,10 +135,10 @@ contract SocialTrading is ISocialTrading {
   }
 
   function getFollowers(address _user) public view returns (address[]) {
-    address[] memory result = new address[](followerToLeadersIndex[_user].length);
+    address[] memory result = new address[](leaderToFollowersIndex[_user].length);
     uint counter = 0;
-    for (uint i = 0; i < followerToLeadersIndex[_user].length; i++) {
-      result[counter] = followerToLeadersIndex[_user][i];
+    for (uint i = 0; i < leaderToFollowersIndex[_user].length; i++) {
+      result[counter] = leaderToFollowersIndex[_user][i];
       counter++;
     }
     return result;
