@@ -46,10 +46,8 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
-    LibUserInfo.Following memory leader1 = LibUserInfo.Following(_leader, _percentage, 0);
     uint index = followerToLeadersIndex[msg.sender].push(_leader);
-    leader1.index = index;
-    followerToLeaders[msg.sender][_leader] = leader1;
+    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, index - 1);
     emit Follow(_leader, msg.sender, _percentage);
   }
 
@@ -89,18 +87,18 @@ contract SocialTrading is ISocialTrading {
     emit Activities(_sideChainHash);
   }
 
-//  /**
-//   * @dev add close position activity log result to contract by a trusted relay.
-//   */
-//  function addCloseActivities(LibActivityInfo.Info[] _activities) external {
-//    require(relays[msg.sender] == 1);
-//    for (uint i = 0; i < _activities.length; i++) {
-//      bytes32 hash = _activities[i].activityHash;
-//      closePositionActivities[_activities[i].activityHash] = _activities[i];
-//      address verifier = getVerifier(hash);
-//      emit CloseActivity(hash, verifier);
-//    }
-//  }
+  //  /**
+  //   * @dev add close position activity log result to contract by a trusted relay.
+  //   */
+  //  function addCloseActivities(LibActivityInfo.Info[] _activities) external {
+  //    require(relays[msg.sender] == 1);
+  //    for (uint i = 0; i < _activities.length; i++) {
+  //      bytes32 hash = _activities[i].activityHash;
+  //      closePositionActivities[_activities[i].activityHash] = _activities[i];
+  //      address verifier = getVerifier(hash);
+  //      emit CloseActivity(hash, verifier);
+  //    }
+  //  }
 
   /**
    * @dev add activity log result to contract by trusted verifier.
