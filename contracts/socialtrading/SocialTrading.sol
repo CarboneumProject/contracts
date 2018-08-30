@@ -15,8 +15,8 @@ contract SocialTrading is ISocialTrading {
   mapping(address => mapping(address => uint)) public leaderToFollowers;
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
-  mapping(address => uint) public relays;
-  mapping(address => uint) public verifiers;
+  mapping(address => bool) public relays;
+  mapping(address => bool) public verifiers;
 
   mapping(address => uint256) public rewards;
   mapping(address => uint256) public claimedRewards;
@@ -47,8 +47,9 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
+    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether);
     uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
-    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, index);
+    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, now, index);
 
     uint index2 = leaderToFollowersIndex[_leader].push(msg.sender) - 1;
     leaderToFollowers[_leader][msg.sender] = index2;
@@ -77,7 +78,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Register relay to contract by the owner.
    */
   function registerRelay(address _relay) onlyOwner external {
-    relays[_relay] = 1;
+    relays[_relay] = true;
     emit AddRelay(_relay);
   }
 
@@ -85,7 +86,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Register verifier to contract by the owner.
    */
   function registerVerifier(address _verifier) onlyOwner external {
-    verifiers[_verifier] = 1;
+    verifiers[_verifier] = true;
     emit AddVerifier(_verifier);
   }
 
@@ -93,28 +94,25 @@ contract SocialTrading is ISocialTrading {
    * @dev add trade activity log to contract by a trusted relay.
    */
   function tradeActivityBatch(bytes32 _sideChainHash) external {
-    require(relays[msg.sender] == 1);
+    require(relays[msg.sender]);
     emit Activities(_sideChainHash);
   }
 
-  //  /**
-  //   * @dev add close position activity log result to contract by a trusted relay.
-  //   */
-  //  function addCloseActivities(LibActivityInfo.Info[] _activities) external {
-  //    require(relays[msg.sender] == 1);
-  //    for (uint i = 0; i < _activities.length; i++) {
-  //      bytes32 hash = _activities[i].activityHash;
-  //      closePositionActivities[_activities[i].activityHash] = _activities[i];
-  //      address verifier = getVerifier(hash);
-  //      emit CloseActivity(hash, verifier);
-  //    }
-  //  }
+  /**
+   * @dev add close activities from relay.
+   */
+  function addCloseActivities(bytes32[] activitiesHash) external {
+    require(relays[msg.sender]);
+    for (uint i = 0; i < activitiesHash.length; i++) {
+      emit CloseActivity(activitiesHash[i], getVerifier(activitiesHash[i]));
+    }
+  }
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
   function verifyActivityBatch(bytes32[] _activitiesHash, bool[] _result) external {
-    require(verifiers[msg.sender] == 1);
+    require(verifiers[msg.sender]);
   }
 
   function claimReward() external {
@@ -146,5 +144,14 @@ contract SocialTrading is ISocialTrading {
 
   function getVerifier(bytes32 hash) private returns (address) {
     return address(0);
+  }
+
+  function getCurrentPercentage(address _user) internal returns (uint) {
+    uint sum = 0;
+    for (uint i = 0; i < followerToLeadersIndex[_user].length; i++) {
+      address leader = followerToLeadersIndex[_user][i];
+      sum += followerToLeaders[_user][leader].percentage;
+    }
+    return sum;
   }
 }

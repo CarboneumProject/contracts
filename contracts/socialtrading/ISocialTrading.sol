@@ -30,7 +30,10 @@ contract ISocialTrading is Ownable {
    */
   function tradeActivityBatch(bytes32 _sideChainHash) external;
 
-
+  /**
+   * @dev add close activities from relay.
+   */
+  function addCloseActivities(bytes32[] activitiesHash) external;
 
   /**
    * @dev add activity log result to contract by trusted verifier.
