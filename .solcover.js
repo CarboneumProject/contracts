@@ -5,5 +5,6 @@ module.exports = {
     skipFiles: [
         'lifecycle/Migrations.sol',
         'mocks'
-    ]
+    ],
+    copyNodeModules: true
 };
