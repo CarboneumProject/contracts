@@ -9,16 +9,21 @@ require('chai')
 const CarboneumToken = artifacts.require('CarboneumToken');
 const SocialTrading = artifacts.require('SocialTrading');
 
-contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, followerA, followerB, followerC]) {
+contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, followerA, followerB, followerC, relay,
+  verifier]) {
   beforeEach(async function () {
     this.token = await CarboneumToken.new({ from: _ });
     await this.token.transfer(followerA, ether(1000), { from: _ });
     await this.token.transfer(followerB, ether(1000), { from: _ });
     await this.token.transfer(followerC, ether(1000), { from: _ });
+    await this.token.transfer(leader1, ether(1000), { from: _ });
     this.socialTrading = await SocialTrading.new(feeWallet, this.token.address, { from: _ });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerA });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerB });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerC });
+    await this.token.approve(this.socialTrading.address, ether(1000), { from: relay });
+    await this.token.approve(this.socialTrading.address, ether(1000), { from: leader1 });
+
   });
 
   describe('follow', function () {
@@ -64,6 +69,39 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       await this.socialTrading.follow(leader1, ether(50), { from: followerA }).should.be.fulfilled;
       await this.socialTrading.follow(leader2, ether(50), { from: followerA }).should.be.fulfilled;
       await this.socialTrading.follow(leader3, ether(1), { from: followerA }).should.be.rejectedWith(EVMRevert);
+    });
+
+    it('Verified Activity Success', async function () {
+      await this.socialTrading.follow(leader1, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader2, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader3, ether(25), { from: followerA });
+      let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
+      assert.equal(friends[0], leader1);
+      assert.equal(friends[1], leader2);
+      assert.equal(friends[2], leader3);
+      await this.socialTrading.registerRelay(relay, { from: _ });
+      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
+      await this.socialTrading.addCloseActivities(['0x541e3', '0x541e13'], { from: relay });
+      await this.socialTrading.verifyActivityBatch(['0x541e3', '0x541e13'],
+        [true, true], { from: verifier });
+    });
+
+    it('Verified claimReward failed', async function () {
+      await this.socialTrading.follow(leader1, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader2, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader3, ether(25), { from: followerA });
+      let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
+      assert.equal(friends[0], leader1);
+      assert.equal(friends[1], leader2);
+      assert.equal(friends[2], leader3);
+      await this.socialTrading.registerRelay(relay, { from: _ });
+      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
+      await this.socialTrading.addCloseActivities(['0x541e3', '0x541e13'], { from: relay });
+      await this.socialTrading.verifyActivityBatch(['0x541e3', '0x541e13'],
+        [true, true], { from: verifier });
+      await this.socialTrading.claimReward({ from: verifier }).should.be.rejectedWith(EVMRevert);
     });
   });
 });
