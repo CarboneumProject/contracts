@@ -28,7 +28,7 @@ contract RelayWallet is Ownable {
   function deposit() payable {
     tokens[address(weth)][msg.sender] = tokens[address(weth)][msg.sender].add(msg.value);
     weth.deposit.value(msg.value)();
-    weth.transfer(wallet, msg.sender);
+    weth.transfer(wallet, msg.value);
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
   }
 
