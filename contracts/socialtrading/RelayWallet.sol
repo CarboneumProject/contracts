@@ -33,7 +33,7 @@ contract RelayWallet is Ownable {
   }
 
   function depositToken(address token, uint amount) {
-    //remember to call Token(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
+    //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
     require(ERC20(token).transferFrom(msg.sender, wallet, amount));
     Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
@@ -42,7 +42,7 @@ contract RelayWallet is Ownable {
   function withdrawToken(address token, uint amount) {
     require(tokens[token][msg.sender] >= amount);
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
-    require(Token(token).transferFrom(wallet, msg.sender, amount));
+    require(ERC20(token).transferFrom(wallet, msg.sender, amount));
     Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
