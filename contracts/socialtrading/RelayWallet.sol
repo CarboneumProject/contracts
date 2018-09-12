@@ -16,37 +16,37 @@ contract RelayWallet is Ownable {
   event Deposit(address token, address user, uint amount, uint balance);
   event Withdraw(address token, address user, uint amount, uint balance);
 
-  function RelayWallet(address _wallet, WETH9 _weth) {
+  constructor(address _wallet, WETH9 _weth) {
     wallet = _wallet;
     weth = _weth;
   }
 
-  function() {
+  function() public {
     revert();
   }
 
-  function deposit() payable {
+  function deposit() public payable {
     tokens[address(weth)][msg.sender] = tokens[address(weth)][msg.sender].add(msg.value);
     weth.deposit.value(msg.value)();
     weth.transfer(wallet, msg.value);
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
   }
 
-  function depositToken(address token, uint amount) {
+  function depositToken(address token, uint amount) public {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
     require(ERC20(token).transferFrom(msg.sender, wallet, amount));
     Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
-  function withdrawToken(address token, uint amount) {
+  function withdrawToken(address token, uint amount) public {
     require(tokens[token][msg.sender] >= amount);
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
     require(ERC20(token).transferFrom(wallet, msg.sender, amount));
     Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
-  function balanceOf(address token, address user) constant returns (uint) {
+  function balanceOf(address token, address user) public constant returns (uint) {
     return tokens[token][user];
   }
 
