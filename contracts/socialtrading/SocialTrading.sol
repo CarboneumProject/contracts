@@ -29,6 +29,7 @@ contract SocialTrading is ISocialTrading {
   event AddVerifier(address indexed verifier);
   event Activities(bytes32 indexed offChainHash);
   event CloseActivity(bytes32 indexed activityHash, address indexed verifier);
+  event ResultFailed(bytes32 indexed activityHash, bool result);
 
   constructor (
     address _feeAccount,
@@ -60,18 +61,22 @@ contract SocialTrading is ISocialTrading {
    * @dev UnFollow leader to stop copy trade.
    */
   function unfollow(address _leader) external {
-    uint rowToDelete = followerToLeaders[msg.sender][_leader].index;
-    address keyToMove = followerToLeadersIndex[msg.sender][followerToLeadersIndex[msg.sender].length - 1];
-    followerToLeadersIndex[msg.sender][rowToDelete] = keyToMove;
-    followerToLeaders[msg.sender][keyToMove].index = rowToDelete;
-    followerToLeadersIndex[msg.sender].length -= 1;
+    _unfollow(msg.sender, _leader);
+  }
 
-    uint rowToDelete2 = leaderToFollowers[_leader][msg.sender];
+  function _unfollow(address _follower, address _leader) private {
+    uint rowToDelete = followerToLeaders[_follower][_leader].index;
+    address keyToMove = followerToLeadersIndex[_follower][followerToLeadersIndex[_follower].length - 1];
+    followerToLeadersIndex[_follower][rowToDelete] = keyToMove;
+    followerToLeaders[_follower][keyToMove].index = rowToDelete;
+    followerToLeadersIndex[_follower].length -= 1;
+
+    uint rowToDelete2 = leaderToFollowers[_leader][_follower];
     address keyToMove2 = leaderToFollowersIndex[_leader][leaderToFollowersIndex[_leader].length - 1];
     leaderToFollowersIndex[_leader][rowToDelete2] = keyToMove2;
     leaderToFollowers[_leader][keyToMove2] = rowToDelete2;
     leaderToFollowersIndex[_leader].length -= 1;
-    emit UnFollow(_leader, msg.sender);
+    emit UnFollow(_leader, _follower);
   }
 
   /**
@@ -101,25 +106,63 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev add close activities from relay.
    */
-  function addCloseActivities(bytes32[] activitiesHash) external {
+  function addCloseActivities(
+    address _leader,
+    address _follower,
+    address _relay,
+    address _verifier,
+    bytes32 _buyTx,
+    bytes32 _sellTx,
+    uint256 _rewardFee,
+    uint256 _relayFee,
+    uint256 _verifierFee,
+    uint _closePositionTimestampInSec,
+    bytes32 _activitiesHash) external {
     require(relays[msg.sender]);
-    for (uint i = 0; i < activitiesHash.length; i++) {
-      emit CloseActivity(activitiesHash[i], getVerifier(activitiesHash[i]));
-    }
+    closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
+      leader : _leader,
+      follower : _follower,
+      relay : _relay,
+      verifier : _verifier,
+      buyTx : _buyTx,
+      sellTx : _sellTx,
+      rewardFee : _rewardFee,
+      relayFee : _relayFee,
+      verifierFee : _verifierFee,
+      closePositionTimestampInSec : _closePositionTimestampInSec,
+      activityHash : _activitiesHash});
+    emit CloseActivity(_activitiesHash, getVerifier(_activitiesHash));
   }
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32[] _activitiesHash, bool[] _result) external {
+  function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external {
     require(verifiers[msg.sender]);
+    LibActivityInfo.Info storage activities = closePositionActivities[_activitiesHash];
+    uint value = activities.rewardFee + activities.relayFee + activities.verifierFee;
+    uint256 allowance = c8Token.allowance(activities.follower, address(this));
+    uint256 balance = c8Token.balanceOf(activities.follower);
+    if (_result) {
+      if ((balance >= value) && (allowance >= value)) {
+        c8Token.transferFrom(activities.follower, address(this), value);
+        rewards[activities.leader] += activities.rewardFee;
+        rewards[activities.relay] += activities.relayFee;
+        rewards[activities.verifier] += activities.verifierFee;
+      } else {
+        _unfollow(activities.follower, activities.leader);
+      }
+    } else {
+      emit ResultFailed(_activitiesHash, _result);
+    }
   }
 
   function claimReward() external {
     require(rewards[msg.sender] > 0);
     claimedRewards[msg.sender] += rewards[msg.sender];
+    uint256 reward = rewards[msg.sender];
     rewards[msg.sender] = 0;
-    require(c8Token.transfer(msg.sender, rewards[msg.sender]));
+    require(c8Token.transfer(msg.sender, reward));
   }
 
   function getFriends(address _user) public view returns (address[]) {

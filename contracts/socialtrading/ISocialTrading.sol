@@ -33,12 +33,22 @@ contract ISocialTrading is Ownable {
   /**
    * @dev add close activities from relay.
    */
-  function addCloseActivities(bytes32[] activitiesHash) external;
+  function addCloseActivities(address _leader,
+    address _follower,
+    address _relay,
+    address _verifier,
+    bytes32 _buyTx,
+    bytes32 _sellTx,
+    uint256 _rewardFee,
+    uint256 _relayFee,
+    uint256 _verifierFee,
+    uint _closePositionTimestampInSec,
+    bytes32 _activitiesHash) external;
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32[] _activitiesHash, bool[] _result) external;
+  function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external;
 
   /**
    * @dev claim reward or fee from this contract.

@@ -3,15 +3,15 @@ pragma solidity ^0.4.13;
 
 contract LibActivityInfo {
   struct Info {
-    address leaders;
-    address followers;
+    address leader;
+    address follower;
     address relay;
     address verifier;
     bytes32 buyTx;
     bytes32 sellTx;
-    int256 rewardFee;
-    int256 relayFee;
-    int256 verifierFee;
+    uint256 rewardFee;
+    uint256 relayFee;
+    uint256 verifierFee;
     uint closePositionTimestampInSec;
     bytes32 activityHash;
   }
