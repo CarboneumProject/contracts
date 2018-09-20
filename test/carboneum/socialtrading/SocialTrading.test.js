@@ -16,10 +16,12 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
     await this.token.transfer(followerA, ether(1000), { from: _ });
     await this.token.transfer(followerB, ether(1000), { from: _ });
     await this.token.transfer(followerC, ether(3), { from: _ });
+    await this.token.transfer(verifier, ether(1000), { from: _ });
     this.socialTrading = await SocialTrading.new(feeWallet, this.token.address, { from: _ });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerA });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerB });
     await this.token.approve(this.socialTrading.address, ether(1000), { from: followerC });
+    await this.token.approve(this.socialTrading.address, ether(1000), { from: verifier });
   });
 
   describe('follow', function () {
@@ -76,7 +78,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -94,7 +96,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -112,7 +114,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -134,7 +136,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -156,7 +158,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -176,7 +178,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerC, relay,
@@ -200,7 +202,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
@@ -225,7 +227,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(verifier, { from: _ });
+      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,

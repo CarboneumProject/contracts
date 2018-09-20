@@ -18,6 +18,7 @@ contract SocialTrading is ISocialTrading {
   mapping(address => bool) public relays;
   mapping(address => bool) public verifiers;
 
+  mapping(address => uint256) public stakeVerifiers;
   mapping(address => uint256) public rewards;
   mapping(address => uint256) public claimedRewards;
 
@@ -90,9 +91,10 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev Register verifier to contract by the owner.
    */
-  function registerVerifier(address _verifier) onlyOwner external {
-    verifiers[_verifier] = true;
-    emit AddVerifier(_verifier);
+  function registerVerifier(uint256 _stakeAmount)  external {
+    c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
+    stakeVerifiers[msg.sender] += _stakeAmount;
+    emit AddVerifier(msg.sender);
   }
 
   /**
