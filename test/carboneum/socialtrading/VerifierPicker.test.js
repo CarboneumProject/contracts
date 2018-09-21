@@ -28,7 +28,7 @@ contract('VerifierPicker', function ([owner, v1, v2, v3, v4, v5, v6, v7, v8, v9,
       console.log(v4);
       console.log(picked);
 
-      await this.picker.showLog({ from: v1 });
+      // await this.picker.showLog({ from: v1 });
     });
   });
 });

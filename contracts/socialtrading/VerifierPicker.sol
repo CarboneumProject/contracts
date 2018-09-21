@@ -22,7 +22,7 @@ contract VerifierPicker is Ownable, EventLogger {
     sumStake += stakeAmount;
   }
 
-  function pickVerifier(uint seed) onlyOwner {
+  function pickVerifier(uint seed) public onlyOwner {
     uint pickedSize = 2;
     pickerVerifiers.length = 0;
     for (uint r = 0; r < pickedSize; r++) {
@@ -30,21 +30,6 @@ contract VerifierPicker is Ownable, EventLogger {
       emit Uint(rnd);
       pickerVerifiers.push(verifiers[rnd]);
     }
-  }
-
-
-  function _pickOne(uint seed) private returns (uint256) {
-    uint rnd = randomGen(seed, sumStake);
-    emit Uint(rnd);
-    for (uint i = 0; i < verifiers.length; i++) {
-      if (rnd < stakes[verifiers[i]])
-        return i;
-      rnd -= stakes[verifiers[i]];
-    }
-  }
-
-  function randomGen(uint seed, uint max) private constant returns (uint randomNumber) {
-    return (uint(keccak256(abi.encodePacked(block.blockhash(block.number - 1), seed))) % max);
   }
 
   function getPickedVerifiers() public view returns (address[]) {
@@ -57,4 +42,17 @@ contract VerifierPicker is Ownable, EventLogger {
     return result;
   }
 
+  function _pickOne(uint seed) private returns (uint256) {
+    uint rnd = randomGen(seed, sumStake);
+    emit Uint(rnd);
+    for (uint i = 0; i < verifiers.length; i++) {
+      if (rnd < stakes[verifiers[i]])
+        return i;
+      rnd -= stakes[verifiers[i]];
+    }
+  }
+
+  function randomGen(uint seed, uint max) private view returns (uint randomNumber) {
+    return (uint(keccak256(abi.encodePacked(block.blockhash(block.number - 1), seed))) % max);
+  }
 }
