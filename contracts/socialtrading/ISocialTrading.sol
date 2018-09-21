@@ -21,9 +21,14 @@ contract ISocialTrading is Ownable {
    */
   function registerRelay(address _relay) onlyOwner external;
   /**
-   * @dev Register verifier to contract by the owner.
+   * @dev Register verifier to contract by stake.
    */
   function registerVerifier(uint256 _stakeAmount) external;
+
+  /**
+     * @dev Cancel verifier withdraw token from stake.
+   */
+  function cancelVerifier() external;
 
   /**
    * @dev add trade activity log to contract by a trusted relay.

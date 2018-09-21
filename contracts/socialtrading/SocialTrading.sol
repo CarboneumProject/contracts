@@ -28,6 +28,7 @@ contract SocialTrading is ISocialTrading {
   event UnFollow(address indexed leader, address indexed follower);
   event AddRelay(address indexed relay);
   event AddVerifier(address indexed verifier);
+  event CancelVerifier(address indexed verifier);
   event Activities(bytes32 indexed offChainHash);
   event CloseActivity(bytes32 indexed activityHash, address indexed verifier);
   event ResultFailed(bytes32 indexed activityHash, bool result);
@@ -91,10 +92,17 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev Register verifier to contract by the owner.
    */
-  function registerVerifier(uint256 _stakeAmount)  external {
+  function registerVerifier(uint256 _stakeAmount) external {
     c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
     stakeVerifiers[msg.sender] += _stakeAmount;
     emit AddVerifier(msg.sender);
+  }
+
+  function cancelVerifier() external {
+    require(stakeVerifiers[msg.sender] > 0);
+    uint256 stakeVerifier = stakeVerifiers[msg.sender];
+    stakeVerifiers[msg.sender] = 0;
+    require(c8Token.transfer(msg.sender, stakeVerifier));
   }
 
   /**
