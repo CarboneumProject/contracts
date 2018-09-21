@@ -10,6 +10,10 @@ contract SocialTrading is ISocialTrading {
   ERC20 public c8Token;
   address public feeAccount;
 
+  address[] public verifiersList;
+  address[] public pickerVerifiers;
+  uint256 public sumStake;
+
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
   mapping(address => mapping(address => uint)) public leaderToFollowers;
@@ -35,10 +39,14 @@ contract SocialTrading is ISocialTrading {
 
   constructor (
     address _feeAccount,
-    ERC20 _c8Token
+    address[] _verifiersList,
+    address[] _pickerVerifiers,
+  ERC20 _c8Token
   ) public
   {
     feeAccount = _feeAccount;
+    verifiersList = _verifiersList;
+    pickerVerifiers = _pickerVerifiers;
     c8Token = _c8Token;
   }
 
@@ -167,12 +175,44 @@ contract SocialTrading is ISocialTrading {
     }
   }
 
+  function pickVerifier(uint seed) public onlyOwner {
+    uint pickedSize = 2;
+    pickerVerifiers.length = 0;
+    for (uint r = 0; r < pickedSize; r++) {
+      uint rnd = _pickOne(seed + r * r);
+      pickerVerifiers.push(verifiersList[rnd]);
+    }
+  }
+
   function claimReward() external {
     require(rewards[msg.sender] > 0);
     claimedRewards[msg.sender] += rewards[msg.sender];
     uint256 reward = rewards[msg.sender];
     rewards[msg.sender] = 0;
     require(c8Token.transfer(msg.sender, reward));
+  }
+
+  function getPickedVerifiers() public view returns (address[]) {
+    address[] memory result = new address[](pickerVerifiers.length);
+    uint counter = 0;
+    for (uint i = 0; i < pickerVerifiers.length; i++) {
+      result[counter] = pickerVerifiers[i];
+      counter++;
+    }
+    return result;
+  }
+
+  function _pickOne(uint seed) private returns (uint256) {
+    uint rnd = randomGen(seed, sumStake);
+    for (uint i = 0; i < verifiersList.length; i++) {
+      if (rnd < stakeVerifiers[verifiersList[i]])
+        return i;
+      rnd -= stakeVerifiers[verifiersList[i]];
+    }
+  }
+
+  function randomGen(uint seed, uint max) private view returns (uint randomNumber) {
+    return (uint(keccak256(abi.encodePacked(block.blockhash(block.number - 1), seed))) % max);
   }
 
   function getFriends(address _user) public view returns (address[]) {
