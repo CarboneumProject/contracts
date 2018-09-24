@@ -13,15 +13,26 @@ contract RelayWallet is Wallet {
 
   WETH9 weth;
 
-  event Deposit(address token, address user, uint amount, uint balance);
-  event Withdraw(address token, address user, uint amount, uint balance);
+  event Deposit(
+    address token,
+    address user,
+    uint amount,
+    uint balance
+  );
+
+  event Withdraw(
+    address token,
+    address user,
+    uint amount,
+    uint balance
+  );
 
   constructor(WETH9 _weth) {
     weth = _weth;
   }
 
   function() public {
-    revert();
+    revert("Unused fallback function");
   }
 
   function deposit() public payable {
@@ -34,15 +45,25 @@ contract RelayWallet is Wallet {
   function depositToken(address token, uint amount) public {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
-    require(ERC20(token).transferFrom(msg.sender, address(this), amount));
-    Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
+    require(ERC20(token).transferFrom(msg.sender, address(this), amount), "Cannot transfer token from sender");
+    emit Deposit(
+      token,
+      msg.sender,
+      amount,
+      tokens[token][msg.sender]
+    );
   }
 
   function withdrawToken(address token, uint amount) public {
-    require(tokens[token][msg.sender] >= amount);
+    require(tokens[token][msg.sender] >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
-    require(ERC20(token).transfer(msg.sender, amount));
-    Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
+    require(ERC20(token).transfer(msg.sender, amount), "Cannot transfer token");
+    emit Withdraw(
+      token,
+      msg.sender,
+      amount,
+      tokens[token][msg.sender]
+    );
   }
 
   function balanceOf(address token, address user) public constant returns (uint) {
