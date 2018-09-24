@@ -4,11 +4,11 @@ import "zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Wrap9.sol";
+import "./0x/Wallet.sol";
 
 
-contract RelayWallet is Ownable {
+contract RelayWallet is Wallet {
   using SafeMath for uint;
-  address wallet;
   mapping(address => mapping(address => uint)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
 
   WETH9 weth;
@@ -16,8 +16,7 @@ contract RelayWallet is Ownable {
   event Deposit(address token, address user, uint amount, uint balance);
   event Withdraw(address token, address user, uint amount, uint balance);
 
-  constructor(address _wallet, WETH9 _weth) {
-    wallet = _wallet;
+  constructor(WETH9 _weth) {
     weth = _weth;
   }
 
@@ -28,21 +27,21 @@ contract RelayWallet is Ownable {
   function deposit() public payable {
     tokens[address(weth)][msg.sender] = tokens[address(weth)][msg.sender].add(msg.value);
     weth.deposit.value(msg.value)();
-    weth.transfer(wallet, msg.value);
+    weth.transfer(address(this), msg.value);
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
   }
 
   function depositToken(address token, uint amount) public {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
-    require(ERC20(token).transferFrom(msg.sender, wallet, amount));
+    require(ERC20(token).transferFrom(msg.sender, address(this), amount));
     Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
   function withdrawToken(address token, uint amount) public {
     require(tokens[token][msg.sender] >= amount);
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
-    require(ERC20(token).transferFrom(wallet, msg.sender, amount));
+    require(ERC20(token).transfer(msg.sender, amount));
     Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 

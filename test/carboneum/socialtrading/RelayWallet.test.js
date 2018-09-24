@@ -10,12 +10,12 @@ const Token = artifacts.require('CarboneumToken');
 const Weth = artifacts.require('WETH9');
 const RelayWallet = artifacts.require('RelayWallet');
 
-contract('RelayWallet', function ([_, adminWallet, user1, user2]) {
+contract('RelayWallet', function ([_, user1, user2]) {
   beforeEach(async function () {
     this.tokenA = await Token.new({ from: _ });
     this.tokenB = await Token.new({ from: _ });
     this.weth = await Weth.new({ from: _ });
-    this.relayWallet = await RelayWallet.new(adminWallet, this.weth.address, { from: _ });
+    this.relayWallet = await RelayWallet.new(this.weth.address, { from: _ });
     await this.tokenA.transfer(user1, ether(1000), { from: _ });
     await this.tokenA.transfer(user2, ether(1000), { from: _ });
     await this.tokenB.transfer(user1, ether(1000), { from: _ });
@@ -24,10 +24,6 @@ contract('RelayWallet', function ([_, adminWallet, user1, user2]) {
     await this.tokenA.approve(this.relayWallet.address, ether(1000), { from: user2 });
     await this.tokenB.approve(this.relayWallet.address, ether(1000), { from: user1 });
     await this.tokenB.approve(this.relayWallet.address, ether(1000), { from: user2 });
-
-    await this.tokenA.approve(this.relayWallet.address, ether(10000000000), { from: adminWallet });
-    await this.tokenB.approve(this.relayWallet.address, ether(10000000000), { from: adminWallet });
-    await this.weth.approve(this.relayWallet.address, ether(10000000000), { from: adminWallet });
   });
 
   describe('deposit', function () {
@@ -45,9 +41,9 @@ contract('RelayWallet', function ([_, adminWallet, user1, user2]) {
       let balanceTokenBUser2 = await this.relayWallet.balanceOf(this.tokenB.address, user2);
       balanceTokenBUser2.should.be.bignumber.equal(ether(7));
 
-      let allTokenA = await this.tokenA.balanceOf(adminWallet);
+      let allTokenA = await this.tokenA.balanceOf(this.relayWallet.address);
       allTokenA.should.be.bignumber.equal(ether(5));
-      let allTokenB = await this.tokenB.balanceOf(adminWallet);
+      let allTokenB = await this.tokenB.balanceOf(this.relayWallet.address);
       allTokenB.should.be.bignumber.equal(ether(12));
     });
 
@@ -58,7 +54,7 @@ contract('RelayWallet', function ([_, adminWallet, user1, user2]) {
       balanceWethBUser1.should.be.bignumber.equal(ether(3));
       let balanceWethBUser2 = await this.relayWallet.balanceOf(this.weth.address, user2);
       balanceWethBUser2.should.be.bignumber.equal(ether(5));
-      let allWeth = await this.weth.balanceOf(adminWallet);
+      let allWeth = await this.weth.balanceOf(this.relayWallet.address);
       allWeth.should.be.bignumber.equal(ether(8));
     });
   });
