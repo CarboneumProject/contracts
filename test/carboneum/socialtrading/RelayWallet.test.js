@@ -1,5 +1,5 @@
 import ether from '../../helpers/ether';
-import ethUtil from 'ethereumjs-util';
+
 const BigNumber = web3.BigNumber;
 require('chai')
   .use(require('chai-as-promised'))
