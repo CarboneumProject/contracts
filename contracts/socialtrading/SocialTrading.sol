@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "./LibActivityInfo.sol";
 import "./LibUserInfo.sol";
 import "./ISocialTrading.sol";
@@ -10,6 +10,10 @@ contract SocialTrading is ISocialTrading {
   ERC20 public c8Token;
   address public feeAccount;
 
+  address[] public verifiersList;
+  address[] public pickerVerifiers;
+  uint256 public sumStake;
+
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
   mapping(address => mapping(address => uint)) public leaderToFollowers;
@@ -18,6 +22,7 @@ contract SocialTrading is ISocialTrading {
   mapping(address => bool) public relays;
   mapping(address => bool) public verifiers;
 
+  mapping(address => uint256) public stakeVerifiers;
   mapping(address => uint256) public rewards;
   mapping(address => uint256) public claimedRewards;
 
@@ -27,6 +32,7 @@ contract SocialTrading is ISocialTrading {
   event UnFollow(address indexed leader, address indexed follower);
   event AddRelay(address indexed relay);
   event AddVerifier(address indexed verifier);
+  event CancelVerifier(address indexed verifier);
   event Activities(bytes32 indexed offChainHash);
   event CloseActivity(bytes32 indexed activityHash, address indexed verifier);
   event ResultFailed(bytes32 indexed activityHash, bool result);
@@ -48,7 +54,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
-    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether);
+    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "Your percentage more than 100%.");
     uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
     followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, now, index);
 
@@ -90,16 +96,24 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev Register verifier to contract by the owner.
    */
-  function registerVerifier(address _verifier) onlyOwner external {
-    verifiers[_verifier] = true;
-    emit AddVerifier(_verifier);
+  function registerVerifier(uint256 _stakeAmount) external {
+    c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
+    stakeVerifiers[msg.sender] += _stakeAmount;
+    emit AddVerifier(msg.sender);
+  }
+
+  function cancelVerifier() external {
+    require(stakeVerifiers[msg.sender] > 0, "Your amount must be more than 0.");
+    uint256 stakeVerifier = stakeVerifiers[msg.sender];
+    stakeVerifiers[msg.sender] = 0;
+    require(c8Token.transfer(msg.sender, stakeVerifier));
   }
 
   /**
    * @dev add trade activity log to contract by a trusted relay.
    */
   function tradeActivityBatch(bytes32 _sideChainHash) external {
-    require(relays[msg.sender]);
+    require(relays[msg.sender], "Must be relay.");
     emit Activities(_sideChainHash);
   }
 
@@ -119,7 +133,7 @@ contract SocialTrading is ISocialTrading {
     uint _closePositionTimestampInSec,
     bytes32 _activitiesHash) external
   {
-    require(relays[msg.sender]);
+    require(relays[msg.sender], "Must be relay.");
     closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
       leader : _leader,
       follower : _follower,
@@ -139,7 +153,7 @@ contract SocialTrading is ISocialTrading {
    * @dev add activity log result to contract by trusted verifier.
    */
   function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external {
-    require(verifiers[msg.sender]);
+    require(verifiers[msg.sender], "Must be verifier.");
     LibActivityInfo.Info storage activities = closePositionActivities[_activitiesHash];
     uint value = activities.rewardFee + activities.relayFee + activities.verifierFee;
     uint256 allowance = c8Token.allowance(activities.follower, address(this));
@@ -158,12 +172,44 @@ contract SocialTrading is ISocialTrading {
     }
   }
 
+  function pickVerifier(uint seed) public onlyOwner {
+    uint pickedSize = 2;
+    pickerVerifiers.length = 0;
+    for (uint r = 0; r < pickedSize; r++) {
+      uint rnd = _pickOne(seed + r * r);
+      pickerVerifiers.push(verifiersList[rnd]);
+    }
+  }
+
   function claimReward() external {
-    require(rewards[msg.sender] > 0);
+    require(rewards[msg.sender] > 0, "Your reward must be more than 0.");
     claimedRewards[msg.sender] += rewards[msg.sender];
     uint256 reward = rewards[msg.sender];
     rewards[msg.sender] = 0;
-    require(c8Token.transfer(msg.sender, reward));
+    require(c8Token.transfer(msg.sender, reward), "Transfer failed.");
+  }
+
+  function getPickedVerifiers() public view returns (address[]) {
+    address[] memory result = new address[](pickerVerifiers.length);
+    uint counter = 0;
+    for (uint i = 0; i < pickerVerifiers.length; i++) {
+      result[counter] = pickerVerifiers[i];
+      counter++;
+    }
+    return result;
+  }
+
+  function _pickOne(uint seed) private returns (uint256) {
+    uint rnd = randomGen(seed, sumStake);
+    for (uint i = 0; i < verifiersList.length; i++) {
+      if (rnd < stakeVerifiers[verifiersList[i]])
+        return i;
+      rnd -= stakeVerifiers[verifiersList[i]];
+    }
+  }
+
+  function randomGen(uint seed, uint max) private view returns (uint randomNumber) {
+    return (uint(keccak256(abi.encodePacked(block.blockhash(block.number - 1), seed))) % max);
   }
 
   function getFriends(address _user) public view returns (address[]) {

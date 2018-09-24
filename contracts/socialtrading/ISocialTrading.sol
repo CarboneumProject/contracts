@@ -21,9 +21,14 @@ contract ISocialTrading is Ownable {
    */
   function registerRelay(address _relay) onlyOwner external;
   /**
-   * @dev Register verifier to contract by the owner.
+   * @dev Register verifier to contract by stake.
    */
-  function registerVerifier(address _verifier) onlyOwner external;
+  function registerVerifier(uint256 _stakeAmount) external;
+
+  /**
+     * @dev Cancel verifier withdraw token from stake.
+   */
+  function cancelVerifier() external;
 
   /**
    * @dev add trade activity log to contract by a trusted relay.
@@ -52,13 +57,33 @@ contract ISocialTrading is Ownable {
   function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external;
 
   /**
+     * @dev call getPickedVerifiers and calculate selected chance
+   */
+  function pickVerifier(uint seed) public onlyOwner;
+
+  /**
    * @dev claim reward or fee from this contract.
    */
   function claimReward() external;
 
   /**
-  * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
-  */
+     * @dev count address who has registered to be verifiers
+   */
+  function getPickedVerifiers() public view returns (address[]);
+
+  /**
+     * @dev choose who registered from calculate random.
+   */
+  function _pickOne(uint seed) private returns (uint256);
+
+  /**
+     * @dev return block calculate.
+   */
+  function randomGen(uint seed, uint max) private view returns (uint randomNumber);
+
+    /**
+    * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
+    */
   function getFriends(address _user) public view returns (address[]);
 
   /**
