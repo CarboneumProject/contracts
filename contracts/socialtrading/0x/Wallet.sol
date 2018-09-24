@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "./IWallet.sol";
 import "./LibBytes.sol";
-import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
 contract Wallet is
