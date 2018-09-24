@@ -39,14 +39,10 @@ contract SocialTrading is ISocialTrading {
 
   constructor (
     address _feeAccount,
-    address[] _verifiersList,
-    address[] _pickerVerifiers,
-  ERC20 _c8Token
+    ERC20 _c8Token
   ) public
   {
     feeAccount = _feeAccount;
-    verifiersList = _verifiersList;
-    pickerVerifiers = _pickerVerifiers;
     c8Token = _c8Token;
   }
 
@@ -58,7 +54,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
-    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether);
+    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "Your percentage more than 100%.");
     uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
     followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, now, index);
 
@@ -107,7 +103,7 @@ contract SocialTrading is ISocialTrading {
   }
 
   function cancelVerifier() external {
-    require(stakeVerifiers[msg.sender] > 0);
+    require(stakeVerifiers[msg.sender] > 0, "Your amount must be more than 0.");
     uint256 stakeVerifier = stakeVerifiers[msg.sender];
     stakeVerifiers[msg.sender] = 0;
     require(c8Token.transfer(msg.sender, stakeVerifier));
@@ -117,7 +113,7 @@ contract SocialTrading is ISocialTrading {
    * @dev add trade activity log to contract by a trusted relay.
    */
   function tradeActivityBatch(bytes32 _sideChainHash) external {
-    require(relays[msg.sender]);
+    require(relays[msg.sender], "Must be relay.");
     emit Activities(_sideChainHash);
   }
 
@@ -135,8 +131,9 @@ contract SocialTrading is ISocialTrading {
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activitiesHash) external {
-    require(relays[msg.sender]);
+    bytes32 _activitiesHash) external
+  {
+    require(relays[msg.sender], "Must be relay.");
     closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
       leader : _leader,
       follower : _follower,
@@ -156,7 +153,7 @@ contract SocialTrading is ISocialTrading {
    * @dev add activity log result to contract by trusted verifier.
    */
   function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external {
-    require(verifiers[msg.sender]);
+    require(verifiers[msg.sender], "Must be verifier.");
     LibActivityInfo.Info storage activities = closePositionActivities[_activitiesHash];
     uint value = activities.rewardFee + activities.relayFee + activities.verifierFee;
     uint256 allowance = c8Token.allowance(activities.follower, address(this));
@@ -185,11 +182,11 @@ contract SocialTrading is ISocialTrading {
   }
 
   function claimReward() external {
-    require(rewards[msg.sender] > 0);
+    require(rewards[msg.sender] > 0, "Your reward must be more than 0.");
     claimedRewards[msg.sender] += rewards[msg.sender];
     uint256 reward = rewards[msg.sender];
     rewards[msg.sender] = 0;
-    require(c8Token.transfer(msg.sender, reward));
+    require(c8Token.transfer(msg.sender, reward), "Transfer failed.");
   }
 
   function getPickedVerifiers() public view returns (address[]) {
