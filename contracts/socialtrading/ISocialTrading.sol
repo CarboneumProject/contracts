@@ -33,7 +33,8 @@ contract ISocialTrading is Ownable {
   /**
    * @dev add close activities from relay.
    */
-  function addCloseActivities(address _leader,
+  function addCloseActivities(
+    address _leader,
     address _follower,
     address _relay,
     address _verifier,

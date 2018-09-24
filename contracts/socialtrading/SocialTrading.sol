@@ -117,7 +117,8 @@ contract SocialTrading is ISocialTrading {
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activitiesHash) external {
+    bytes32 _activitiesHash) external
+  {
     require(relays[msg.sender]);
     closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
       leader : _leader,
