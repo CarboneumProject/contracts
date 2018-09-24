@@ -98,7 +98,9 @@ contract SocialTrading is ISocialTrading {
    */
   function registerVerifier(uint256 _stakeAmount) external {
     c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
-    stakeVerifiers[msg.sender] += _stakeAmount;
+    verifiersList.push(msg.sender);
+    stakeVerifiers[msg.sender] = _stakeAmount;
+    sumStake += _stakeAmount;
     emit AddVerifier(msg.sender);
   }
 
