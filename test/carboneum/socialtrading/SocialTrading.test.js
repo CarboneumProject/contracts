@@ -82,11 +82,16 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
+      await this.socialTrading.registerVerifier(ether(10), { from: followerB });
+      await this.socialTrading.registerVerifier(ether(20), { from: leader2 });
+      await this.socialTrading.registerVerifier(ether(30), { from: leader3 });
+      await this.socialTrading.registerVerifier(ether(40), { from: verifier });
+      await this.socialTrading.pickVerifier(2, 88888, { from: _ });
+      await this.socialTrading.getPickedVerifiers({ from: verifier, followerB, leader3 });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
-        verifier, '0x8352523589203752624',
+        [verifier, followerB, leader3], [], '0x8352523589203752624',
         '0x8352523589203752625', ether(1), ether(2), ether(1),
         '1536655421', '0x8352523589203752627', { from: relay });
     });
@@ -100,11 +105,16 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       assert.equal(friends[1], leader2);
       assert.equal(friends[2], leader3);
       await this.socialTrading.registerRelay(relay, { from: _ });
-      await this.socialTrading.registerVerifier(ether(20), { from: verifier });
+      await this.socialTrading.registerVerifier(ether(10), { from: followerB });
+      await this.socialTrading.registerVerifier(ether(20), { from: leader2 });
+      await this.socialTrading.registerVerifier(ether(30), { from: leader3 });
+      await this.socialTrading.registerVerifier(ether(40), { from: verifier });
+      await this.socialTrading.pickVerifier(2, 88888, { from: _ });
+      await this.socialTrading.getPickedVerifiers({ from: verifier, followerB, leader3 });
       await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
       await this.socialTrading.addCloseActivities(leader1,
         followerA, relay,
-        verifier, '0x8352523589203752624',
+        [verifier, followerB, leader3], [], '0x8352523589203752624',
         '0x8352523589203752625', ether(1), ether(2), ether(1),
         '1536655421', '0x8352523589203752627', { from: followerA }).should.be.rejectedWith(EVMRevert);
     });
@@ -135,32 +145,41 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       await this.socialTrading.registerVerifier(ether(20), { from: leader2 });
       await this.socialTrading.registerVerifier(ether(30), { from: leader3 });
       await this.socialTrading.registerVerifier(ether(40), { from: verifier });
-      await this.socialTrading.pickVerifier(88888, { from: _ });
-      await this.socialTrading.getPickedVerifiers({ from: verifier });
+      await this.socialTrading.pickVerifier(2, 88888, { from: _ });
+      await this.socialTrading.getPickedVerifiers({ from: verifier, followerB, leader3 });
     });
 
-    // it('Verify activities success.', async function () {
-    //   await this.socialTrading.follow(leader1, ether(25), { from: followerA });
-    //   await this.socialTrading.follow(leader2, ether(25), { from: followerA });
-    //   await this.socialTrading.follow(leader3, ether(25), { from: followerA });
-    //   let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
-    //   assert.equal(friends[0], leader1);
-    //   assert.equal(friends[1], leader2);
-    //   assert.equal(friends[2], leader3);
-    //   await this.socialTrading.registerRelay(relay, { from: _ });
-    //   await this.socialTrading.registerVerifier(ether(20), { from: verifier });
-    //   await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
-    //   await this.socialTrading.addCloseActivities(leader1,
-    //     followerA, relay,
-    //     verifier, '0x8352523589203752624',
-    //     '0x8352523589203752625', ether(1), ether(2), ether(1),
-    //     '1536655421', '0x8352523589203752627', { from: relay });
-    //   await this.socialTrading.verifyActivityBatch('0x8352523589203752627',
-    //     true, { from: verifier });
-    //   let ContractBalance = await this.token.balanceOf(this.socialTrading.address);
-    //   ContractBalance.should.be.bignumber.equal(ether(4));
-    // });
-    //
+    it('Verify activities success.', async function () {
+      await this.socialTrading.follow(leader1, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader2, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader3, ether(25), { from: followerA });
+      let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
+      assert.equal(friends[0], leader1);
+      assert.equal(friends[1], leader2);
+      assert.equal(friends[2], leader3);
+      await this.socialTrading.registerRelay(relay, { from: _ });
+      await this.socialTrading.registerVerifier(ether(10), { from: followerB });
+      await this.socialTrading.registerVerifier(ether(20), { from: leader2 });
+      await this.socialTrading.registerVerifier(ether(30), { from: leader3 });
+      await this.socialTrading.registerVerifier(ether(40), { from: verifier });
+      await this.socialTrading.pickVerifier(2, 88888, { from: _ });
+      await this.socialTrading.getPickedVerifiers({ from: verifier, followerB, leader3 });
+      await this.socialTrading.tradeActivityBatch('0x541e41', { from: relay });
+      await this.socialTrading.addCloseActivities(leader1,
+        followerA, relay,
+        [verifier, followerB, leader3], [], '0x8352523589203752624',
+        '0x8352523589203752625', ether(1), ether(2), ether(1),
+        '1536655421', '0x8352523589203752627', { from: relay });
+      // await this.socialTrading.verifyActivityBatch('0x8352523589203752627',
+      //   true, { from: verifier });
+      // await this.socialTrading.verifyActivityBatch('0x8352523589203752627',
+      //   true, { from: followerB });
+      // await this.socialTrading.verifyActivityBatch('0x8352523589203752627',
+      //   true, { from: leader3 });
+      // let ContractBalance = await this.token.balanceOf(this.socialTrading.address);
+      // ContractBalance.should.be.bignumber.equal(ether(4));
+    });
+
     // it('Verify activities failed by hash.', async function () {
     //   await this.socialTrading.follow(leader1, ether(25), { from: followerA });
     //   await this.socialTrading.follow(leader2, ether(25), { from: followerA });

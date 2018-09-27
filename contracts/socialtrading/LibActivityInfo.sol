@@ -6,7 +6,8 @@ contract LibActivityInfo {
     address leader;
     address follower;
     address relay;
-    address verifier;
+    address[] verifier;
+    bool[] result;
     bytes32 buyTx;
     bytes32 sellTx;
     uint256 rewardFee;

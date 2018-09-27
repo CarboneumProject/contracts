@@ -41,7 +41,8 @@ contract ISocialTrading is Ownable {
   function addCloseActivities(address _leader,
     address _follower,
     address _relay,
-    address _verifier,
+    address[] _verifier,
+    bool[] _result,
     bytes32 _buyTx,
     bytes32 _sellTx,
     uint256 _rewardFee,
@@ -58,7 +59,7 @@ contract ISocialTrading is Ownable {
   /**
      * @dev call getPickedVerifiers and calculate selected chance
    */
-  function pickVerifier(uint seed) public onlyOwner;
+  function pickVerifier(uint pickedSize, uint seed) public onlyOwner;
 
   /**
    * @dev claim reward or fee from this contract.

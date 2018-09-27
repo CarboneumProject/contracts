@@ -11,7 +11,7 @@ contract SocialTrading is ISocialTrading {
   address public feeAccount;
 
   address[] public verifiersList;
-  address[] public pickerVerifiers;
+  address[] public pickedVerifiers;
   uint256 public sumStake;
 
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
@@ -21,6 +21,7 @@ contract SocialTrading is ISocialTrading {
 
   mapping(address => bool) public relays;
   mapping(address => bool) public verifiers;
+  mapping(address => bool) public result;
 
   mapping(address => uint256) public stakeVerifiers;
   mapping(address => uint256) public rewards;
@@ -54,7 +55,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Follow leader to copy trade.
    */
   function follow(address _leader, uint _percentage) external {
-    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "Your percentage more than 100%.");
+    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "YOUR PERCENTAGE MORE THAN 100%.");
     uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
     followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, now, index);
 
@@ -105,7 +106,7 @@ contract SocialTrading is ISocialTrading {
   }
 
   function cancelVerifier() external {
-    require(stakeVerifiers[msg.sender] > 0, "Your amount must be more than 0.");
+    require(stakeVerifiers[msg.sender] > 0, "YOUR AMOUNT MUST BE MORE THAN 0.");
     uint256 stakeVerifier = stakeVerifiers[msg.sender];
     stakeVerifiers[msg.sender] = 0;
     require(c8Token.transfer(msg.sender, stakeVerifier));
@@ -115,7 +116,7 @@ contract SocialTrading is ISocialTrading {
    * @dev add trade activity log to contract by a trusted relay.
    */
   function tradeActivityBatch(bytes32 _sideChainHash) external {
-    require(relays[msg.sender], "Must be relay.");
+    require(relays[msg.sender], "YOU ARE NOT RELAY.");
     emit Activities(_sideChainHash);
   }
 
@@ -126,7 +127,8 @@ contract SocialTrading is ISocialTrading {
     address _leader,
     address _follower,
     address _relay,
-    address _verifier,
+    address[] _verifier,
+    bool[] _result,
     bytes32 _buyTx,
     bytes32 _sellTx,
     uint256 _rewardFee,
@@ -135,12 +137,13 @@ contract SocialTrading is ISocialTrading {
     uint _closePositionTimestampInSec,
     bytes32 _activitiesHash) external
   {
-    require(relays[msg.sender], "Must be relay.");
+    require(relays[msg.sender], "YOU ARE NOT RELAY.");
     closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
       leader : _leader,
       follower : _follower,
       relay : _relay,
       verifier : _verifier,
+      result : _result,
       buyTx : _buyTx,
       sellTx : _sellTx,
       rewardFee : _rewardFee,
@@ -155,17 +158,21 @@ contract SocialTrading is ISocialTrading {
    * @dev add activity log result to contract by trusted verifier.
    */
   function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external {
-    require(verifiers[msg.sender], "Must be verifier.");
+    require(verifiers[msg.sender], "YOU ARE NOT VERIFIER.");
     LibActivityInfo.Info storage activities = closePositionActivities[_activitiesHash];
-    uint value = activities.rewardFee + activities.relayFee + activities.verifierFee;
+    activities.result.push(_result);
+    uint256 value = activities.rewardFee + activities.relayFee + activities.verifierFee;
     uint256 allowance = c8Token.allowance(activities.follower, address(this));
     uint256 balance = c8Token.balanceOf(activities.follower);
+    // count vote from verifiers
     if (_result) {
       if ((balance >= value) && (allowance >= value)) {
         c8Token.transferFrom(activities.follower, address(this), value);
         rewards[activities.leader] += activities.rewardFee;
         rewards[activities.relay] += activities.relayFee;
-        rewards[activities.verifier] += activities.verifierFee;
+        for (uint i = 0; i <= pickedVerifiers.length; i++) {
+          rewards[pickedVerifiers[i]] += activities.verifierFee;
+        }
       } else {
         _unfollow(activities.follower, activities.leader);
       }
@@ -174,28 +181,27 @@ contract SocialTrading is ISocialTrading {
     }
   }
 
-  function pickVerifier(uint seed) public onlyOwner {
-    uint pickedSize = 2;
-    pickerVerifiers.length = 0;
+  function pickVerifier(uint pickedSize, uint seed) public onlyOwner {
+    pickedVerifiers.length = 0;
     for (uint r = 0; r < pickedSize; r++) {
       uint rnd = _pickOne(seed + r * r);
-      pickerVerifiers.push(verifiersList[rnd]);
+      pickedVerifiers.push(verifiersList[rnd]);
     }
   }
 
   function claimReward() external {
-    require(rewards[msg.sender] > 0, "Your reward must be more than 0.");
+    require(rewards[msg.sender] > 0, "YOUR REWARD MUST BE MORE THAN 0.");
     claimedRewards[msg.sender] += rewards[msg.sender];
     uint256 reward = rewards[msg.sender];
     rewards[msg.sender] = 0;
-    require(c8Token.transfer(msg.sender, reward), "Transfer failed.");
+    require(c8Token.transfer(msg.sender, reward), "TRANSFER FAILED.");
   }
 
   function getPickedVerifiers() public view returns (address[]) {
-    address[] memory result = new address[](pickerVerifiers.length);
+    address[] memory result = new address[](pickedVerifiers.length);
     uint counter = 0;
-    for (uint i = 0; i < pickerVerifiers.length; i++) {
-      result[counter] = pickerVerifiers[i];
+    for (uint i = 0; i < pickedVerifiers.length; i++) {
+      result[counter] = pickedVerifiers[i];
       counter++;
     }
     return result;
