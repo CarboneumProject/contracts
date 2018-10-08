@@ -20,14 +20,14 @@ contract SocialTrading is ISocialTrading {
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
   mapping(address => bool) public relays;
-  mapping(address => bool) public verifiers;
-  mapping(address => bool) public result;
+  //  mapping(address => bool) public verifiers;
+  mapping(address => address[]) public verifierToVerifiersIndex;
 
   mapping(address => uint256) public stakeVerifiers;
   mapping(address => uint256) public rewards;
   mapping(address => uint256) public claimedRewards;
 
-  mapping(bytes32 => LibActivityInfo.Info) public closePositionActivities;
+  mapping(bytes32 => LibActivityInfo.Info) public closePositionActivity;
 
   event Follow(address indexed leader, address indexed follower, uint percentage);
   event UnFollow(address indexed leader, address indexed follower);
@@ -98,6 +98,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Register verifier to contract by the owner.
    */
   function registerVerifier(uint256 _stakeAmount) external {
+    require(c8Token.balanceOf(msg.sender) > 0, "YOUR AMOUNT MUST BE MORE THAN 0.");
     c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
     verifiersList.push(msg.sender);
     stakeVerifiers[msg.sender] = _stakeAmount;
@@ -127,57 +128,82 @@ contract SocialTrading is ISocialTrading {
     address _leader,
     address _follower,
     address _relay,
-    address[] _verifier,
-    bool[] _result,
+    address[] _verifiers,
     bytes32 _buyTx,
     bytes32 _sellTx,
     uint256 _rewardFee,
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activitiesHash) external
+    bytes32 _activityHash) external
   {
     require(relays[msg.sender], "YOU ARE NOT RELAY.");
-    closePositionActivities[_activitiesHash] = LibActivityInfo.Info({
-      leader : _leader,
-      follower : _follower,
-      relay : _relay,
-      verifier : _verifier,
-      result : _result,
-      buyTx : _buyTx,
-      sellTx : _sellTx,
-      rewardFee : _rewardFee,
-      relayFee : _relayFee,
-      verifierFee : _verifierFee,
-      closePositionTimestampInSec : _closePositionTimestampInSec,
-      activityHash : _activitiesHash});
-    emit CloseActivity(_activitiesHash, getVerifier(_activitiesHash));
+    LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
+    activities.leader = _leader;
+    activities.follower = _follower;
+    activities.relay = _relay;
+    activities.verifiers = _verifiers;
+    activities.buyTx = _buyTx;
+    activities.sellTx = _sellTx;
+    activities.rewardFee = _rewardFee;
+    activities.relayFee = _relayFee;
+    activities.verifierFee = _verifierFee;
+    activities.closePositionTimestampInSec = _closePositionTimestampInSec;
+    activities.activityHash = _activityHash;
+    emit CloseActivity(_activityHash, getVerifier(_activityHash));
   }
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external {
-    require(verifiers[msg.sender], "YOU ARE NOT VERIFIER.");
-    LibActivityInfo.Info storage activities = closePositionActivities[_activitiesHash];
-    activities.result.push(_result);
+  function verifyActivityBatch(bytes32 _activityHash, bool _resultVotes) external {
+    require(checkPickedVerifiers(), "YOU ARE NOT VERIFIER.");
+    require(getVerifiersToCheck(_activityHash), "CAN NOT SEND ONE MORE VERIFY.");
+    LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
+    uint timeout = activities.closePositionTimestampInSec + 1 hours;
+    activities.results.push(LibActivityInfo.ValidatorResult({
+      validator : msg.sender,
+      result : _resultVotes
+      }));
+    if (_resultVotes) {
+      activities.counterTrue++;
+    } else {
+      activities.counterFalse++;
+    }
+    if (pickedVerifiers.length >= activities.results.length && timeout > now) {
+      if (activities.counterTrue > activities.counterFalse) {
+        //gives rewards to verifiers win votes(true)
+        _transferFee(_activityHash, _resultVotes);
+      } else {
+        //fine false to verifiers lose votes (false)
+      }
+    } else if (pickedVerifiers.length > activities.results.length && timeout == now) {
+      if (activities.counterTrue > activities.counterFalse) {
+        //gives rewards to verifiers win votes(true)
+        _transferFee(_activityHash, _resultVotes);
+      } else {
+        //fine false to verifiers lose votes (false)
+      }
+    } else {
+      //failed
+    }
+  }
+
+  function _transferFee(bytes32 _activityHash, bool _resultVotes) private {
+    LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
     uint256 value = activities.rewardFee + activities.relayFee + activities.verifierFee;
     uint256 allowance = c8Token.allowance(activities.follower, address(this));
     uint256 balance = c8Token.balanceOf(activities.follower);
-    // count vote from verifiers
-    if (_result) {
-      if ((balance >= value) && (allowance >= value)) {
-        c8Token.transferFrom(activities.follower, address(this), value);
-        rewards[activities.leader] += activities.rewardFee;
-        rewards[activities.relay] += activities.relayFee;
-        for (uint i = 0; i <= pickedVerifiers.length; i++) {
-          rewards[pickedVerifiers[i]] += activities.verifierFee;
-        }
-      } else {
-        _unfollow(activities.follower, activities.leader);
+
+    if ((balance >= value) && (allowance >= value)) {
+      c8Token.transferFrom(activities.follower, address(this), value);
+      rewards[activities.leader] += activities.rewardFee;
+      rewards[activities.relay] += activities.relayFee;
+      if (_resultVotes) {
+        rewards[msg.sender] += activities.verifierFee;
       }
     } else {
-      emit ResultFailed(_activitiesHash, _result);
+      _unfollow(activities.follower, activities.leader);
     }
   }
 
@@ -251,5 +277,24 @@ contract SocialTrading is ISocialTrading {
       sum += followerToLeaders[_user][leader].percentage;
     }
     return sum;
+  }
+
+  function getVerifiersToCheck(bytes32 _activityHash) internal returns (bool) {
+    LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
+    for (uint i = 0; i < activities.results.length; i++) {
+      if (activities.results[i].validator == msg.sender) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkPickedVerifiers() internal returns (bool) {
+    for (uint i = 0; i < pickedVerifiers.length; i++) {
+      if (pickedVerifiers[i] == msg.sender) {
+        return true;
+      }
+    }
+    return false;
   }
 }

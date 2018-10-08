@@ -38,23 +38,25 @@ contract ISocialTrading is Ownable {
   /**
    * @dev add close activities from relay.
    */
-  function addCloseActivities(address _leader,
+  function addCloseActivities(
+    address _leader,
     address _follower,
     address _relay,
-    address[] _verifier,
-    bool[] _result,
+    address[] _verifiers,
     bytes32 _buyTx,
     bytes32 _sellTx,
     uint256 _rewardFee,
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activitiesHash) external;
+    bytes32 _activityHash) external;
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32 _activitiesHash, bool _result) external;
+  function verifyActivityBatch(bytes32 _activitiesHash, bool _resultVotes) external;
+
+  function _transferFee(bytes32 _activitiesHash, bool _resultVotes) private;
 
   /**
      * @dev call getPickedVerifiers and calculate selected chance
@@ -81,9 +83,9 @@ contract ISocialTrading is Ownable {
    */
   function randomGen(uint seed, uint max) private view returns (uint randomNumber);
 
-    /**
-    * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
-    */
+  /**
+  * Friends - we refer to "friends" as the users that a specific user follows (e.g., following).
+  */
   function getFriends(address _user) public view returns (address[]);
 
   /**
