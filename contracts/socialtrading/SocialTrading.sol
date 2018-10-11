@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "./LibActivityInfo.sol";
-import "./LibUserInfo.sol";
-import "./ISocialTrading.sol";
+import "./libs/LibActivityInfo.sol";
+import "./libs/LibUserInfo.sol";
+import "./interfaces/ISocialTrading.sol";
 
 
 contract SocialTrading is ISocialTrading {

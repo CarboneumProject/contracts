@@ -6,7 +6,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./socialtrading/libs/Wrap9.sol";
 import "./socialtrading/Wallet.sol";
-import "./socialtrading/IExchange.sol";
+import "./socialtrading/interfaces/IExchange.sol";
 
 
 contract RelayWallet is Wallet {
