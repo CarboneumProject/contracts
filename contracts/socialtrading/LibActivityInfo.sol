@@ -5,6 +5,7 @@ contract LibActivityInfo {
   struct ValidatorResult {
     address validator;
     bool result;
+    uint time;
   }
   struct Info {
     address leader;
@@ -21,5 +22,6 @@ contract LibActivityInfo {
     uint256 verifierFee;
     uint closePositionTimestampInSec;
     bytes32 activityHash;
+    bool isTransfer;
   }
 }

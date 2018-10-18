@@ -20,8 +20,6 @@ contract SocialTrading is ISocialTrading {
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
   mapping(address => bool) public relays;
-  //  mapping(address => bool) public verifiers;
-  mapping(address => address[]) public verifierToVerifiersIndex;
 
   mapping(address => uint256) public stakeVerifiers;
   mapping(address => uint256) public rewards;
@@ -98,6 +96,7 @@ contract SocialTrading is ISocialTrading {
    * @dev Register verifier to contract by the owner.
    */
   function registerVerifier(uint256 _stakeAmount) external {
+    require(checkListVerifiers(), "YOU HAS BEEN REGISTERED.");
     require(c8Token.balanceOf(msg.sender) > 0, "YOUR AMOUNT MUST BE MORE THAN 0.");
     c8Token.transferFrom(msg.sender, address(this), _stakeAmount);
     verifiersList.push(msg.sender);
@@ -107,6 +106,7 @@ contract SocialTrading is ISocialTrading {
   }
 
   function cancelVerifier() external {
+    require(checkVerifiers(), "YOU HAS NEVER BEEN REGISTERED.");
     require(stakeVerifiers[msg.sender] > 0, "YOUR AMOUNT MUST BE MORE THAN 0.");
     uint256 stakeVerifier = stakeVerifiers[msg.sender];
     stakeVerifiers[msg.sender] = 0;
@@ -116,7 +116,7 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev add trade activity log to contract by a trusted relay.
    */
-  function tradeActivityBatch(bytes32 _sideChainHash) external {
+  function tradeActivity(bytes32 _sideChainHash) external {
     require(relays[msg.sender], "YOU ARE NOT RELAY.");
     emit Activities(_sideChainHash);
   }
@@ -135,7 +135,9 @@ contract SocialTrading is ISocialTrading {
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activityHash) external
+    bytes32 _activityHash,
+    bool _isTransfer
+  ) external
   {
     require(relays[msg.sender], "YOU ARE NOT RELAY.");
     LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
@@ -150,46 +152,45 @@ contract SocialTrading is ISocialTrading {
     activities.verifierFee = _verifierFee;
     activities.closePositionTimestampInSec = _closePositionTimestampInSec;
     activities.activityHash = _activityHash;
+    activities.isTransfer = _isTransfer;
     emit CloseActivity(_activityHash, getVerifier(_activityHash));
   }
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32 _activityHash, bool _resultVotes) external {
+  function verifyActivity(bytes32 _activityHash, bool _resultVotes) external {
     require(checkPickedVerifiers(), "YOU ARE NOT VERIFIER.");
     require(getVerifiersToCheck(_activityHash), "CAN NOT SEND ONE MORE VERIFY.");
     LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
     uint timeout = activities.closePositionTimestampInSec + 1 hours;
+    uint latestTimeout = timeout + 1 hours;
     activities.results.push(LibActivityInfo.ValidatorResult({
       validator : msg.sender,
-      result : _resultVotes
+      result : _resultVotes,
+      time : now
       }));
     if (_resultVotes) {
       activities.counterTrue++;
     } else {
       activities.counterFalse++;
     }
-    if (pickedVerifiers.length >= activities.results.length && timeout > now) {
-      if (activities.counterTrue > activities.counterFalse) {
-        //gives rewards to verifiers win votes(true)
-        _transferFee(_activityHash, _resultVotes);
-      } else {
-        //fine false to verifiers lose votes (false)
+
+    if (activities.counterTrue > activities.counterFalse) {
+      if (pickedVerifiers.length == activities.results.length && timeout >= now) {
+        if (activities.results[activities.results.length - 1].validator == msg.sender) {
+          _transferFee(_activityHash);
+        }
+      } else if (pickedVerifiers.length != activities.results.length && timeout < now) {
+        if (activities.isTransfer == false) {
+          _transferFee(_activityHash);
+          activities.isTransfer = true;
+        }
       }
-    } else if (pickedVerifiers.length > activities.results.length && timeout == now) {
-      if (activities.counterTrue > activities.counterFalse) {
-        //gives rewards to verifiers win votes(true)
-        _transferFee(_activityHash, _resultVotes);
-      } else {
-        //fine false to verifiers lose votes (false)
-      }
-    } else {
-      //failed
     }
   }
 
-  function _transferFee(bytes32 _activityHash, bool _resultVotes) private {
+  function _transferFee(bytes32 _activityHash) private {
     LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
     uint256 value = activities.rewardFee + activities.relayFee + activities.verifierFee;
     uint256 allowance = c8Token.allowance(activities.follower, address(this));
@@ -199,11 +200,42 @@ contract SocialTrading is ISocialTrading {
       c8Token.transferFrom(activities.follower, address(this), value);
       rewards[activities.leader] += activities.rewardFee;
       rewards[activities.relay] += activities.relayFee;
-      if (_resultVotes) {
-        rewards[msg.sender] += activities.verifierFee;
+      for (uint i = 0; i < activities.results.length; i++) {
+        if (activities.results[i].result) {
+          rewards[activities.results[i].validator] += activities.verifierFee;
+        }
       }
     } else {
       _unfollow(activities.follower, activities.leader);
+    }
+  }
+
+  /**
+   * @dev this function created for test(Can't handle picked same address in verifiersList) .
+   */
+  function ownerTransferFee(bytes32 _activityHash) onlyOwner external {
+    LibActivityInfo.Info storage activities = closePositionActivity[_activityHash];
+    uint256 value = activities.rewardFee + activities.relayFee + activities.verifierFee;
+    uint256 allowance = c8Token.allowance(activities.follower, address(this));
+    uint256 balance = c8Token.balanceOf(activities.follower);
+    uint timeout = activities.closePositionTimestampInSec + 1 hours;
+    uint latestTimeout = timeout + 1 hours;
+
+    if (activities.counterTrue > activities.counterFalse && now > latestTimeout) {
+      if ((balance >= value) && (allowance >= value)) {
+        c8Token.transferFrom(activities.follower, address(this), value);
+        rewards[activities.leader] += activities.rewardFee;
+        rewards[activities.relay] += activities.relayFee;
+        for (uint i = 0; i < activities.results.length; i++) {
+          if (activities.results[i].result) {
+            if (activities.results[i].time < timeout) {
+              rewards[activities.results[i].validator] += activities.verifierFee;
+            }
+          }
+        }
+      } else {
+        _unfollow(activities.follower, activities.leader);
+      }
     }
   }
 
@@ -297,4 +329,32 @@ contract SocialTrading is ISocialTrading {
     }
     return false;
   }
+
+  function checkListVerifiers() internal returns (bool) {
+    for (uint i = 0; i < verifiersList.length; i++) {
+      if (verifiersList[i] == msg.sender) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkVerifiers() internal returns (bool) {
+    for (uint i = 0; i < verifiersList.length; i++) {
+      if (verifiersList[i] == msg.sender) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @dev this function created for test(Can't handle picked same address in verifiersList) .
+   */
+  function fixPickedVerifier() public onlyOwner {
+    for (uint i = 0; i < verifiersList.length; i++) {
+      pickedVerifiers.push(verifiersList[i]);
+    }
+  }
+
 }

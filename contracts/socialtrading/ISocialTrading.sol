@@ -33,7 +33,7 @@ contract ISocialTrading is Ownable {
   /**
    * @dev add trade activity log to contract by a trusted relay.
    */
-  function tradeActivityBatch(bytes32 _sideChainHash) external;
+  function tradeActivity(bytes32 _sideChainHash) external;
 
   /**
    * @dev add close activities from relay.
@@ -49,14 +49,16 @@ contract ISocialTrading is Ownable {
     uint256 _relayFee,
     uint256 _verifierFee,
     uint _closePositionTimestampInSec,
-    bytes32 _activityHash) external;
+    bytes32 _activityHash,
+    bool isTransfer
+  ) external;
 
   /**
    * @dev add activity log result to contract by trusted verifier.
    */
-  function verifyActivityBatch(bytes32 _activitiesHash, bool _resultVotes) external;
+  function verifyActivity(bytes32 _activitiesHash, bool _resultVotes) external;
 
-  function _transferFee(bytes32 _activitiesHash, bool _resultVotes) private;
+  function _transferFee(bytes32 _activitiesHash) private;
 
   /**
      * @dev call getPickedVerifiers and calculate selected chance

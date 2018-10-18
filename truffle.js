@@ -22,7 +22,7 @@ module.exports = {
       host: 'localhost',
       port: 8545,
       network_id: '*', // eslint-disable-line camelcase
-      gas: 4600000,
+      gas: 6000000,
     },
     ropsten: {
       provider: ropstenProvider,
@@ -71,4 +71,11 @@ module.exports = {
       gas: 4600000,
     },
   },
+  // mocha: {
+  //   reporter: 'eth-gas-reporter',
+  //   reporterOptions: {
+  //     currency: 'USD',
+  //     gasPrice: 15,
+  //   },
+  // },
 };
