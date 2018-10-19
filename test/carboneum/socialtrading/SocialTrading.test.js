@@ -179,14 +179,20 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
         true, { from: leader3 });
       await this.socialTrading.ownerTransferFee('0x8352523589203752627', { from: _ });
       await this.socialTrading.claimReward({ from: verifier });
+      await this.socialTrading.claimReward({ from: leader1 });
       await this.socialTrading.claimReward({ from: leader2 });
       await this.socialTrading.claimReward({ from: leader3 }).should.be.rejectedWith(EVMRevert);
+      await this.socialTrading.claimReward({ from: relay });
       let verifierBalance = await this.token.balanceOf(verifier);
       verifierBalance.should.be.bignumber.equal(ether(961));
       let leader2Balance = await this.token.balanceOf(leader2);
       leader2Balance.should.be.bignumber.equal(ether(961));
-      let leader3Balance = await this.token.balanceOf(leader3);
-      leader3Balance.should.be.bignumber.equal(ether(960));
+      let leader1Balance = await this.token.balanceOf(leader1);
+      leader1Balance.should.be.bignumber.equal(ether(1));
+      let relayBalance = await this.token.balanceOf(relay);
+      relayBalance.should.be.bignumber.equal(ether(3));
+      let followerABalance = await this.token.balanceOf(followerA);
+      followerABalance.should.be.bignumber.equal(ether(995));
     });
 
     it('Dont sent result in a time(default is 1 hr after close activities).', async function () {
@@ -256,6 +262,7 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       await this.socialTrading.verifyActivity('0x8352523589203752627',
         true, { from: leader3 });
       await this.socialTrading.claimReward({ from: verifier }).should.be.rejectedWith(EVMRevert);
+      await this.socialTrading.claimReward({ from: leader2 }).should.be.rejectedWith(EVMRevert);
       await this.socialTrading.claimReward({ from: leader3 }).should.be.rejectedWith(EVMRevert);
     });
 
