@@ -7,11 +7,13 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./socialtrading/libs/Wrap9.sol";
 import "./socialtrading/Wallet.sol";
 import "./socialtrading/interfaces/IExchange.sol";
+import "./socialtrading/libs/LibBytes.sol";
 
 
 contract RelayWallet is Wallet {
-  using SafeMath for uint;
-  mapping(address => mapping(address => uint)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
+  using SafeMath for uint256;
+  using LibBytes for bytes;
+  mapping(address => mapping(address => uint256)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
 
   WETH9 weth;
   IExchange internal EXCHANGE;
@@ -19,15 +21,15 @@ contract RelayWallet is Wallet {
   event Deposit(
     address token,
     address user,
-    uint amount,
-    uint balance
+    uint256 amount,
+    uint256 balance
   );
 
   event Withdraw(
     address token,
     address user,
-    uint amount,
-    uint balance
+    uint256 amount,
+    uint256 balance
   );
 
   constructor(WETH9 _weth, address _exchange) public {
@@ -44,12 +46,13 @@ contract RelayWallet is Wallet {
     weth.deposit.value(msg.value)();
     weth.transfer(address(this), msg.value);
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
+    abi.encode();
   }
 
-  function depositToken(address token, uint amount) public {
+  function depositToken(address token, uint256 amount) public {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
-    tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
     require(ERC20(token).transferFrom(msg.sender, address(this), amount), "Cannot transfer token from sender");
+    tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
     emit Deposit(
       token,
       msg.sender,
@@ -58,7 +61,7 @@ contract RelayWallet is Wallet {
     );
   }
 
-  function withdrawToken(address token, uint amount) public {
+  function withdrawToken(address token, uint256 amount) public {
     require(tokens[token][msg.sender] >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
     require(ERC20(token).transfer(msg.sender, amount), "Cannot transfer token");
@@ -70,7 +73,7 @@ contract RelayWallet is Wallet {
     );
   }
 
-  function balanceOf(address token, address user) public constant returns (uint) {
+  function balanceOf(address token, address user) public constant returns (uint256) {
     return tokens[token][user];
   }
 
@@ -127,6 +130,13 @@ contract RelayWallet is Wallet {
       takerAssetFillAmount,
       orderSignature
     );
+
+    address takerToken = order.takerAssetData.readAddress(16);
+    address makerToken = order.makerAssetData.readAddress(16);
+
+    require(tokens[takerToken][msg.sender] >= takerAssetFillAmount, "takerAssetFillAmount is more than user's balance");
+    tokens[takerToken][msg.sender] = tokens[takerToken][msg.sender].sub(order.takerAssetAmount);
+    tokens[makerToken][msg.sender] = tokens[makerToken][msg.sender].add(order.makerAssetAmount);
 
     // Call `fillOrder` via `executeTransaction`.
     EXCHANGE.executeTransaction(
