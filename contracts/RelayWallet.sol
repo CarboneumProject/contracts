@@ -46,7 +46,6 @@ contract RelayWallet is Wallet {
     weth.deposit.value(msg.value)();
     weth.transfer(address(this), msg.value);
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
-    abi.encode();
   }
 
   function depositToken(address token, uint256 amount) public {
