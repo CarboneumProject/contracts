@@ -129,13 +129,15 @@ contract RelayWallet is Wallet {
       takerAssetFillAmount,
       orderSignature
     );
-
+    // Todo check if it is the token only.
     address takerToken = order.takerAssetData.readAddress(16);
     address makerToken = order.makerAssetData.readAddress(16);
 
     require(tokens[takerToken][msg.sender] >= takerAssetFillAmount, "takerAssetFillAmount is more than user's balance");
     tokens[takerToken][msg.sender] = tokens[takerToken][msg.sender].sub(order.takerAssetAmount);
     tokens[makerToken][msg.sender] = tokens[makerToken][msg.sender].add(order.makerAssetAmount);
+
+    // Todo can social trading to distribute copy trade fee.
 
     // Call `fillOrder` via `executeTransaction`.
     EXCHANGE.executeTransaction(
