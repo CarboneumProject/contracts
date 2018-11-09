@@ -70,5 +70,11 @@ module.exports = {
       gasPrice: 4000000000,
       gas: 4600000,
     },
+    kovan: {
+      provider: infuraProvider('kovan'),
+      network_id: 42, // eslint-disable-line camelcase
+      gasPrice: 4000000000,
+      gas: 4600000,
+    },
   },
 };

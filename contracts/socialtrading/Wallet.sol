@@ -1,8 +1,8 @@
 pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./lib/IWallet.sol";
-import "./lib/LibBytes.sol";
+import "./interfaces/IWallet.sol";
+import "./libs/LibBytes.sol";
 
 
 contract Wallet is IWallet, Ownable {

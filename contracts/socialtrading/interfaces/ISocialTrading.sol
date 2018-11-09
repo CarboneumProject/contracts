@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./LibActivityInfo.sol";
+import "../libs/LibActivityInfo.sol";
 
 
 contract ISocialTrading is Ownable {
