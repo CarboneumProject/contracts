@@ -130,10 +130,8 @@ contract RelayWallet is Wallet {
       orderSignature
     );
 
-    bytes orderTakerAssetData = order.takerAssetData;
-    bytes orderMakerAssetData = order.makerAssetData;
-    address takerToken = orderTakerAssetData.readAddress(16);
-    address makerToken = orderMakerAssetData.readAddress(16);
+    address takerToken = order.takerAssetData.readAddress(16);
+    address makerToken = order.makerAssetData.readAddress(16);
 
     require(tokens[takerToken][msg.sender] >= takerAssetFillAmount, "takerAssetFillAmount is more than user's balance");
     tokens[takerToken][msg.sender] = tokens[takerToken][msg.sender].sub(order.takerAssetAmount);
