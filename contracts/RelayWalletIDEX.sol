@@ -28,8 +28,7 @@ contract RelayWalletIDEX {
   );
 
   constructor(address _exchange) public {
-    weth = _weth;
-    EXCHANGE = Exchange(_exchange);
+    IDEX = Exchange(_exchange);
   }
 
   function() public {
@@ -37,10 +36,8 @@ contract RelayWalletIDEX {
   }
 
   function deposit() public payable {
-    tokens[address(weth)][msg.sender] = tokens[address(weth)][msg.sender].add(msg.value);
-    weth.deposit.value(msg.value)();
-    weth.transfer(address(this), msg.value);
-    Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
+    tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
+    Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
   }
 
   function depositToken(address token, uint256 amount) public {
