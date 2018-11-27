@@ -9,6 +9,7 @@ import "./idex/Exchange.sol";
 
 contract RelayWalletIDEX {
   using SafeMath for uint256;
+  address collector;
   mapping(address => mapping(address => uint256)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
 
   Exchange internal IDEX;
@@ -27,8 +28,9 @@ contract RelayWalletIDEX {
     uint256 balance
   );
 
-  constructor(address _exchange) public {
+  constructor(address _exchange, address _collector) public {
     IDEX = Exchange(_exchange);
+    collector = _collector;
   }
 
   function() public {
@@ -36,13 +38,26 @@ contract RelayWalletIDEX {
   }
 
   function deposit() public payable {
+    collector.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
-    Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
+    emit Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
+  }
+
+  function withdraw() public payable {
+    require(tokens[address(0)][msg.sender] >= msg.value, "Withdraw amount is more than user's balance");
+    tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub( msg.value);
+    msg.sender.transfer( msg.value);
+    emit Withdraw(
+      address(0),
+      msg.sender,
+        msg.value,
+      tokens[address(0)][msg.sender]
+    );
   }
 
   function depositToken(address token, uint256 amount) public {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
-    require(ERC20(token).transferFrom(msg.sender, address(this), amount), "Cannot transfer token from sender");
+    require(ERC20(token).transferFrom(msg.sender, collector, amount), "Cannot transfer token from sender");
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
     emit Deposit(
       token,
@@ -55,7 +70,7 @@ contract RelayWalletIDEX {
   function withdrawToken(address token, uint256 amount) public {
     require(tokens[token][msg.sender] >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
-    require(ERC20(token).transfer(msg.sender, amount), "Cannot transfer token");
+    require(ERC20(token).transferFrom(collector, msg.sender, amount), "Cannot transfer token from sender");
     emit Withdraw(
       token,
       msg.sender,
