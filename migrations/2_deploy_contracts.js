@@ -1,15 +1,16 @@
-const SocialTrading = artifacts.require('SocialTrading');
-// const CarboneumToken = artifacts.require('CarboneumToken');
-//
-// function ether (n) {
-//   return new web3.BigNumber(web3.toWei(n, 'ether'));
-// }
+const RelayWallet = artifacts.require('RelayWallet');
+// const Weth = artifacts.require('WETH9');
 
+let relay;
 module.exports = function (deployer, network) {
   if (network === 'rinkeby') {
     return deployer.then(function () {
-      return SocialTrading.new('0x541e36182d2aeb6346c10293d3caf619fe4a17ed',
-        '0xd36255cee98d10068d0bc1a394480bf09b3db4d7');
+      return RelayWallet.new('0xc778417e063141139fce010982780140aa0cd5ab', '0x22ebc052f43a88efa06379426120718170f2204e');
+    }).then(function (instance) {
+      relay = instance;
+      console.log('Contract address: ', relay.address);
     });
   }
 };
+
+

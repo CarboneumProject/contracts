@@ -67,7 +67,7 @@ module.exports = {
     rinkeby: {
       provider: infuraProvider('rinkeby'),
       network_id: 4, // eslint-disable-line camelcase
-      gasPrice: 4000000000,
+      gasPrice: 7000000000,
       gas: 4600000,
     },
     kovan: {
