@@ -10,13 +10,16 @@ const Token = artifacts.require('CarboneumToken');
 
 const Weth = artifacts.require('WETH9');
 const RelayWallet = artifacts.require('RelayWallet');
+const ZeroExchageAddress = '0x4f833a24e1f95d70f028921e27040ca56e09ab0b';
+const ERC20Proxy = '0x2240dab907db71e64d3e0dba4800c83b5c502d4e';
+const MAX_ALLOWANCE = new BigNumber(1e50);
 
 contract('RelayWallet', function ([_, user1, user2]) {
   beforeEach(async function () {
     this.tokenA = await Token.new({ from: _ });
     this.tokenB = await Token.new({ from: _ });
     this.weth = await Weth.new({ from: _ });
-    this.relayWallet = await RelayWallet.new(this.weth.address, { from: _ });
+    this.relayWallet = await RelayWallet.new(this.weth.address, ZeroExchageAddress, ERC20Proxy, { from: _ });
     await this.tokenA.transfer(user1, ether(1000), { from: _ });
     await this.tokenA.transfer(user2, ether(1000), { from: _ });
     await this.tokenB.transfer(user1, ether(1000), { from: _ });
@@ -57,6 +60,26 @@ contract('RelayWallet', function ([_, user1, user2]) {
       balanceWethBUser2.should.be.bignumber.equal(ether(5));
       let allWeth = await this.weth.balanceOf(this.relayWallet.address);
       allWeth.should.be.bignumber.equal(ether(8));
+    });
+  });
+
+  describe('Check Allowance', function () {
+    it('WETH Allowance should increased if some user deposit ETH to smart contract.', async function () {
+      let allowance1 = await this.weth.allowance(this.relayWallet.address, ERC20Proxy);
+      allowance1.should.be.bignumber.equal(0);
+      await this.relayWallet.deposit({ value: ether(3), from: user1 });
+      let allowance2 = await this.weth.allowance(this.relayWallet.address, ERC20Proxy);
+      allowance2.should.be.bignumber.equal(MAX_ALLOWANCE);
+    });
+
+    it('Token A Allowance should increased if some user deposit Token A to smart contract.', async function () {
+      let allowanceA1 = await this.tokenA.allowance(this.relayWallet.address, ERC20Proxy);
+      allowanceA1.should.be.bignumber.equal(0);
+      let allowanceWETH = await this.weth.allowance(this.relayWallet.address, ERC20Proxy);
+      allowanceWETH.should.be.bignumber.equal(0);
+      await this.relayWallet.depositToken(this.tokenA.address, ether(7), { from: user2 });
+      let allowanceA2 = await this.tokenA.allowance(this.relayWallet.address, ERC20Proxy);
+      allowanceA2.should.be.bignumber.equal(MAX_ALLOWANCE);
     });
   });
 

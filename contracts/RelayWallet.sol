@@ -11,12 +11,14 @@ import "./socialtrading/libs/LibBytes.sol";
 
 
 contract RelayWallet is Wallet {
+  uint256 constant MAX_ALLOWANCE = 10 ** 50;
   using SafeMath for uint256;
   using LibBytes for bytes;
   mapping(address => mapping(address => uint256)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
 
   WETH9 weth;
   IExchange internal EXCHANGE;
+  address assetProxy;
 
   event Deposit(
     address token,
@@ -32,9 +34,10 @@ contract RelayWallet is Wallet {
     uint256 balance
   );
 
-  constructor(WETH9 _weth, address _exchange) public {
+  constructor(WETH9 _weth, address _exchange, address _assetProxy) public {
     weth = _weth;
     EXCHANGE = IExchange(_exchange);
+    assetProxy = _assetProxy;
   }
 
   function() public {
@@ -45,6 +48,10 @@ contract RelayWallet is Wallet {
     tokens[address(weth)][msg.sender] = tokens[address(weth)][msg.sender].add(msg.value);
     weth.deposit.value(msg.value)();
     weth.transfer(address(this), msg.value);
+    uint256 checkAllowance = ERC20(weth).allowance(address(this), assetProxy);
+    if (checkAllowance < ERC20(weth).balanceOf(address(this))){
+      ERC20(weth).approve(assetProxy, MAX_ALLOWANCE);
+    }
     Deposit(address(weth), msg.sender, msg.value, tokens[address(weth)][msg.sender]);
   }
 
@@ -52,6 +59,10 @@ contract RelayWallet is Wallet {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     require(ERC20(token).transferFrom(msg.sender, address(this), amount), "Cannot transfer token from sender");
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
+    uint256 checkAllowance = ERC20(token).allowance(address(this), assetProxy);
+    if (checkAllowance < ERC20(token).balanceOf(address(this))){
+      ERC20(token).approve(assetProxy, MAX_ALLOWANCE);
+    }
     emit Deposit(
       token,
       msg.sender,
