@@ -8,10 +8,15 @@ import "./socialtrading/libs/Wrap9.sol";
 import "./socialtrading/Wallet.sol";
 import "./socialtrading/interfaces/IExchange.sol";
 import "./socialtrading/libs/LibBytes.sol";
+import "./socialtrading/Validator.sol";
 
 
-contract RelayWallet is Wallet {
-  uint256 constant MAX_ALLOWANCE = 10 ** 50;
+contract RelayWallet is Validator, Wallet {
+  mapping (address => mapping (address => bool)) public allowedValidators;
+  mapping (bytes32 => mapping (address => bool)) public preSigned;
+  mapping (bytes4 => address) public assetProxies;
+
+  uint256 constant MAX_ALLOWANCE =~uint256(0);
   using SafeMath for uint256;
   using LibBytes for bytes;
   mapping(address => mapping(address => uint256)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
@@ -38,10 +43,19 @@ contract RelayWallet is Wallet {
     weth = _weth;
     EXCHANGE = IExchange(_exchange);
     assetProxy = _assetProxy;
+    assetProxies[0xf47261b0] = _assetProxy;
   }
 
   function() public {
     revert("Unused fallback function");
+  }
+
+  function getAssetProxy(bytes4 assetProxyId)
+  external
+  view
+  returns (address)
+  {
+    return EXCHANGE.getAssetProxy(assetProxyId);
   }
 
   function deposit() public payable {
