@@ -12,8 +12,7 @@ import "./socialtrading/Validator.sol";
 
 
 contract RelayWallet is Validator, Wallet {
-  mapping (address => mapping (address => bool)) public allowedValidators;
-  mapping (bytes32 => mapping (address => bool)) public preSigned;
+
   mapping (bytes4 => address) public assetProxies;
 
   uint256 constant MAX_ALLOWANCE =~uint256(0);
