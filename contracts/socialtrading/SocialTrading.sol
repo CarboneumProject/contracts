@@ -4,9 +4,6 @@ import "./libs/LibUserInfo.sol";
 import "./interfaces/ISocialTrading.sol";
 
 contract SocialTrading is ISocialTrading {
-  address[] public verifiersList;
-  address[] public pickerVerifiers;
-
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
   mapping(address => mapping(address => uint)) public leaderToFollowers;
