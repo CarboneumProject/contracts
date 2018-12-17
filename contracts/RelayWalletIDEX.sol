@@ -9,7 +9,9 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract RelayWalletIDEX {
   using SafeMath for uint256;
   address custodian;
-  mapping(address => mapping(address => uint256)) public tokens; //mapping of token addresses to mapping of account balances (token=0 means Ether)
+
+  //mapping of token addresses to mapping of account balances (token=0 means Ether)
+  mapping(address => mapping(address => uint256)) public tokens;
 
   event Deposit(
     address token,
@@ -36,7 +38,12 @@ contract RelayWalletIDEX {
   function deposit() public payable {
     custodian.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
-    emit Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
+    emit Deposit(
+      address(0),
+      msg.sender,
+      msg.value,
+      tokens[address(0)][msg.sender]
+    );
   }
 
   function withdraw() public payable {
@@ -75,7 +82,7 @@ contract RelayWalletIDEX {
     );
   }
 
-  function balanceOf(address token, address user) public constant returns (uint256) {
+  function balanceOf(address token, address user) public view returns (uint256) {
     return tokens[token][user];
   }
 

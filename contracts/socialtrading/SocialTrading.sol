@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 import "./libs/LibUserInfo.sol";
 import "./interfaces/ISocialTrading.sol";
 
+
 contract SocialTrading is ISocialTrading {
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
@@ -22,7 +23,12 @@ contract SocialTrading is ISocialTrading {
   function follow(address _leader, uint _percentage) external {
     require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "Your percentage more than 100%.");
     uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
-    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(_leader, _percentage, now, index);
+    followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(
+      _leader,
+      _percentage,
+      now,
+      index
+    );
 
     uint index2 = leaderToFollowersIndex[_leader].push(msg.sender) - 1;
     leaderToFollowers[_leader][msg.sender] = index2;

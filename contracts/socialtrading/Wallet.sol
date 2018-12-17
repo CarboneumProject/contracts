@@ -29,7 +29,12 @@ contract Wallet is IWallet, Ownable {
     uint8 v = uint8(eip712Signature[0]);
     bytes32 r = eip712Signature.readBytes32(1);
     bytes32 s = eip712Signature.readBytes32(33);
-    address recoveredAddress = ecrecover(hash, v, r, s);
+    address recoveredAddress = ecrecover(
+      hash,
+      v,
+      r,
+      s
+    );
     isValid = owner == recoveredAddress;
     return isValid;
   }

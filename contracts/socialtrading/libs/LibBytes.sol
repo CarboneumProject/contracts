@@ -304,7 +304,7 @@ library LibBytes {
   returns (address result)
   {
     require(
-      b.length >= index + 20,  // 20 is length of address
+      b.length >= index + 20, // 20 is length of address
       "GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
     );
 
@@ -336,7 +336,7 @@ library LibBytes {
   pure
   {
     require(
-      b.length >= index + 20,  // 20 is length of address
+      b.length >= index + 20, // 20 is length of address
       "GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
     );
 
@@ -530,7 +530,7 @@ library LibBytes {
     // Assert length of <b> is valid, given
     // length of input
     require(
-      b.length >= index + 32 + input.length,  // 32 bytes to store length
+      b.length >= index + 32 + input.length, // 32 bytes to store length
       "GREATER_OR_EQUAL_TO_NESTED_BYTES_LENGTH_REQUIRED"
     );
 
