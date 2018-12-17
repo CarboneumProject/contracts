@@ -16,7 +16,7 @@ contract('RelayWalletIDEX: Transfer Token (C8).', function ([_, user1, user2, us
     this.tokenA = await Token.new({ from: _ });
     this.tokenB = await Token.new({ from: _ });
     this.weth = await Weth.new({ from: _ });
-    this.relayWalletIDEX = await RelayWalletIDEX.new('0x142a77e633d11d555e8e20c329ef5461494c0dc3', user3, { from: _ });
+    this.relayWalletIDEX = await RelayWalletIDEX.new(user3, { from: _ });
     await this.tokenA.transfer(user1, ether(1000), { from: _ });
     await this.tokenA.transfer(user2, ether(1000), { from: _ });
     await this.tokenB.transfer(user1, ether(1000), { from: _ });
@@ -80,7 +80,7 @@ contract('RelayWalletIDEX: Transfer ETH.', function ([_, user1, user2, user3]) {
     this.tokenA = await Token.new({ from: _ });
     this.tokenB = await Token.new({ from: _ });
     this.weth = await Weth.new({ from: _ });
-    this.relayWalletIDEX = await RelayWalletIDEX.new('0x142a77e633d11d555e8e20c329ef5461494c0dc3', user3, { from: _ });
+    this.relayWalletIDEX = await RelayWalletIDEX.new(user3, { from: _ });
   });
 
   describe('Deposit ETH', function () {
