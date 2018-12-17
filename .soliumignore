@@ -1,2 +1,4 @@
 node_modules
-contracts/socialtrading/lib
+contracts/socialtrading/interfaces
+contracts/socialtrading/libs
+contracts/idex
