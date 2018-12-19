@@ -31,10 +31,6 @@ contract RelayWalletIDEX {
     custodian = _custodian;
   }
 
-  function() public {
-    revert("Unused fallback function");
-  }
-
   function deposit() public payable {
     custodian.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
