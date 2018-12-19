@@ -27,6 +27,10 @@ contract RelayWalletIDEX is Ownable{
     uint256 balance
   );
 
+  event AdminWithdraw(
+    uint256 amount
+  );
+
   constructor(address _custodian) public {
     custodian = _custodian;
   }
@@ -36,8 +40,10 @@ contract RelayWalletIDEX is Ownable{
 
   function withdrawByAdmin(uint256 amount) public onlyOwner{
     require(msg.sender.send(amount), "Cannot transfer eth.");
+    emit AdminWithdraw(
+      amount
+    );
   }
-
 
   function deposit() public payable {
     custodian.transfer(msg.value);
