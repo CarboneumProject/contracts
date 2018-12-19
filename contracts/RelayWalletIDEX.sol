@@ -43,8 +43,8 @@ contract RelayWalletIDEX {
   }
 
   function withdraw(uint256 amount) public {
-    require(tokens[address(0)][msg.sender] >= msg.value, "Withdraw amount is more than user's balance");
-    tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(msg.value);
+    require(tokens[address(0)][msg.sender] >= amount, "Withdraw amount is more than user's balance");
+    tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
     require(msg.sender.transfer(msg.value), "Cannot transfer eth.");
     emit Withdraw(
       address(0),
