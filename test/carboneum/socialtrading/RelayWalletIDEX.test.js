@@ -100,16 +100,27 @@ contract('RelayWalletIDEX: Transfer ETH.', function ([_, user1, user2, user3]) {
   describe('Withdraw ETH', function () {
     it('wallet should allow user to withdraw ETH when deposit with ETH', async function () {
       await this.relayWalletIDEX.deposit({ value: ether(3), from: user1 });
+      await this.relayWalletIDEX.sendTransaction({ from: user2, value: ether(100) });
 
       let balanceETHBUser1 = await this.relayWalletIDEX.balanceOf('0x0000000000000000000000000000000000000000', user1);
       let balanceETHBUser2 = await this.relayWalletIDEX.balanceOf('0x0000000000000000000000000000000000000000', user2);
       balanceETHBUser1.should.be.bignumber.equal(ether(3));
       balanceETHBUser2.should.be.bignumber.equal(ether(0));
+      let ETHBalanceUser3 = await web3.eth.getBalance(user3);
+      ETHBalanceUser3.should.be.bignumber.equal(ether(1000011));
 
-      let actualBalance = await web3.eth.getBalance(user3);
-      actualBalance.should.be.bignumber.equal(ether(1000011));
+      let ETHBalanceUser11 = await web3.eth.getBalance(user1);
+      let ETHBalanceRelay11 = await web3.eth.getBalance(this.relayWalletIDEX.address);
+      ETHBalanceRelay11.should.be.bignumber.equal(ether(100));
+      await this.relayWalletIDEX.withdraw(ether(1), { from: user1 });
 
-      await this.relayWalletIDEX.withdraw({ value: ether(1), from: user1 });
+      let ETHBalanceUser12 = await web3.eth.getBalance(user1);
+      let ETHBalanceRelay12 = await web3.eth.getBalance(this.relayWalletIDEX.address);
+
+      ETHBalanceRelay12.should.be.bignumber.equal(ether(99));
+      ETHBalanceUser12.should.be.bignumber.greaterThan(ETHBalanceUser11);
+      ETHBalanceRelay11.should.be.bignumber.greaterThan(ETHBalanceRelay12);
+
       let balanceETHBUser11 = await this.relayWalletIDEX.balanceOf('0x0000000000000000000000000000000000000000', user1);
       balanceETHBUser11.should.be.bignumber.equal(ether(2));
     });
@@ -120,7 +131,16 @@ contract('RelayWalletIDEX: Transfer ETH.', function ([_, user1, user2, user3]) {
       await this.relayWalletIDEX.deposit({ value: ether(3), from: user1 });
       let balanceETHBUser1 = await this.relayWalletIDEX.balanceOf('0x0000000000000000000000000000000000000000', user1);
       balanceETHBUser1.should.be.bignumber.equal(ether(3));
-      await this.relayWalletIDEX.withdraw({ value: ether(4), from: user1 }).should.be.rejectedWith(EVMRevert);
+
+      let actualBalance1 = await web3.eth.getBalance(user3);
+      actualBalance1.should.be.bignumber.equal(ether(1000014));
+
+      let actualBalance21 = await web3.eth.getBalance(this.relayWalletIDEX.address);
+      actualBalance21.should.be.bignumber.equal(ether(0));
+
+      await this.relayWalletIDEX.withdraw(ether(4), { value: ether(0), from: user1 }).should.be.rejectedWith(EVMRevert);
+      let actualBalance22 = await web3.eth.getBalance(this.relayWalletIDEX.address);
+      actualBalance22.should.be.bignumber.equal(ether(0));
     });
   });
 });

@@ -6,7 +6,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
-contract RelayWalletIDEX {
+contract RelayWalletIDEX is Ownable{
   using SafeMath for uint256;
   address custodian;
 
@@ -31,6 +31,14 @@ contract RelayWalletIDEX {
     custodian = _custodian;
   }
 
+  function () external payable {
+  }
+
+  function withdrawByAdmin(uint256 amount) public onlyOwner{
+    require(msg.sender.send(amount), "Cannot transfer eth.");
+  }
+
+
   function deposit() public payable {
     custodian.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
@@ -45,11 +53,11 @@ contract RelayWalletIDEX {
   function withdraw(uint256 amount) public {
     require(tokens[address(0)][msg.sender] >= amount, "Withdraw amount is more than user's balance");
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
-    require(msg.sender.transfer(msg.value), "Cannot transfer eth.");
+    require(msg.sender.send(amount), "Cannot transfer eth.");
     emit Withdraw(
       address(0),
       msg.sender,
-      msg.value,
+      amount,
       tokens[address(0)][msg.sender]
     );
   }
@@ -67,6 +75,7 @@ contract RelayWalletIDEX {
   }
 
   function withdrawToken(address token, uint256 amount) public {
+    require(token != address(0));
     require(tokens[token][msg.sender] >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
     require(ERC20(token).transferFrom(custodian, msg.sender, amount), "Cannot transfer token from sender");
