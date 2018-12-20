@@ -13,7 +13,7 @@ contract RelayWalletIDEX is Ownable {
   //mapping of token addresses to mapping of account balances (token=0 means Ether)
   mapping(address => mapping(address => uint256)) public tokens;
   mapping(address => mapping(address => uint256)) public withdrawAble;
-  mapping(address => mapping(address => bool)) public locked;   //default is false.
+  mapping(address => mapping(address => uint256)) public locked;
   mapping(address => uint256) public lastActiveTransaction;
 
   event Deposit(
@@ -69,33 +69,13 @@ contract RelayWalletIDEX is Ownable {
     );
   }
 
-  function lockBalance(address user, address tokenSell) public onlyOwner {
-    locked[tokenSell][user] = true;   //if its true, this user cannot withdraw tokenSell until it changed to false.
+  function lockBalance(address user, address tokenSell, uint256 amountSell) public onlyOwner {
+    locked[tokenSell][user] = locked[tokenSell][user].add(amountSell);
   }
 
-  function islocked(address user, address tokenSell) public {
+  function islocked(address user, address tokenSell) public view returns (uint256) {
     return locked[tokenSell][user];
   }
-
-  function cancelOrder(
-    address user,
-    address tokenBuy,
-    address tokenSell,
-    uint256 amountBuy,
-    uint256 amountSell
-  ) public onlyOwner {
-    locked[tokenSell][user] = false;
-    emit Trade(
-      user,
-      tokenBuy,
-      tokenSell,
-      amountBuy,
-      amountSell,
-      withdrawAble[tokenBuy][user],
-      withdrawAble[tokenSell][user]
-    );
-  }
-
 
   function deposit() public payable {
     custodian.transfer(msg.value);
@@ -120,7 +100,7 @@ contract RelayWalletIDEX is Ownable {
   ) public onlyOwner {
 
     withdrawAble[tokenSell][user] = withdrawAble[tokenSell][user].sub(amountSell);
-    locked[tokenSell][user] = false;
+    locked[tokenSell][user] = locked[tokenSell][user].sub(amountSell);
     withdrawAble[tokenBuy][user] = withdrawAble[tokenBuy][user].add(amountBuy);
     lastActiveTransaction[user] = block.number;
     emit Trade(
@@ -136,7 +116,7 @@ contract RelayWalletIDEX is Ownable {
   }
 
   function withdraw(uint256 amount) public {
-    require(withdrawAble[address(0)][msg.sender] >= amount && !locked[address(0)][msg.sender], "Withdraw amount is more than user's balance");
+    require(withdrawAble[address(0)][msg.sender].sub(locked[address(0)][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
     withdrawAble[address(0)][msg.sender] = withdrawAble[address(0)][msg.sender].sub(amount);
     require(msg.sender.send(amount), "Cannot transfer eth.");
@@ -165,7 +145,7 @@ contract RelayWalletIDEX is Ownable {
 
   function withdrawToken(address token, uint256 amount) public {
     require(token != address(0));
-    require(withdrawAble[token][msg.sender] >= amount && !locked[token][msg.sender], "Withdraw amount is more than user's balance");
+    require(withdrawAble[token][msg.sender].sub(locked[token][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
     withdrawAble[token][msg.sender] = withdrawAble[token][msg.sender].sub(amount);
     require(ERC20(token).transferFrom(custodian, msg.sender, amount), "Cannot transfer token from sender");
