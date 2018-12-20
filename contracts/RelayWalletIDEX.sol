@@ -88,6 +88,7 @@ contract RelayWalletIDEX is Ownable {
   ) public onlyOwner {
 
     locked[tokenSell][user] = locked[tokenSell][user].sub(amountSell);
+    tokens[tokenSell][user] = tokens[tokenSell][user].sub(amountSell);
     tokens[tokenBuy][user] = tokens[tokenBuy][user].add(amountBuy);
     lastActiveTransaction[user] = block.number;
     emit Trade(
