@@ -12,7 +12,6 @@ contract RelayWalletIDEX is Ownable {
 
   //mapping of token addresses to mapping of account balances (token=0 means Ether)
   mapping(address => mapping(address => uint256)) public tokens;
-  mapping(address => mapping(address => uint256)) public withdrawAble;
   mapping(address => mapping(address => uint256)) public locked;
   mapping(address => uint256) public lastActiveTransaction;
 
@@ -39,16 +38,6 @@ contract RelayWalletIDEX is Ownable {
     uint256 balanceBuy,
     uint256 balanceSell,
     bytes32 transactionHash
-  );
-
-  event CancelOrder(
-    address user,
-    address tokenBuy,
-    address tokenSell,
-    uint256 amountBuy,
-    uint256 amountSell,
-    uint256 balanceBuy,
-    uint256 balanceSell
   );
 
   event AdminWithdraw(
@@ -80,13 +69,12 @@ contract RelayWalletIDEX is Ownable {
   function deposit() public payable {
     custodian.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
-    withdrawAble[address(0)][msg.sender] = withdrawAble[address(0)][msg.sender].add(msg.value);
     lastActiveTransaction[msg.sender] = block.number;
     emit Deposit(
       address(0),
       msg.sender,
       msg.value,
-      withdrawAble[address(0)][msg.sender]
+      tokens[address(0)][msg.sender]
     );
   }
 
@@ -99,9 +87,8 @@ contract RelayWalletIDEX is Ownable {
     bytes32 transactionHash
   ) public onlyOwner {
 
-    withdrawAble[tokenSell][user] = withdrawAble[tokenSell][user].sub(amountSell);
     locked[tokenSell][user] = locked[tokenSell][user].sub(amountSell);
-    withdrawAble[tokenBuy][user] = withdrawAble[tokenBuy][user].add(amountBuy);
+    tokens[tokenBuy][user] = tokens[tokenBuy][user].add(amountBuy);
     lastActiveTransaction[user] = block.number;
     emit Trade(
       user,
@@ -109,23 +96,22 @@ contract RelayWalletIDEX is Ownable {
       tokenSell,
       amountBuy,
       amountSell,
-      withdrawAble[tokenBuy][user],
-      withdrawAble[tokenSell][user],
+      tokens[tokenBuy][user],
+      tokens[tokenSell][user],
       transactionHash
     );
   }
 
   function withdraw(uint256 amount) public {
-    require(withdrawAble[address(0)][msg.sender].sub(locked[address(0)][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
+    require(tokens[address(0)][msg.sender].sub(locked[address(0)][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
-    withdrawAble[address(0)][msg.sender] = withdrawAble[address(0)][msg.sender].sub(amount);
     require(msg.sender.send(amount), "Cannot transfer eth.");
     lastActiveTransaction[msg.sender] = block.number;
     emit Withdraw(
       address(0),
       msg.sender,
       amount,
-      withdrawAble[address(0)][msg.sender]
+      tokens[address(0)][msg.sender]
     );
   }
 
@@ -133,33 +119,36 @@ contract RelayWalletIDEX is Ownable {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     require(ERC20(token).transferFrom(msg.sender, custodian, amount), "Cannot transfer token from sender");
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
-    withdrawAble[token][msg.sender] = withdrawAble[token][msg.sender].add(amount);
     lastActiveTransaction[msg.sender] = block.number;
     emit Deposit(
       token,
       msg.sender,
       amount,
-      withdrawAble[token][msg.sender]
+      tokens[token][msg.sender]
     );
   }
 
   function withdrawToken(address token, uint256 amount) public {
     require(token != address(0));
-    require(withdrawAble[token][msg.sender].sub(locked[token][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
+    require(tokens[token][msg.sender].sub(locked[token][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
-    withdrawAble[token][msg.sender] = withdrawAble[token][msg.sender].sub(amount);
     require(ERC20(token).transferFrom(custodian, msg.sender, amount), "Cannot transfer token from sender");
     lastActiveTransaction[msg.sender] = block.number;
     emit Withdraw(
       token,
       msg.sender,
       amount,
-      withdrawAble[token][msg.sender]
+      tokens[token][msg.sender]
     );
   }
 
+  //balanceOf() used for token deposited.
   function balanceOf(address token, address user) public view returns (uint256) {
-    return withdrawAble[token][user];
+    return tokens[token][user];
   }
 
+  //availableBalanceOf() used for token be able to withdraw or trade in exchange.
+  function availableBalanceOf(address token, address user) public view returns (uint256) {
+    return tokens[token][user].sub(locked[token][user]);
+  }
 }
