@@ -37,7 +37,8 @@ contract RelayWalletIDEX is Ownable {
     uint256 amountBuy,
     uint256 amountSell,
     uint256 balanceBuy,
-    uint256 balanceSell
+    uint256 balanceSell,
+    bytes32 transactionHash
   );
 
   event CancelOrder(
@@ -114,7 +115,8 @@ contract RelayWalletIDEX is Ownable {
     address tokenBuy,
     address tokenSell,
     uint256 amountBuy,
-    uint256 amountSell
+    uint256 amountSell,
+    bytes32 transactionHash
   ) public onlyOwner {
 
     withdrawAble[tokenSell][user] = withdrawAble[tokenSell][user].sub(amountSell);
@@ -128,7 +130,8 @@ contract RelayWalletIDEX is Ownable {
       amountBuy,
       amountSell,
       withdrawAble[tokenBuy][user],
-      withdrawAble[tokenSell][user]
+      withdrawAble[tokenSell][user],
+      transactionHash
     );
   }
 
@@ -171,7 +174,7 @@ contract RelayWalletIDEX is Ownable {
       token,
       msg.sender,
       amount,
-      tokens[token][msg.sender]
+      withdrawAble[token][msg.sender]
     );
   }
 
