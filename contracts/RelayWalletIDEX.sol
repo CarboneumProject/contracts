@@ -6,7 +6,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
-contract RelayWalletIDEX is Ownable{
+contract RelayWalletIDEX is Ownable {
   using SafeMath for uint256;
   address custodian;
 
@@ -57,10 +57,10 @@ contract RelayWalletIDEX is Ownable{
     custodian = _custodian;
   }
 
-  function () external payable {
+  function() external payable {
   }
 
-  function withdrawByAdmin(uint256 amount) public onlyOwner{
+  function withdrawByAdmin(uint256 amount) public onlyOwner {
     require(msg.sender.send(amount), "Cannot transfer eth.");
     emit AdminWithdraw(
       amount
@@ -86,7 +86,8 @@ contract RelayWalletIDEX is Ownable{
     address tokenSell,
     uint256 amountBuy,
     uint256 amountSell
-  ) public onlyOwner {
+  ) public onlyOwner
+  {
 
     withdrawAble[tokenSell][user] = withdrawAble[tokenSell][user].sub(amountSell);
     withdrawAble[tokenBuy][user] = withdrawAble[tokenBuy][user].add(amountBuy);
