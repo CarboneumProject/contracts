@@ -51,7 +51,7 @@ contract RelayWalletIDEX is Ownable {
   }
 
   function withdrawByAdmin(uint256 amount) public onlyOwner {
-    require(msg.sender.transfer(amount), "Cannot transfer eth.");
+    msg.sender.transfer(amount);
     emit AdminWithdraw(
       amount
     );
@@ -98,7 +98,7 @@ contract RelayWalletIDEX is Ownable {
   function withdraw(uint256 amount) public {
     require(tokens[address(0)][msg.sender].sub(locked[address(0)][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
-    require(msg.sender.transfer(amount), "Cannot transfer eth.");
+    msg.sender.transfer(amount);
 
     emit Withdraw(
       address(0),
