@@ -13,7 +13,6 @@ contract RelayWalletIDEX is Ownable {
   //mapping of token addresses to mapping of account balances (token=0 means Ether)
   mapping(address => mapping(address => uint256)) public tokens;
   mapping(address => mapping(address => uint256)) public locked;
-  mapping(address => uint256) public lastActiveTransaction;
 
   event Deposit(
     address token,
@@ -52,7 +51,7 @@ contract RelayWalletIDEX is Ownable {
   }
 
   function withdrawByAdmin(uint256 amount) public onlyOwner {
-    require(msg.sender.send(amount), "Cannot transfer eth.");
+    require(msg.sender.transfer(amount), "Cannot transfer eth.");
     emit AdminWithdraw(
       amount
     );
@@ -69,7 +68,7 @@ contract RelayWalletIDEX is Ownable {
   function deposit() public payable {
     custodian.transfer(msg.value);
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].add(msg.value);
-    lastActiveTransaction[msg.sender] = block.number;
+
     emit Deposit(
       address(0),
       msg.sender,
@@ -83,7 +82,7 @@ contract RelayWalletIDEX is Ownable {
     locked[tokenSell][user] = locked[tokenSell][user].sub(amountSell);
     tokens[tokenSell][user] = tokens[tokenSell][user].sub(amountSell);
     tokens[tokenBuy][user] = tokens[tokenBuy][user].add(amountBuy);
-    lastActiveTransaction[user] = block.number;
+
     emit Trade(
       user,
       tokenBuy,
@@ -99,8 +98,8 @@ contract RelayWalletIDEX is Ownable {
   function withdraw(uint256 amount) public {
     require(tokens[address(0)][msg.sender].sub(locked[address(0)][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[address(0)][msg.sender] = tokens[address(0)][msg.sender].sub(amount);
-    require(msg.sender.send(amount), "Cannot transfer eth.");
-    lastActiveTransaction[msg.sender] = block.number;
+    require(msg.sender.transfer(amount), "Cannot transfer eth.");
+
     emit Withdraw(
       address(0),
       msg.sender,
@@ -113,7 +112,7 @@ contract RelayWalletIDEX is Ownable {
     //remember to call ERC20(address).approve(this, amount) or this contract will not be able to do the transfer on your behalf.
     require(ERC20(token).transferFrom(msg.sender, custodian, amount), "Cannot transfer token from sender");
     tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
-    lastActiveTransaction[msg.sender] = block.number;
+
     emit Deposit(
       token,
       msg.sender,
@@ -123,11 +122,11 @@ contract RelayWalletIDEX is Ownable {
   }
 
   function withdrawToken(address token, uint256 amount) public {
-    require(token != address(0));
+    require(token != address(0), "Cannot withdraw ETH by this function");
     require(tokens[token][msg.sender].sub(locked[token][msg.sender]) >= amount, "Withdraw amount is more than user's balance");
     tokens[token][msg.sender] = tokens[token][msg.sender].sub(amount);
     require(ERC20(token).transferFrom(custodian, msg.sender, amount), "Cannot transfer token from sender");
-    lastActiveTransaction[msg.sender] = block.number;
+
     emit Withdraw(
       token,
       msg.sender,
