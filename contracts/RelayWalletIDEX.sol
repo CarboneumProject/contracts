@@ -78,14 +78,7 @@ contract RelayWalletIDEX is Ownable {
     );
   }
 
-  function adjustBalance(
-    address user,
-    address tokenBuy,
-    address tokenSell,
-    uint256 amountBuy,
-    uint256 amountSell,
-    bytes32 transactionHash
-  ) public onlyOwner {
+  function adjustBalance(address user, address tokenBuy, address tokenSell, uint256 amountBuy, uint256 amountSell, bytes32 transactionHash) public onlyOwner {
 
     locked[tokenSell][user] = locked[tokenSell][user].sub(amountSell);
     tokens[tokenSell][user] = tokens[tokenSell][user].sub(amountSell);

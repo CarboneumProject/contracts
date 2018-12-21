@@ -81,7 +81,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     // Transfer Carboneum token from token owner to sender.
     _deliverTokens(_beneficiary, tokenAmount);
 
-    TokenPurchaseWithIcon(
+    emit TokenPurchaseWithIcon(
       msg.sender,
       _beneficiary,
       _iconAmount,
