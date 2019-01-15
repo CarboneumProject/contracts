@@ -7,7 +7,7 @@ contract ISocialTrading is Ownable {
   /**
    * @dev Follow leader to copy trade.
    */
-  function follow(address _leader, uint _percentage) external;
+  function follow(address _leader, uint8 _percentage) external;
 
   /**
    * @dev UnFollow leader to stop copy trade.

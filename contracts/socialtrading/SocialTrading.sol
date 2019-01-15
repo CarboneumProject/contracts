@@ -7,7 +7,7 @@ import "./interfaces/ISocialTrading.sol";
 contract SocialTrading is ISocialTrading {
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
-  mapping(address => mapping(address => uint)) public leaderToFollowers;
+  mapping(address => mapping(address => uint8)) public leaderToFollowers;
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
   event Follow(address indexed leader, address indexed follower, uint percentage);
@@ -20,9 +20,9 @@ contract SocialTrading is ISocialTrading {
   /**
    * @dev Follow leader to copy trade.
    */
-  function follow(address _leader, uint _percentage) external {
-    require(getCurrentPercentage(msg.sender) + _percentage <= 100 ether, "Your percentage more than 100%.");
-    uint index = followerToLeadersIndex[msg.sender].push(_leader) - 1;
+  function follow(address _leader, uint8 _percentage) external {
+    require(getCurrentPercentage(msg.sender) + _percentage <= 100, "Following percentage more than 100%.");
+    uint8 index = uint8(followerToLeadersIndex[msg.sender].push(_leader) - 1);
     followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(
       _leader,
       _percentage,
@@ -30,7 +30,7 @@ contract SocialTrading is ISocialTrading {
       index
     );
 
-    uint index2 = leaderToFollowersIndex[_leader].push(msg.sender) - 1;
+    uint8 index2 = uint8(leaderToFollowersIndex[_leader].push(msg.sender) - 1);
     leaderToFollowers[_leader][msg.sender] = index2;
     emit Follow(_leader, msg.sender, _percentage);
   }
@@ -43,13 +43,13 @@ contract SocialTrading is ISocialTrading {
   }
 
   function _unfollow(address _follower, address _leader) private {
-    uint rowToDelete = followerToLeaders[_follower][_leader].index;
+    uint8 rowToDelete = uint8(followerToLeaders[_follower][_leader].index);
     address keyToMove = followerToLeadersIndex[_follower][followerToLeadersIndex[_follower].length - 1];
     followerToLeadersIndex[_follower][rowToDelete] = keyToMove;
     followerToLeaders[_follower][keyToMove].index = rowToDelete;
     followerToLeadersIndex[_follower].length -= 1;
 
-    uint rowToDelete2 = leaderToFollowers[_leader][_follower];
+    uint8 rowToDelete2 = uint8(leaderToFollowers[_leader][_follower]);
     address keyToMove2 = leaderToFollowersIndex[_leader][leaderToFollowersIndex[_leader].length - 1];
     leaderToFollowersIndex[_leader][rowToDelete2] = keyToMove2;
     leaderToFollowers[_leader][keyToMove2] = rowToDelete2;

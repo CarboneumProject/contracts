@@ -30,9 +30,9 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
 
   describe('follow', function () {
     it('should allow follow leaders', async function () {
-      await this.socialTrading.follow(leader1, ether(25), { from: followerA });
-      await this.socialTrading.follow(leader2, ether(25), { from: followerA });
-      await this.socialTrading.follow(leader3, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader1, new BigNumber(25), { from: followerA });
+      await this.socialTrading.follow(leader2, new BigNumber(25), { from: followerA });
+      await this.socialTrading.follow(leader3, new BigNumber(25), { from: followerA });
       let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
       assert.equal(friends[0], leader1);
       assert.equal(friends[1], leader2);
@@ -40,9 +40,9 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
     });
 
     it('should allow unfollow leaders', async function () {
-      await this.socialTrading.follow(leader1, ether(25), { from: followerA });
-      await this.socialTrading.follow(leader2, ether(25), { from: followerA });
-      await this.socialTrading.follow(leader3, ether(25), { from: followerA });
+      await this.socialTrading.follow(leader1, new BigNumber(25), { from: followerA });
+      await this.socialTrading.follow(leader2, new BigNumber(25), { from: followerA });
+      await this.socialTrading.follow(leader3, new BigNumber(25), { from: followerA });
       let friends = await this.socialTrading.getFriends(followerA, { from: followerA });
       assert.equal(friends[0], leader1);
       assert.equal(friends[1], leader2);
@@ -54,9 +54,9 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
     });
 
     it('should allow a leader to follow by users', async function () {
-      await this.socialTrading.follow(leader1, ether(50), { from: followerA });
-      await this.socialTrading.follow(leader1, ether(50), { from: followerB });
-      await this.socialTrading.follow(leader1, ether(50), { from: followerC });
+      await this.socialTrading.follow(leader1, new BigNumber(50), { from: followerA });
+      await this.socialTrading.follow(leader1, new BigNumber(50), { from: followerB });
+      await this.socialTrading.follow(leader1, new BigNumber(50), { from: followerC });
       let followers = await this.socialTrading.getFollowers(leader1, { from: leader1 });
       assert.equal(followers[0], followerA);
       assert.equal(followers[1], followerB);
@@ -68,14 +68,15 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
     });
 
     it('should reject follow leaders over 100 percentage', async function () {
-      await this.socialTrading.follow(leader1, ether(50), { from: followerA }).should.be.fulfilled;
-      await this.socialTrading.follow(leader2, ether(50), { from: followerA }).should.be.fulfilled;
-      await this.socialTrading.follow(leader3, ether(1), { from: followerA }).should.be.rejectedWith(EVMRevert);
+      await this.socialTrading.follow(leader1, new BigNumber(50), { from: followerA }).should.be.fulfilled;
+      await this.socialTrading.follow(leader2, new BigNumber(50), { from: followerA }).should.be.fulfilled;
+      await this.socialTrading.follow(leader3, new BigNumber(1), { from: followerA }).should.be.rejectedWith(EVMRevert);
     });
 
     it('should reject follow leader over 100 percentage, 2 leaders', async function () {
-      await this.socialTrading.follow(leader1, ether(100), { from: followerA }).should.be.fulfilled;
-      await this.socialTrading.follow(leader2, ether(100), { from: followerA }).should.be.rejectedWith(EVMRevert);
+      await this.socialTrading.follow(leader1, new BigNumber(100), { from: followerA }).should.be.fulfilled;
+      await this.socialTrading.follow(leader2,
+        new BigNumber(100), { from: followerA }).should.be.rejectedWith(EVMRevert);
     });
   });
 });
