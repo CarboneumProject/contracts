@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.25;
 
 contract Token {
   bytes32 public standard;
@@ -50,7 +50,7 @@ contract Exchange {
     _;
   }
   function setOwner(address newOwner) onlyOwner {
-    SetOwner(owner, newOwner);
+    emit SetOwner(owner, newOwner);
     owner = newOwner;
   }
 
@@ -108,13 +108,13 @@ contract Exchange {
     tokens[token][msg.sender] = safeAdd(tokens[token][msg.sender], amount);
     lastActiveTransaction[msg.sender] = block.number;
     if (!Token(token).transferFrom(msg.sender, this, amount)) throw;
-    Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
+    emit Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
   function deposit() payable {
     tokens[address(0)][msg.sender] = safeAdd(tokens[address(0)][msg.sender], msg.value);
     lastActiveTransaction[msg.sender] = block.number;
-    Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
+    emit Deposit(address(0), msg.sender, msg.value, tokens[address(0)][msg.sender]);
   }
 
   function withdraw(address token, uint256 amount) returns (bool success) {
@@ -126,14 +126,14 @@ contract Exchange {
     } else {
       if (!Token(token).transfer(msg.sender, amount)) throw;
     }
-    Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
+    emit Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
   }
 
   function adminWithdraw(address token, uint256 amount, address user, uint256 nonce, uint8 v, bytes32 r, bytes32 s, uint256 feeWithdrawal) onlyAdmin returns (bool success) {
-    bytes32 hash = keccak256(this, token, amount, user, nonce);
+    bytes32 hash = keccak256(abi.encodePacked(this, token, amount, user, nonce));
     if (withdrawn[hash]) throw;
     withdrawn[hash] = true;
-    if (ecrecover(keccak256("\x19Ethereum Signed Message:\n32", hash), v, r, s) != user) throw;
+    if (ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)), v, r, s) != user) throw;
     if (feeWithdrawal > 50 finney) feeWithdrawal = 50 finney;
     if (tokens[token][user] < amount) throw;
     tokens[token][user] = safeSub(tokens[token][user], amount);
@@ -145,7 +145,7 @@ contract Exchange {
       if (!Token(token).transfer(user, amount)) throw;
     }
     lastActiveTransaction[user] = block.number;
-    Withdraw(token, user, amount, tokens[token][user]);
+    emit Withdraw(token, user, amount, tokens[token][user]);
   }
 
   function balanceOf(address token, address user) constant returns (uint256) {
@@ -170,10 +170,10 @@ contract Exchange {
        [3] taker
      */
     if (invalidOrder[tradeAddresses[2]] > tradeValues[3]) throw;
-    bytes32 orderHash = keccak256(this, tradeAddresses[0], tradeValues[0], tradeAddresses[1], tradeValues[1], tradeValues[2], tradeValues[3], tradeAddresses[2]);
-    if (ecrecover(keccak256("\x19Ethereum Signed Message:\n32", orderHash), v[0], rs[0], rs[1]) != tradeAddresses[2]) throw;
-    bytes32 tradeHash = keccak256(orderHash, tradeValues[4], tradeAddresses[3], tradeValues[5]);
-    if (ecrecover(keccak256("\x19Ethereum Signed Message:\n32", tradeHash), v[1], rs[2], rs[3]) != tradeAddresses[3]) throw;
+    bytes32 orderHash = keccak256(abi.encodePacked(this, tradeAddresses[0], tradeValues[0], tradeAddresses[1], tradeValues[1], tradeValues[2], tradeValues[3], tradeAddresses[2]));
+    if (ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", orderHash)), v[0], rs[0], rs[1]) != tradeAddresses[2]) throw;
+    bytes32 tradeHash = keccak256(abi.encodePacked(orderHash, tradeValues[4], tradeAddresses[3], tradeValues[5]));
+    if (ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", tradeHash)), v[1], rs[2], rs[3]) != tradeAddresses[3]) throw;
     if (traded[tradeHash]) throw;
     traded[tradeHash] = true;
     if (tradeValues[6] > 100 finney) tradeValues[6] = 100 finney;

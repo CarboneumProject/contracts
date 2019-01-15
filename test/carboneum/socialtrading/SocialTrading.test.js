@@ -72,5 +72,10 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       await this.socialTrading.follow(leader2, ether(50), { from: followerA }).should.be.fulfilled;
       await this.socialTrading.follow(leader3, ether(1), { from: followerA }).should.be.rejectedWith(EVMRevert);
     });
+
+    it('should reject follow leader over 100 percentage, 2 leaders', async function () {
+      await this.socialTrading.follow(leader1, ether(100), { from: followerA }).should.be.fulfilled;
+      await this.socialTrading.follow(leader2, ether(100), { from: followerA }).should.be.rejectedWith(EVMRevert);
+    });
   });
 });
