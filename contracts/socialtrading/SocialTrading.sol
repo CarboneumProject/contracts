@@ -26,7 +26,6 @@ contract SocialTrading is ISocialTrading {
     followerToLeaders[msg.sender][_leader] = LibUserInfo.Following(
       _leader,
       _percentage,
-      now,
       index
     );
 
