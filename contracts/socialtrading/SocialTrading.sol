@@ -2,9 +2,13 @@ pragma solidity ^0.4.24;
 
 import "./libs/LibUserInfo.sol";
 import "./interfaces/ISocialTrading.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
 
 contract SocialTrading is ISocialTrading {
+  ERC20 public feeToken;
+  address public feeWallet;
+
   mapping(address => mapping(address => LibUserInfo.Following)) public followerToLeaders; // Following list
   mapping(address => address[]) public followerToLeadersIndex; // Following list
   mapping(address => mapping(address => uint)) public leaderToFollowers;
@@ -12,6 +16,15 @@ contract SocialTrading is ISocialTrading {
 
   event Follow(address indexed leader, address indexed follower, uint percentage);
   event UnFollow(address indexed leader, address indexed follower);
+
+  constructor (
+    address _feeWallet,
+    ERC20 _feeToken
+  ) public
+  {
+    feeWallet = _feeWallet;
+    feeToken = _feeToken;
+  }
 
   function() public {
     revert();
@@ -77,7 +90,7 @@ contract SocialTrading is ISocialTrading {
     return result;
   }
 
-  function getCurrentPercentage(address _user) internal returns (uint) {
+  function getCurrentPercentage(address _user) internal view returns (uint) {
     uint sum = 0;
     for (uint i = 0; i < followerToLeadersIndex[_user].length; i++) {
       address leader = followerToLeadersIndex[_user][i];
