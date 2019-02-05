@@ -14,8 +14,21 @@ contract SocialTrading is ISocialTrading {
   mapping(address => mapping(address => uint8)) public leaderToFollowers;
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
+  mapping(address => bool) public relays;
+  mapping(address => uint256) public rewards;
+
   event Follow(address indexed leader, address indexed follower, uint percentage);
   event UnFollow(address indexed leader, address indexed follower);
+  event AddRelay(address indexed relay);
+  event RemoveRelay(address indexed relay);
+  event PaidReward(
+    address indexed leader,
+    address indexed follower,
+    address indexed relay,
+    uint rewardAndFee,
+    bytes32 openTradeHash,
+    bytes32 closeTradeHash
+  );
 
   constructor (
     address _feeWallet,
@@ -96,5 +109,59 @@ contract SocialTrading is ISocialTrading {
       sum += followerToLeaders[_user][leader].percentage;
     }
     return sum;
+  }
+
+  /**
+   * @dev Register relay to contract by the owner.
+   */
+  function registerRelay(address _relay) onlyOwner external {
+    relays[_relay] = true;
+    emit AddRelay(_relay);
+  }
+
+  /**
+   * @dev Remove relay.
+   */
+  function removeRelay(address _relay) onlyOwner external {
+    relays[_relay] = false;
+    emit RemoveRelay(_relay);
+  }
+
+  function distributeReward(
+    address _leader,
+    address _follower,
+    uint _reward,
+    uint _relayFee,
+    bytes32 _openTradeHash,
+    bytes32 _closeTradeHash
+  ) external {
+    address relay = msg.sender;
+    require(relays[relay]);
+    // Accept only trusted relay
+    uint256 allowance = feeToken.allowance(_follower, address(this));
+    uint256 balance = feeToken.balanceOf(_follower);
+    uint rewardAndFee = _reward + _relayFee;
+    if ((balance >= rewardAndFee) && (allowance >= rewardAndFee)) {
+      feeToken.transferFrom(_follower, address(this), rewardAndFee);
+      rewards[_leader] += _reward;
+      rewards[relay] += _relayFee;
+      emit PaidReward(
+        _leader,
+        _follower,
+        relay,
+        rewardAndFee,
+        _openTradeHash,
+        _closeTradeHash
+      );
+    } else {
+      _unfollow(_follower, _leader);
+    }
+  }
+
+  function claimReward() external {
+    require(rewards[msg.sender] > 0);
+    uint256 reward = rewards[msg.sender];
+    rewards[msg.sender] = 0;
+    require(feeToken.transfer(msg.sender, reward));
   }
 }
