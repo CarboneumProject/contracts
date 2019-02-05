@@ -30,6 +30,7 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
+    "eth-gas-reporter": "^0.1.12",
     "ethereumjs-util": "^5.1.2",
     "ethjs-abi": "^0.2.1",
     "ganache-cli": "6.1.0",
