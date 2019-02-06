@@ -1,5 +1,6 @@
 import ether from '../../helpers/ether';
 import EVMRevert from '../../helpers/EVMRevert';
+
 const BigNumber = web3.BigNumber;
 require('chai')
   .use(require('chai-as-promised'))
@@ -71,6 +72,38 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
       await this.socialTrading.follow(leader1, ether(50), { from: followerA }).should.be.fulfilled;
       await this.socialTrading.follow(leader2, ether(50), { from: followerA }).should.be.fulfilled;
       await this.socialTrading.follow(leader3, ether(1), { from: followerA }).should.be.rejectedWith(EVMRevert);
+    });
+  });
+
+  describe('relay', function () {
+    it('should allow owner to add relay', async function () {
+      await this.socialTrading.registerRelay(relay, { from: _ });
+    });
+
+    it('should allow owner to remove relay', async function () {
+      await this.socialTrading.removeRelay(relay, { from: _ });
+    });
+  });
+
+  describe('reward', function () {
+    it('should allow relay to distribute reward', async function () {
+      await this.socialTrading.registerRelay(relay, { from: _ });
+      await this.socialTrading.distributeReward(
+        leader1,
+        followerA,
+        ether(88),
+        ether(8),
+        '0x3ec13d8f7ffc514225e459c07609ba951d78971ae4bf67af171080e104868d9a',
+        '0x336d38735561dbc08863d4256c757eb493941798a26e2f7d04d92be28c5e4be6',
+        { from: relay });
+
+      await this.socialTrading.claimReward({ from: relay });
+      let relayBalance = await this.token.balanceOf(relay);
+      relayBalance.should.be.bignumber.equal(ether(8));
+
+      await this.socialTrading.claimReward({ from: leader1 });
+      let leader1Balance = await this.token.balanceOf(leader1);
+      leader1Balance.should.be.bignumber.equal(ether(88));
     });
   });
 });
