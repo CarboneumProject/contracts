@@ -134,7 +134,8 @@ contract SocialTrading is ISocialTrading {
     uint _relayFee,
     bytes32 _openTradeHash,
     bytes32 _closeTradeHash
-  ) external {
+  ) external
+  {
     address relay = msg.sender;
     require(relays[relay]);
     // Accept only trusted relay
