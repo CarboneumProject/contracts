@@ -26,8 +26,10 @@ contract SocialTrading is ISocialTrading {
     address indexed follower,
     address indexed relay,
     uint rewardAndFee,
-    bytes32 openTradeHash,
-    bytes32 closeTradeHash
+    bytes32 leaderOpenOrderHash,
+    bytes32 leaderCloseOrderHash,
+    bytes32 followerOpenOrderHash,
+    bytes32 followercloseOrderHash
   );
 
   constructor (
@@ -132,10 +134,13 @@ contract SocialTrading is ISocialTrading {
     address _follower,
     uint _reward,
     uint _relayFee,
-    bytes32 _openTradeHash,
-    bytes32 _closeTradeHash
+    bytes32[4] _orderHashes
   ) external
   {
+    // orderHashes[0] = leaderOpenOrderHash
+    // orderHashes[1] = leaderCloseOrderHash
+    // orderHashes[2] = followerOpenOrderHash
+    // orderHashes[3] = followerCloseOrderHash
     address relay = msg.sender;
     require(relays[relay]);
     // Accept only trusted relay
@@ -151,8 +156,10 @@ contract SocialTrading is ISocialTrading {
         _follower,
         relay,
         rewardAndFee,
-        _openTradeHash,
-        _closeTradeHash
+        _orderHashes[0],
+        _orderHashes[1],
+        _orderHashes[2],
+        _orderHashes[3]
       );
     } else {
       _unfollow(_follower, _leader);

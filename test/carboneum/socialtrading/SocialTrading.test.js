@@ -93,8 +93,12 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
         followerA,
         ether(88),
         ether(8),
-        '0x3ec13d8f7ffc514225e459c07609ba951d78971ae4bf67af171080e104868d9a',
-        '0x336d38735561dbc08863d4256c757eb493941798a26e2f7d04d92be28c5e4be6',
+        [
+          '0xd6493ae72bfbe3f59a93643436d6ba1e0e96c794ddb9ece4183f1a6aa2cd3b77',
+          '0x84fecd8c568025d098ae1d5d34a0ec507de0a33461fda6d7db94728c9b706b33',
+          '0xbbe8901b5086487a99455bb0fb3f492e56c8b543a5f0239cd277593c9b9707df',
+          '0x8b997756de102cd1f449e103e7104da66b7f85625c6bfdbb084ca8a50c0eb49b',
+        ],
         { from: relay });
 
       await this.socialTrading.claimReward({ from: relay });
