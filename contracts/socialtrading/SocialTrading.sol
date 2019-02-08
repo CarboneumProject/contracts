@@ -15,7 +15,6 @@ contract SocialTrading is ISocialTrading {
   mapping(address => address[]) public leaderToFollowersIndex; // Follower list
 
   mapping(address => bool) public relays;
-  mapping(address => uint256) public rewards;
 
   event Follow(address indexed leader, address indexed follower, uint percentage);
   event UnFollow(address indexed leader, address indexed follower);
@@ -148,9 +147,8 @@ contract SocialTrading is ISocialTrading {
     uint256 balance = feeToken.balanceOf(_follower);
     uint rewardAndFee = _reward + _relayFee;
     if ((balance >= rewardAndFee) && (allowance >= rewardAndFee)) {
-      feeToken.transferFrom(_follower, address(this), rewardAndFee);
-      rewards[_leader] += _reward;
-      rewards[relay] += _relayFee;
+      feeToken.transferFrom(_follower, _leader, _reward);
+      feeToken.transferFrom(_follower, relay, _relayFee);
       emit PaidReward(
         _leader,
         _follower,
@@ -164,12 +162,5 @@ contract SocialTrading is ISocialTrading {
     } else {
       _unfollow(_follower, _leader);
     }
-  }
-
-  function claimReward() external {
-    require(rewards[msg.sender] > 0);
-    uint256 reward = rewards[msg.sender];
-    rewards[msg.sender] = 0;
-    require(feeToken.transfer(msg.sender, reward));
   }
 }

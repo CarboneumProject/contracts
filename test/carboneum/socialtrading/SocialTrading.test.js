@@ -101,11 +101,9 @@ contract('SocialTrading', function ([_, feeWallet, leader1, leader2, leader3, fo
         ],
         { from: relay });
 
-      await this.socialTrading.claimReward({ from: relay });
       let relayBalance = await this.token.balanceOf(relay);
       relayBalance.should.be.bignumber.equal(ether(8));
 
-      await this.socialTrading.claimReward({ from: leader1 });
       let leader1Balance = await this.token.balanceOf(leader1);
       leader1Balance.should.be.bignumber.equal(ether(88));
     });
