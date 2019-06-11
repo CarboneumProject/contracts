@@ -38,7 +38,7 @@ for (i; i <= numberOfCode; i++) {
   let sign = w3.eth.accounts.sign(w3.utils.fromUtf8(code), privateKey);
   signature = sign.signature;
   if (i < numberOfCode) {
-    let link = `https://carboneum.io/promocode/?c=${code}&s=${signature}`;
+    let link = `https://carboneum.io/p/?c=${code}&s=${signature}`;
     console.log(link);
   }
 }
