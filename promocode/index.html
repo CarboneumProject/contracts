@@ -44,46 +44,67 @@
                 height: auto;
             }
         }
+
+        .wordwrap {
+            white-space: pre-wrap; /* css-3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+        }
     </style>
 </head>
 <body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <img src="carboneum.png" class="img-responsive center-block" style="height: 100px">
+        </div>
+    </div>
+</nav>
 
 <div class="container-fluid text-center">
-    <div class="row content">
-        <div class="col-sm-2 sidenav">
-        </div>
-        <div class="col-sm-8 text-center">
+    <div class="row">
+        <div class="col-sm-12 text-center">
             <h1>Carboneum Redeem Code</h1>
             <h2>Your promo code is:</h2>
             <h3 id="promocode">-</h3>
             <h3>signature:</h3>
-            <p id="signature">-</p>
-            <hr>
-            <div class="col-sm-8 text-left">
-                <h3>How to redeem your code</h3>
-                <ul>
-                    <li>Install
-                        <a target="_blank"
-                           href="https://metamask.io/">
-                            MetaMask
-                        </a>
-                        Extension and setup your wallet and add some ETH to it
-                    </li>
-                    <li>Go to
-                        <a target="_blank"
-                           href="https://etherscan.io/address/0xb82545e883a22787b8912c4fbcdbf64156358701#writeContract">
-                            https://etherscan.io/address/0xb82545e883a22787b8912c4fbcdbf64156358701#writeContract
-                        </a>
-                    </li>
-                    <li>Click "Write Contract Connect to Web3"</li>
-                    <li>Find section '4. redeem'</li>
-                    <li>Fill your promo code and signature from above and click "Write"</li>
-                    <li>Click Confirm on MetaMask and wait a few minute for transaction process</li>
-                </ul>
+            <p class="wordwrap" id="signature">-</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8 text-left">
+            <div class="text-left">
+                <hr>
+                <h3>How to redeem C8 from your code</h3>
+                <div>
+                    <ul>
+                        <li>Install
+                            <a target="_blank"
+                               href="https://metamask.io/">
+                                MetaMask
+                            </a>
+                            Extension and setup your wallet and add some ETH to it
+                        </li>
+                        <li>Go to our smart contract page on
+                            <a target="_blank"
+                               href="https://etherscan.io/address/0xb82545e883a22787b8912c4fbcdbf64156358701#writeContract">
+                                Etherscan
+                            </a>
+                        </li>
+                        <li>Click "Write Contract Connect to Web3"</li>
+                        <li>Find section '4. redeem'</li>
+                        <li>Fill your promo code and signature from above and click "Write"</li>
+                        <li>Click "Confirm" on MetaMask and wait a few minute for transaction process</li>
+                    </ul>
+                </div>
                 <hr>
             </div>
         </div>
-        <div class="col-sm-2 sidenav">
+        <div class="col-sm-2">
         </div>
     </div>
 </div>
@@ -91,12 +112,13 @@
 <footer class="container-fluid text-center">
     <p>Copyright © 2019 carboneum.io</p>
 </footer>
+
 <script>
   let url_string = window.location.href;
   let url = new URL(url_string);
   let code = url.searchParams.get('c');
   let signature = url.searchParams.get('s');
-  document.getElementById('promocode').innerHTML = code;
+  document.getElementById('promocode').innerHTML = '<b>'+ code + '</b>';
   document.getElementById('signature').innerHTML = signature;
   console.log(code, signature);
 </script>

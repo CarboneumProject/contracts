@@ -43,27 +43,23 @@ for (i; i <= numberOfCode; i++) {
   }
 }
 console.log('============================================================================================');
-
-if (network !== 'mainnet') {
-  console.log('Approving contract spending...');
-  const token = new w3.eth.Contract(TokenABI, tokenContractAddress);
-  token.methods.approve(promocodeAddress, w3.utils.toHex(approveAmount)).send(
-    { from: provider.address, gas: 300000 }).on('transactionHash', (hash) => {
-    console.log('Approving Tx:', hash);
-    console.log('Testing Redeem Code...', code);
-    const promoCode = new w3.eth.Contract(PromoCodeABI, promocodeAddress);
-    promoCode.methods.redeem(code, signature).send(
-      { from: provider.address, gas: 300000 }).on('transactionHash', (redeemHash) => {
-      console.log('Test Redeem Tx:', redeemHash);
-      process.exit();
-    }).on('confirmation', (confirmationNumber, receipt) => {
-      console.log('confirmation2');
-    }).on('receipt', (receipt) => {
-    }).on('error', console.error);
+console.log('Approving contract spending...');
+const token = new w3.eth.Contract(TokenABI, tokenContractAddress);
+token.methods.approve(promocodeAddress, w3.utils.toHex(approveAmount)).send(
+  { from: provider.address, gas: 300000 }).on('transactionHash', (hash) => {
+  console.log('Approving Tx:', hash);
+  console.log('Testing Redeem Code...', code);
+  const promoCode = new w3.eth.Contract(PromoCodeABI, promocodeAddress);
+  promoCode.methods.redeem(code, signature).send(
+    { from: provider.address, gas: 300000 }).on('transactionHash', (redeemHash) => {
+    console.log('Test Redeem Tx:', redeemHash);
+    process.exit();
   }).on('confirmation', (confirmationNumber, receipt) => {
-    console.log('confirmation1');
+    console.log('confirmation2');
   }).on('receipt', (receipt) => {
-    console.log('receipt1');
   }).on('error', console.error);
-}
-
+}).on('confirmation', (confirmationNumber, receipt) => {
+  console.log('confirmation1');
+}).on('receipt', (receipt) => {
+  console.log('receipt1');
+}).on('error', console.error);
