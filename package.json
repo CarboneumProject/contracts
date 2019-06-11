@@ -39,7 +39,7 @@
     "solium": "^1.1.8",
     "truffle": "^4.1.8",
     "truffle-hdwallet-provider": "0.0.3",
-    "web3": "1.0.0-beta.55"
+    "web3": "^0.20.7"
   },
   "repository": {
     "type": "git",
