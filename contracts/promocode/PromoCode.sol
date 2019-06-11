@@ -10,16 +10,16 @@ contract PromoCode is Ownable {
 
   event Redeem(address user, uint256 amount, string code);
 
-  function PromoCode(ERC20 _token, uint256 _amount) {
+  function PromoCode(ERC20 _token, uint256 _amount) public {
     amount = _amount;
     token = _token;
   }
 
-  function setAmount(uint256 _amount) onlyOwner {
+  function setAmount(uint256 _amount) public onlyOwner {
     amount = _amount;
   }
 
-  function redeem(string promoCode, bytes signature) {
+  function redeem(string promoCode, bytes signature) public {
     bytes32 hash = keccak256(abi.encodePacked(promoCode));
     bytes32 r;
     bytes32 s;
@@ -29,7 +29,9 @@ contract PromoCode is Ownable {
       s := mload(add(signature, 64))
       v := and(mload(add(signature, 65)), 255)
     }
-    if (v < 27) v += 27;
+    if (v < 27) {
+      v += 27;
+    }
 
     require(!used[hash]);
     used[hash] = true;
