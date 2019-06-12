@@ -19,7 +19,7 @@ contract PromoCode is Ownable {
     amount = _amount;
   }
 
-  function redeem(string promoCode, bytes signature) public {
+  function redeem(address user, string promoCode, bytes signature) public onlyOwner {
     bytes32 hash = keccak256(abi.encodePacked(promoCode));
     bytes32 r;
     bytes32 s;
@@ -36,7 +36,6 @@ contract PromoCode is Ownable {
     require(!used[hash]);
     used[hash] = true;
     require(ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)), v, r, s) == owner);
-    address user = msg.sender;
     require(token.transferFrom(owner, user, amount));
     emit Redeem(user, amount, promoCode);
   }
