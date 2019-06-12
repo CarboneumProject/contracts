@@ -24,8 +24,8 @@ contract('PromoCode', accounts => {
   it('Can redeem a promo code', async function () {
     let code1 = 'CARBONEUM_8564535475';
     let code2 = 'CARBONEUM_0873802979';
-    let signature1 = await web3.eth.sign(creator, web3.fromUtf8(code1));
-    let signature2 = await web3.eth.sign(creator, web3.fromUtf8(code2));
+    let signature1 = await web3.eth.sign(creator, web3.sha3(code1));
+    let signature2 = await web3.eth.sign(creator, web3.sha3(code2));
     await this.promoCode.redeem(code1, signature1, { from: user1 });
     await this.promoCode.redeem(code2, signature2, { from: user2 });
     let user1Balance = await this.token.balanceOf(user1);
@@ -36,7 +36,7 @@ contract('PromoCode', accounts => {
 
   it('Can not redeem a promo code 2rd time', async function () {
     let code1 = 'CARBONEUM_9546435475';
-    let signature1 = await web3.eth.sign(creator, web3.fromUtf8(code1));
+    let signature1 = await web3.eth.sign(creator, web3.sha3(code1));
     await this.promoCode.redeem(code1, signature1, { from: user1 });
     let user1Balance = await this.token.balanceOf(user1);
     user1Balance.should.be.bignumber.equal(amount);
@@ -46,8 +46,8 @@ contract('PromoCode', accounts => {
   it('Can not redeem promo code with wrong signature', async function () {
     let code1 = 'CARBONEUM_2546415105';
     let code2 = 'CARBONEUM_7543885979';
-    let signature1 = await web3.eth.sign(creator, web3.fromUtf8(code1));
-    let signature2 = await web3.eth.sign(creator, web3.fromUtf8(code2));
+    let signature1 = await web3.eth.sign(creator, web3.sha3(code1));
+    let signature2 = await web3.eth.sign(creator, web3.sha3(code2));
     await this.promoCode.redeem(code1, signature2, { from: user1 }).should.be.rejectedWith(EVMRevert);
     await this.promoCode.redeem(code2, signature1, { from: user2 }).should.be.rejectedWith(EVMRevert);
   });
