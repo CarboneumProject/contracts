@@ -1,5 +1,4 @@
 import EVMRevert from '../../helpers/EVMRevert';
-const util = require('ethereumjs-util');
 
 const BigNumber = web3.BigNumber;
 require('chai')
