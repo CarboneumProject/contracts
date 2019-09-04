@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
 
-import "zeppelin-solidity/contracts/crowdsale/validation/IndividuallyCappedCrowdsale.sol";
-import "zeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
-import "zeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
-import "zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
-import "zeppelin-solidity/contracts/crowdsale/distribution/PostDeliveryCrowdsale.sol";
+import "openzeppelin-solidity/contracts/crowdsale/validation/IndividuallyCappedCrowdsale.sol";
+import "openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
+import "openzeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
+import "openzeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
+import "openzeppelin-solidity/contracts/crowdsale/distribution/PostDeliveryCrowdsale.sol";
 
 
 /**
@@ -81,7 +81,7 @@ contract CarboneumCrowdsale is CappedCrowdsale, AllowanceCrowdsale, Individually
     // Transfer Carboneum token from token owner to sender.
     _deliverTokens(_beneficiary, tokenAmount);
 
-    TokenPurchaseWithIcon(
+    emit TokenPurchaseWithIcon(
       msg.sender,
       _beneficiary,
       _iconAmount,
